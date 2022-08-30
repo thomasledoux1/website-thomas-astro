@@ -1,0 +1,212 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local(''), url('/fonts/roboto-v29-latin-regular.woff2') format('woff2');
+}
+/* roboto-700 - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local(''), url('/fonts/roboto-v29-latin-700.woff2') format('woff2');
+}
+
+/* montserrat-700 - latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local(''), url('/fonts/montserrat-v23-latin-700.woff2') format('woff2');
+}
+
+html {
+  --purple: #f5ebff;
+  --darkpurple: #5851f9;
+  --primary: var(--darkpurple);
+  --text: #000;
+  --yellow: #f7df1e;
+  --blue: #2965f1;
+  --darkgray: #222831;
+  --beige: #eee;
+  --secondary: #f5ebff;
+  --lightpurple: #f0efff;
+  --orange: #b55400;
+}
+
+body {
+  @apply min-h-screen;
+}
+
+html.dark {
+  --primary: var(--orange);
+  --text: var(--beige);
+  --secondary: var(--darkgray);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.wrapper.dark progress[value]::-webkit-progress-value {
+  background-color: var(--primary);
+}
+
+.logo:hover .letter {
+  animation: bounce 0.3s ease alternate;
+}
+
+.logo:hover .letter:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.logo:hover .letter:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.logo:hover .letter:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.logo:hover .letter:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.logo:hover .letter:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.logo:hover .letter:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+.logo:hover .letter:nth-child(7) {
+  animation-delay: 0.7s;
+}
+
+.logo:hover .letter:nth-child(8) {
+  animation-delay: 0.8s;
+}
+
+.logo:hover .letter:nth-child(9) {
+  animation-delay: 0.9s;
+}
+
+.logo:hover .letter:nth-child(10) {
+  animation-delay: 1s;
+}
+
+.logo:hover .letter:nth-child(11) {
+  animation-delay: 1.1s;
+}
+
+.logo:hover .letter:nth-child(12) {
+  animation-delay: 1.2s;
+}
+
+.logo:hover .letter:nth-child(13) {
+  animation-delay: 1.3s;
+}
+
+.timeline-container::after {
+  left: calc(50% - 2px);
+}
+
+.timeline-item:after {
+  box-shadow: 1px -1px 1px rgba(0, 0, 0, 0.1);
+  top: calc(50% - 0.5rem);
+}
+
+.timeline-item:nth-child(even)::after {
+  box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+nav ul li a.active:before,
+nav ul li a.active:after,
+nav ul li:hover a:before,
+nav ul li:hover a:after {
+  @apply w-full;
+}
+
+@keyframes bounce {
+  50% {
+    top: -5px;
+  }
+
+  100% {
+    top: 0;
+  }
+}
+
+section {
+  scroll-margin-top: 4rem;
+}
+
+li.css {
+  background-color: var(--blue);
+  color: #fff;
+}
+
+li.nextjs,
+li.discuss {
+  background-color: #000;
+  color: #fff;
+}
+
+li.react {
+  background-color: #222222;
+  color: #61daf6;
+}
+
+li.javascript {
+  background-color: var(--yellow);
+  color: #000;
+}
+
+li.html {
+  background-color: #f53900;
+  color: white;
+}
+
+li.performance {
+  background-color: #ffa364;
+  color: #000;
+}
+
+li.showdev {
+  background-color: #091b47;
+  color: #b2ffe1;
+}
+
+li.gatsby {
+  background-color: #663399;
+  color: #fff;
+}
+
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: -webkit-fill-available;
+  }
+}
+@layer base {
+  .link {
+    @apply decoration-4 decoration-solid underline-offset-2 decoration-primary underline;
+  }
+}
+
+body {
+  @apply font-body;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-heading;
+}

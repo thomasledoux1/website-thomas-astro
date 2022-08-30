@@ -1,0 +1,41 @@
+---
+import '../../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+---
+
+<title>Thomas Ledoux | Home</title>
+<meta content="Thomas Ledoux | Home" property="og:title" />
+<meta content="Thomas Ledoux | Home" property="twitter:title" />
+<meta content="Thomas Ledoux' personal website" name="description" />
+<meta content="Thomas Ledoux' personal website" name="twitter:description" />
+<meta content="Thomas Ledoux' personal website" name="og:description" />
+<Layout>
+  <section
+    id="hero"
+    class="container mx-auto relative lg:pt-0 items-center content-center flex text-text"
+  >
+    <div
+      class="gap-8 md:gap-0 grid md:grid-cols-2 items-center content-center justify-items-center"
+    >
+      <h1
+        class="text-4xl font-bold md:text-6xl flex flex-col items-center md:items-start"
+      >
+        <span>Thomas is a</span>
+        <a class="animate-title-part1" href="/portfolio"> developer</a>
+        <a class="animate-title-part2" href="/personal"> cyclist</a>
+        <a class="animate-title-part3" href="/personal"> travel lover</a>
+      </h1>
+      <div class="w-3/4">
+        <img
+          class="rounded-full"
+          alt="Profile"
+          src="/me-mobile.webp"
+          width={640}
+          height={640}
+          sizes="(max-width: 600px) 320px, 800px"
+          srcset="/me-mobile.webp 320w, /me.webp 640w"
+        />
+      </div>
+    </div>
+  </section>
+</Layout>

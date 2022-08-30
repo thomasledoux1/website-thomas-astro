@@ -1,0 +1,21 @@
+{
+  "name": "@example/basics",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "devDependencies": {
+    "@astrojs/tailwind": "^1.0.0",
+    "@types/react": "^18.0.17",
+    "astro": "^1.1.2"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "uninstall": "^0.0.0"
+  }
+}

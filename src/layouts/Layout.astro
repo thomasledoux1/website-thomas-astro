@@ -1,0 +1,19 @@
+---
+import Footer from '../components/Footer.astro';
+import Navigation from '../components/Navigation.astro';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body class="flex flex-col">
+    <Navigation />
+    <main class="pt-16 flex-grow flex flex-col justify-center">
+      <slot />
+      <!-- your content is injected here -->
+    </main>
+    <Footer />
+  </body>
+</html>
