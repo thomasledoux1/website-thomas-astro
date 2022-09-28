@@ -1,0 +1,59 @@
+---
+title: 'Highlighting navigation items on scroll in React with IntersectionObserver'
+layout: '../../layouts/Layout.astro'
+---
+
+import '../../../styles/global.css';
+
+<section class="container mx-auto">
+<h1 class="mb-4 text-2xl">Highlighting navigation items on scroll in React with IntersectionObserver</h1>
+This week I was working on my personal website (https://www.thomasledoux.be), and I needed my navigation items to be highlighted when scrolling to the linked section.
+I found some solutions with a scroll listener, but none using the widely supported Intersection Observer (https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+
+So I decided to write the logic myself.
+What has to be done first, is referencing the `<section>`'s using `React.useRef`.
+
+```javascript
+import * as React from 'react';
+const personalRef = React.useRef(null);
+const portfolioRef = React.useRef(null);
+const contactRef = React.useRef(null);
+```
+
+Now we have the reference to the `<section>`'s we can fire up the IntersectionObserver. I prefer to do this using the `React.useEffect` hook. The ref objects are added as dependencies, so we can reference these when they are ready. I use the 0.5 threshold, this will cause the observer to be triggered when the `<section>` is >50% visible. The `navElement` gets the navigation element which has a href pointing to the `<section>`'s id.
+
+```javascript
+React.useEffect(() => {
+  let observer;
+  if (personalRef.current && portfolioRef.current && contactRef.current) {
+    const options = {
+      threshold: 0.5,
+    };
+    observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        const navElement = document.querySelector(
+          `a[href="/#${entry.target.id}"]`
+        );
+        if (entry.isIntersecting) {
+          if (!navElement.classList.contains('active')) {
+            navElement.classList.add('active');
+          }
+        } else if (navElement.classList.contains('active')) {
+          navElement.classList.remove('active');
+        }
+      });
+    }, options);
+    observer.observe(personalRef.current);
+    observer.observe(portfolioRef.current);
+    observer.observe(contactRef.current);
+  }
+  return () => observer.disconnect();
+}, [personalRef, portfolioRef, contactRef]);
+```
+
+And that's it! The `active` class will be added to the navigation element which points to the `<section>`.
+By adding the return function at the end of the useEffect hook, we make sure the IntersectionObserver is cleaned up correctly.
+
+Full code can be found on https://github.com/thomasledoux1/website-thomas
+
+</section>

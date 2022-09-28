@@ -1,6 +1,7 @@
 ---
 import Footer from '../components/Footer.astro';
 import Navigation from '../components/Navigation.astro';
+// import '../../styles/global.css';
 ---
 
 <html lang="en">
@@ -10,7 +11,7 @@ import Navigation from '../components/Navigation.astro';
   </head>
   <body class="flex flex-col">
     <Navigation />
-    <main class="pt-16 flex-grow flex flex-col justify-center">
+    <main class="pt-24 pb-8 flex-grow flex flex-col justify-center">
       <slot />
       <!-- your content is injected here -->
     </main>

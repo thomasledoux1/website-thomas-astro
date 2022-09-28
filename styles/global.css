@@ -210,3 +210,7 @@ h2,
 h3 {
   @apply font-heading;
 }
+
+.astro-code {
+  @apply rounded-lg p-4 my-4;
+}
