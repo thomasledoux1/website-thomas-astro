@@ -1,0 +1,68 @@
+---
+title: 'The 3 best features announced at Next.js Conf 2021'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# The 3 best features announced at Next.js Conf 2021
+
+Vercel (the company behind Next.js) announced a special edition of their Next.js
+Conf last month. This was announced as a collaboration with the Google Chrome team,
+so I was certainly excited! What could be expected on beforehand was even more speed
+and page loading optimisations and a better developer experience built in to the
+framework.
+
+And they delivered on that!
+[Next.js 11](https://nextjs.org/blog/next-11) was announced, these are my top 3 features:
+
+### Conformance
+
+This is a system created on top of ESLint, with a set of predefined rules.
+These rules will help you as a developer to avoid mistakes which could negatively influence your Core Web Vitals.
+This could be something like forgetting to set a width and height on your images, not using the `<Image>` component from next/image, not using the `<Link>` component for `<a>` internal links..
+
+To use this feature, just install the Next.js 11 using `npm install next@latest` in your project, and then run `npx next lint`.
+This will create a `.eslintrc` file, and you will get your errors/warnings in your terminal.
+
+I already upgraded my [personal website](https://thomasledoux.be) to Next.js 11, and it was smooth as always.
+Once installed, I ran the `next lint` command, and immediately found some possible optimizations!
+
+### Image optimisations
+
+Next.js is already doing a lot of image optimisations when you use their `<Image>` component, and they added some more!
+In Next.js 11 the width and height of your local images are detected automatically, so you don't have to set them manually anymore.
+
+There is also a possibility to add a blurred placeholder for your image while it's loading.
+Just add `placeholder="blur"` to your local `<Image>`, and it will work out of the box.
+
+```jsx
+// example from the docs
+<Image src={author} alt="Picture of the author" placeholder="blur" />
+```
+
+If you want to apply this placeholder to external images (coming from a DAM for example), you can provide the `<Image>` with a `blurDataURL` property.
+This should contain a base64-encoded image.
+
+```jsx
+// example from the docs
+<Image
+  src="https://nextjs.org/static/images/learn.png"
+  blurDataURL="data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+  alt="Picture of the author"
+  placeholder="blur"
+/>
+```
+
+A little preview of what it looks like on my website:
+https://dev-to-uploads.s3.amazonaws.com/uploads/articles/gw4rixzszthneoa640qv.gif
+
+### Next.js Live
+
+This is Next.js' attempt to make the development process more inclusive, so you can easily collaborate with (non-technical) colleagues.
+Next.js Live puts your development environment into the browser. You get a live URL where everyone you share this URL with can see what you are working on in real time!
+You can even do live code changes in the browser which are immediately reflected on the website.
+There's also a possibility for people to draw on the website to point out potential problems, or to give feedback.
+
+It's currently in closed beta, but you can already register [here](https://nextjs.org/live).
+If you want to already try it out with an example project, that's also possible [here](https://vercel.com/new/git/external?demo-description=An%20all-in-one%20starter%20kit%20for%20high-performance%20e-commerce%20sites.&demo-image=https%3A%2F%2Fbigcommerce-demo-asset-ksvtgfvnd.vercel.app%2Fbigcommerce.png&demo-title=Next.js%20Commerce&demo-url=https%3A%2F%2Fdemo.vercel.store&project-name=commerce&repository-name=commerce&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fcommerce%2Ftree%2Fcustom-checkout&live=1).
+
+So some nice announcements, and definitely something to look forward to with Next.js live!

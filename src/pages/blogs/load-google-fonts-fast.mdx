@@ -1,0 +1,135 @@
+---
+title: 'The best way to load and use Google Fonts in Next.js + Tailwind'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# The best way to load and use Google Fonts in Next.js + Tailwind
+
+I was setting up a new project today with Next.js and tailwindcss, and I had to use
+Roboto as a font.{' '}
+
+Since it's a Google Font, I was looking into the best way to load a font from an external URL (since the fonts are available through a CDN, I don't bother hosting them myself).
+
+The following article explains this very thoroughly: https://csswizardry.com/2020/05/the-fastest-google-fonts.
+
+From this article you can derive the following snippet:
+
+```html
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<!-- [2] -->
+<link
+  rel="preload"
+  as="style"
+  href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+/>
+
+<!-- [3] -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+  media="print"
+  onload="this.media='all'"
+/>
+
+<!-- [4] -->
+<noscript>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+  />
+</noscript>
+```
+
+<b>
+  Also note how I only include the weights I'm going to be using (400 & 700) to
+  reduce the size of the font we're loading.
+</b>
+
+So, how do we implement the above snippet into our Next.js application?
+That's quite simple!
+In your `/pages` folder, you should have a `_document.js/.tsx` file.
+In this file, we can easily adapt the `<head>` section using the `next/head` module. This will be applied on every page by Next.js.
+
+```tsx
+import Document, {
+  DocumentContext,
+  Html,
+  Head,
+  Main,
+  NextScript,
+} from 'next/document';
+
+class MyDocument extends Document {
+  static async getInitialProps(ctx: DocumentContext) {
+    const initialProps = await Document.getInitialProps(ctx);
+
+    return initialProps;
+  }
+
+  render() {
+    return (
+      <Html>
+        <Head>
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="true"
+          />
+          <link
+            rel="preload"
+            as="style"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+          />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+            media="print"
+            onLoad="this.media='all'"
+          />
+          <noscript>
+            <link
+              rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+            />
+          </noscript>
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+
+export default MyDocument;
+```
+
+Now the Next.js part is done. The font is being loaded, yay!
+The next and final part is actually using the font in Tailwind, and applying it to all our sans-serif text (since Roboto is a sans-serif font).
+
+This is super easy in Tailwind, this just requires an extension of the default theme:
+
+```javascript
+const defaultTheme = require('tailwindcss/defaultTheme');
+
+module.exports = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
+      },
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+I only needed to add the `sans` property of the `fontFamily` object to include the Roboto font, and add the other sans-serif fonts from the default theme as fallbacks.
+
+There you have it! Optimized font loading in your Next.js application with Tailwind :-)
+Enjoy.

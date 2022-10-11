@@ -1,0 +1,75 @@
+---
+let posts = await Astro.glob('./*.mdx');
+import { createClient } from '@supabase/supabase-js';
+import Layout from '../../layouts/Layout.astro';
+const supabaseUrl = import.meta.env.SUPABASE_URL;
+const supabaseKey = import.meta.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+const { data: blogViewCounts } = await supabase.from('blogs').select();
+const postsWithViewCounts = posts
+  .map(post => ({
+    ...post,
+    viewCount:
+      blogViewCounts?.find(blogViewCount => blogViewCount.url === post.url)
+        ?.view_count ?? 0,
+  }))
+  .sort((a, b) => b.viewCount - a.viewCount);
+---
+
+<Layout title="The Thomas Ledoux blog">
+  <section id="blog" class="container mx-auto px-4 lg:px-16 text-text">
+    <div class="flex flex-col items-center justify-center">
+      <h2 class="text-center text-2xl font-bold mb-6">
+        Personal blog - most read
+      </h2>
+      <div class="flex flex-col gap-6 items-center">
+        {
+          postsWithViewCounts.map(post => (
+            <a
+              class="transform text-center border-4 border-purple rounded-xl transition-transform p-6 lg:hover:scale-[1.04]"
+              href={post.url}
+            >
+              <article class="relative rounded-lg text-textsm:mx-0">
+                <div class="flex justify-between">
+                  <div class="flex justify-between items-center w-full flex-col">
+                    <div class="flex justify-between gap-x-2 mb-3 items-center w-full">
+                      <h2 class="text-xl font-medium transition-colors dark:text-white">
+                        {post.frontmatter.title}
+                      </h2>
+                      {post.viewCount ? (
+                        <div class="flex flex-col md:flex-row items-center text-gray-500 dark:text-white">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6 md:mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                          <span>{post.viewCount}</span>
+                        </div>
+                      ) : null}
+                    </div>
+                    <p>{post.frontmatter.minutesRead}ing time</p>
+                  </div>
+                </div>
+              </article>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

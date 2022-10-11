@@ -1,0 +1,9 @@
+---
+import Layout from './Layout.astro';
+const frontmatter = Astro.props.frontmatter;
+---
+
+<Layout frontmatter={frontmatter}>
+  <slot />
+  <script is:inline src="/update-view-count"></script>
+</Layout>

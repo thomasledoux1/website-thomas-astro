@@ -1,0 +1,162 @@
+---
+title: 'Easy way to integrate Google Maps in React'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# Easy way to integrate Google Maps in React
+
+More often than not, you will be asked to add a map coming from Google Maps to websites
+you are developing. This might seem like a pain to integrate in your React application,
+but luckily Alexey Lyakhov created a package to make it all a bit easier: [React
+Google Maps API](https://github.com/JustFly1984/react-google-maps-api). It's [well
+documented](https://react-google-maps-api-docs.netlify.app/) too!
+
+Now, let's dive into the actual code to create a component using this package!
+
+```jsx
+import React from 'react';
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from '@react-google-maps/api';
+
+type OfficeNode = {
+  id: string,
+  field_address: {
+    locality: string,
+    postal_code: string,
+    address_line1: string,
+    address_line2: string,
+    latitude: number,
+    longitude: number,
+  },
+};
+
+export default function App() {
+  const offices = [
+    {
+      id: '1',
+      field_address: {
+        locality: 'Gent',
+        postal_code: '9000',
+        address_line1: 'Veldstraat 1',
+        address_line2: 'a',
+        latitude: 51.053589,
+        longitude: 3.72242,
+      },
+    },
+    {
+      id: '2',
+      field_address: {
+        locality: 'Brussel',
+        postal_code: '1000',
+        address_line1: 'Nieuwstraat 1',
+        address_line2: 'a',
+        latitude: 50.85061,
+        longitude: 4.35403,
+      },
+    },
+    {
+      id: '3',
+      field_address: {
+        locality: 'Antwerpen',
+        postal_code: '2000',
+        address_line1: 'Meir 1',
+        address_line2: 'a',
+        latitude: 51.21878,
+        longitude: 4.40559,
+      },
+    },
+  ];
+  const mapRef = React.useRef < any > null;
+  const [selectedOffice, setSelectedOffice] =
+    (React.useState < OfficeNode) | undefined | (null > null);
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'ENTER-YOUR-API-KEY-HERE',
+  });
+  const onLoad = React.useCallback(
+    mapInstance => {
+      const bounds = new google.maps.LatLngBounds();
+      offices.forEach(office => {
+        bounds.extend(
+          new google.maps.LatLng(
+            office.field_address.latitude,
+            office.field_address.longitude
+          )
+        );
+      });
+      mapRef.current = mapInstance;
+      mapInstance.fitBounds(bounds);
+    },
+    [offices]
+  );
+  const onClickMarker = (officeId: string) => {
+    setSelectedOffice(offices.find(office => office.id === officeId));
+  };
+  return (
+    <div className="App">
+      <h1 class="mb-4 text-3xl">Google maps + React</h1>
+      {isLoaded ? (
+        <>
+          <GoogleMap
+            mapContainerClassName="c-office-overview__map"
+            onLoad={onLoad}
+          >
+            {offices.map(office => (
+              <Marker
+                key={office.id}
+                onClick={() => onClickMarker(office.id)}
+                position={{
+                  lat: office.field_address.latitude,
+                  lng: office.field_address.longitude,
+                }}
+              />
+            ))}
+            {selectedOffice ? (
+              <InfoWindow
+                position={{
+                  lat: selectedOffice.field_address.latitude,
+                  lng: selectedOffice.field_address.longitude,
+                }}
+                onCloseClick={() => setSelectedOffice(null)}
+              >
+                <p>
+                  {selectedOffice.field_address.address_line1}{' '}
+                  {selectedOffice.field_address.address_line2} -{' '}
+                  {selectedOffice.field_address.postal_code}{' '}
+                  {selectedOffice.field_address.locality}
+                </p>
+              </InfoWindow>
+            ) : null}
+          </GoogleMap>
+        </>
+      ) : null}
+    </div>
+  );
+}
+```
+
+So let's see what's going on here.
+We import the different needed components from the library and we select the needed library (only places needed for this demo).
+After this is done, we can create a Ref with the useRef hook, this will be used to store the reference to the Google Maps map.
+
+We then use the `useJsApiLoader` hook to initialise the Google Maps API, passing the API key.
+From the response of this hook, we can get the `isLoaded` boolean back, this will be used to show/hide the map in our rendering.
+We also need to create an `onLoad` function (wrapped in a useCallback hook), this will be called by the Google Maps API once it's done initialising.
+In this function we'll loop over our offices, and add positions to the bounds of our Google Map, so the map is correctly centered, and we'll assign the Google Maps instance to our Ref we created earlier.
+
+In our rendering, it's all pretty straightforward. We render our map once the `isLoaded` boolean is true.
+We render a marker for every office, and add an onClick listener to select the office when the marker is clicked.
+
+We also have a check in the code to see if `selectedOffice`, when an office is selected we want to use the InfoWindow from Google Maps to show some details of the office.
+When the close button is clicked, the `selectedOffice` will be cleared.
+
+And that's it!
+I hope this was helpful.
+I might write a follow-up article where I explain how to search for addresses with Google Maps Places, and how to search the closest office to the address. This would also include working with the built-in geolocation API in the browsers.
+If you'd be interested in this, leave a comment :-)
+
+Source code can be found on [Codesandbox](https://codesandbox.io/s/gracious-hypatia-fowlq) (you still need to enter a Google Maps API key, I can't give out mine since I'd get charged :D)

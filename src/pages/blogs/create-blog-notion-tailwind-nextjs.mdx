@@ -1,0 +1,222 @@
+---
+title: 'Creating a Markdown blog with Notion, Tailwind & Next.js'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+Last week Notion announced that they are opening up their [API](https://developers.notion.com) to the public, after being in closed beta for a while.
+For me that was great news, since I'm a big Notion fan and I was looking for a way to easily write my blogs in Markdown in a central place.
+
+So the backend was decided! For the frontend I went with my usual stack: Next.js and Tailwind.
+
+I started out by creating an integration, and then sharing my database with this integration. This is explained in detail [here](https://developers.notion.com/docs/getting-started).
+
+Once this part is set up, we can start querying our database in Notion!
+
+There are 3 different API routes I used to create my blog:
+
+- Query the database: https://developers.notion.com/reference/post-database-query
+- Retrieving a page: https://developers.notion.com/reference/get-page
+- Retrieving the blocks and their children: https://developers.notion.com/reference/get-block-children
+
+In my `pages/index.jsx` I query the database to get back the pages in my database.
+
+```javascript
+// fetcher function
+async function fetcher(url, method = 'GET') {
+  return fetch(url, {
+    method,
+    headers: {
+      Authorization: `Bearer ${process.env.NOTION_API_KEY}`,
+    },
+  });
+}
+
+// getBlogs function
+export async function getBlogs() {
+  const res = await fetcher(
+    `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE}/query`,
+    'POST'
+  );
+  const database = await res.json();
+  return database.results;
+}
+
+// in pages/index.js
+export async function getStaticProps() {
+  const blogs = await getBlogs();
+  return {
+    props: {
+      blogs,
+    },
+  };
+}
+```
+
+So now we have passed the blogs to the props of the home page.
+In the functional component I render the blogs, wrapped in a [Link](https://nextjs.org/docs/api-reference/next/link) for internal routing:
+
+```javascript
+{
+  blogs.map(blog => (
+    <Link passHref key={blog.id} href={`/blog/${blog.id}`}>
+      <a>
+        <article className="shadow-md hover:shadow-xl p-4">
+          <h2>{blog.properties.Name.title[0].plain_text}</h2>
+          <p>{new Date(blog.last_edited_time).toLocaleDateString()}</p>
+        </article>
+      </a>
+    </Link>
+  ));
+}
+```
+
+Now we have the blog previews being shown on the homepage, we can now work on the actual blog page.
+As you can see in the `href` of the Link, we will use `/blog/[id]` as the URL.
+So in the `/pages` folder we create a folder `/blog` and create a file `[id].jsx` in there.
+
+On the blog page, we need to fetch the pages again to generate our URL's, fetch the actual page and fetch the blocks out of which the page consists.
+
+```javascript
+export async function getStaticPaths() {
+  const blogs = await getBlogs();
+  return {
+    paths: blogs.map(el => ({
+      params: {
+        id: el.id,
+      },
+    })),
+  };
+}
+```
+
+```javascript
+export async function getStaticProps(context) {
+  const { id } = context.params;
+  const blocks = await getBlocks(id);
+  const page = await getBlog(id);
+  return {
+    props: {
+      blocks,
+      page,
+    },
+  };
+}
+```
+
+Now we have the blocks and page available in our component, we can render them to our page!
+I'm going to focus on the blocks, because the page is just used for the title.
+All the content comes from the blocks:
+
+```jsx
+// components/block.jsx
+import Text from './text';
+
+const Block = ({ block }) => {
+  const { type } = block;
+  const value = block[type];
+  if (type === 'paragraph') {
+    return (
+      <p className="mb-4">
+        <Text text={value.text} />
+      </p>
+    );
+  }
+  if (type === 'heading_1') {
+    return (
+      <h1 className="text-2xl font-bold md:text-4xl mb-4">
+        <Text text={value.text} />
+      </h1>
+    );
+  }
+  if (type === 'heading_2') {
+    return (
+      <h2 className="text-xl font-bold md:text-2xl mb-4">
+        <Text text={value.text} />
+      </h2>
+    );
+  }
+  if (type === 'heading_3') {
+    return (
+      <h3 className="text-lg font-bold md:text-xl mb-4">
+        <Text text={value.text} />
+      </h3>
+    );
+  }
+  if (type === 'bulleted_list_item' || type === 'numbered_list_item') {
+    return (
+      <li className="mb-4">
+        <Text text={value.text} />
+      </li>
+    );
+  }
+  return (
+    <p className="bg-red-600 px-4 py-2 mb-4">Not supported yet by Notion API</p>
+  );
+};
+
+export default Block;
+```
+
+```jsx
+// components/text.jsx
+import classNames from 'classnames';
+import { v4 as uuid } from 'uuid';
+const Text = ({ text }) => {
+  const colorMapper = {
+    default: 'text-current',
+    yellow: 'text-yellow-500',
+    gray: 'text-gray-500',
+    brown: 'text-brown-500',
+    orange: 'text-orange-500',
+    green: 'text-green-500',
+    blue: 'text-blue-500',
+    purple: 'text-purple-500',
+    red: 'text-red-500',
+  };
+  if (!text) {
+    return null;
+  }
+  return text.map(value => {
+    const {
+      annotations: { bold, code, color, italic, strikethrough, underline },
+      text,
+    } = value;
+    const id = uuid();
+    return (
+      <span
+        className={classNames(colorMapper[color], 'break-words', {
+          'font-bold': bold,
+          italic: italic,
+          'line-through': strikethrough,
+          underline: underline,
+          'bg-gray-300 px-2 py-1': code,
+        })}
+        key={id}
+      >
+        {text.link ? (
+          <a className="underline" href={text.link.url}>
+            {text.content}
+          </a>
+        ) : (
+          text.content
+        )}
+      </span>
+    );
+  });
+};
+
+export default Text;
+
+// pages/blog/[id]
+{
+  blocks.map(block => <Block key={block.id} block={block} />);
+}
+```
+
+Using the classes provided by Tailwind, we can easily map the Markdown to a fully styled page.
+
+You can check the demo at [https://notion-blog-ruby-kappa.vercel.app](https://notion-blog-ruby-kappa.vercel.app/).
+Source code can be found on [https://github.com/thomasledoux1/notion-blog](https://github.com/thomasledoux1/notion-blog).
+Some of the code was inspired by [https://github.com/samuelkraft/notion-blog-nextjs](https://github.com/samuelkraft/notion-blog-nextjs/), so shoutout to Samuel too.
+
+Thanks for reading, I hope you learned something new today!

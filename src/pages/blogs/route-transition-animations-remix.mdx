@@ -1,0 +1,58 @@
+---
+title: 'Adding route transition animations in Remix'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# Adding route transition animations in Remix
+
+TLDR:
+
+Have a look at the live site at [thomasledoux.be](https://www.thomasledoux.be). Code can be found on [Github](https://github.com/thomasledoux1/website-thomas-remix/blob/main/app/root.tsx).
+
+When I [rebuilt my website using Remix](https://dev.to/thomasledoux1/migrating-my-portfolio-site-from-nextjs-to-remix-4g03), I didn't bother putting any time into animating anything.
+After the rebuilt has been live for some weeks, I wanted to add some more fun things, so the first thing that came to mind was animations.
+
+Remix makes it really easy to add transitions to your routes when doing data mutations, using the `useTransition()` hook. But what I wanted, is just animating in the route which is requested by clicking a link, and animating out the currently active route.
+The easiest way I found to do this, is using [Framer Motion](https://www.framer.com/motion/). By wrapping all of my content with the `<AnimatePresence />` component, we're now ready to add the actual animations we'd like to have on route transitions.
+This is what my App function looks like in `root.tsx` (the main entry point for the Remix app):
+
+```tsx
+import { AnimatePresence, motion } from 'framer-motion';
+import { useOutlet, useLocation } from 'remix';
+
+export default function App() {
+  const outlet = useOutlet();
+  const data = useLoaderData<LoaderData>();
+
+  return (
+    <ThemeProvider specifiedTheme={data.theme}>
+      <Document>
+        <Scripts />
+        <Layout>
+          <AnimatePresence exitBeforeEnter initial={false}>
+            <motion.main
+              key={useLocation().pathname}
+              initial={{ x: '-10%', opacity: 0 }}
+              animate={{ x: '0', opacity: 1 }}
+              exit={{ y: '-10%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {outlet}
+            </motion.main>
+          </AnimatePresence>
+        </Layout>
+      </Document>
+    </ThemeProvider>
+  );
+}
+```
+
+As you can see, I added the `exitBeforeEnter` prop on `<AnimatePresence>`, because I want it to only render one component at a time. The exiting component will finished its exit animation before the entering component is rendered. Because I also want the initial load to not trigger an animation, I used the `initial={false}` prop. This will cause components present when AnimatePresence first loads to start in their animate state. Only components that enter after this initial render will animate in.
+
+By keeping my `<Layout>` outside of the `<AnimatePresence>`, my header and footer will not be animated, only the content within the page, just what I wanted!
+
+On `<motion.main>` you have to pass a key for Framer to be able to identify unique routes, I chose to pass the pathname provided by the built in `useLocation()` hook from Remix, which works fine.
+What remain is passing the `exit`, `initial`, `animate` and `transition` props, which kind of speak for themselves, and are well documented in the [docs](https://www.framer.com/docs/component/).
+
+It's a really basic animation, but I do like the outcome, it makes the site a bit more dynamic :-).
+Have a look at the live site at [thomasledoux.be](https://www.thomasledoux.be). Code can be found on [Github](https://github.com/thomasledoux1/website-thomas-remix/blob/main/app/root.tsx).

@@ -3,13 +3,14 @@ import '../../styles/global.css';
 import Layout from '../layouts/Layout.astro';
 ---
 
-<title>Thomas Ledoux | Home</title>
-<meta content="Thomas Ledoux | Home" property="og:title" />
-<meta content="Thomas Ledoux | Home" property="twitter:title" />
-<meta content="Thomas Ledoux' personal website" name="description" />
-<meta content="Thomas Ledoux' personal website" name="twitter:description" />
-<meta content="Thomas Ledoux' personal website" name="og:description" />
-<Layout>
+<meta
+  property="og:image"
+  content="https://website-thomas-astro.vercel.app/api/og?title=home"
+/>
+<Layout
+  description="Thomas Ledoux' personal website"
+  title="Thomas Ledoux - Home"
+>
   <section
     id="hero"
     class="container mx-auto relative lg:pt-0 items-center content-center flex text-text"

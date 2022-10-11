@@ -1,0 +1,70 @@
+---
+title: 'The 3 best features announced at GatsbyConf 2021'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# The 3 best features announced at GatsbyConf 2021
+
+Yesterday the (virtual) conference for Gatsby started. It's still going on today,
+with a lot of workshops. If you're interested, go check it out at https://gatsbyconf.com/.
+
+In the talks yesterday a lot of cool new features were announced. I've selected 3 which I found the most interesting.
+
+## Gatsby Cloud Hosting
+
+Gatsby cloud already existed for a while now, but yesterday the Gatsby team announced they are adding hosting to their offering. So as easy and fast as it was before to build your website, you can now immediately deploy your Gatsby site through this service too.
+They partnered with Fastly for a super fast CDN.
+More info: https://www.gatsbyjs.com/products/cloud/hosting/
+
+## Gatsby Image Plugin
+
+The Gatsby team has worked on a new image plugin for the past few months, and it shows!
+This might be my favourite announcement of the conference.
+The new plugin makes your images responsive and fast by default.
+Images above the fold are immediately loaded, images below the fold are lazy loaded.
+
+Here are some of the options I like in the plugin:
+
+- Formats: adding more image formats to be served (think AVIF, WEBP..)
+- Placeholder: Gatsby can generate a placeholder to show while your images is being lazily loaded. 4 options available: Blurred, Dominant color, Traced SVG or None.
+- Aspect ratio: forces an image to the specified aspect ratio, cropped if needed. Example: `aspectRatio={16/9}`
+- Transform options: grayscale, duotone, rotate, trim, cropFocus, fit.
+
+Example of the code:
+
+```jsx
+import { StaticImage } from 'gatsby-plugin-image';
+
+export function Dino() {
+  return (
+    <StaticImage
+      src="../images/dino.png"
+      alt="A dinosaur"
+      placeholder="blurred"
+      layout="fixed"
+      width={200}
+      height={200}
+    />
+  );
+}
+```
+
+More info can be found here: https://www.gatsbyjs.com/docs/how-to/images-and-media/using-gatsby-plugin-image
+
+## Gatsby v3.0
+
+Last but not least: a new major version of Gatsby's core!
+Some of the biggest takeaways:
+
+- 80% faster develop experience: pages are only being built when request, images only processed when needed.
+- Incremental Builds for OSS: this used to be a feature only available for websites being built through Gatsby Cloud. This is no longer the case, you can enjoy incremental builds on any CI/CD service. This means (much) faster building!
+- The core dependencies have been updated, fixing a lot of bugs:
+- Node 12
+- webpack 5
+- React 17
+- GraphQL 15
+- ESLint 7
+
+More info can be found here: https://www.gatsbyjs.com/blog/gatsby-v3/
+
+Thanks for reading!

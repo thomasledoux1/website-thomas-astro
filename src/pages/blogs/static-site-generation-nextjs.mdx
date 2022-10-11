@@ -1,0 +1,186 @@
+---
+title: 'Set up Static Site Generation in Next.js 5 minutes'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# Set up Static Site Generation in Next.js 5 minutes
+
+The past year, Next.js has been gaining a lot of traction around static site generation,
+since version 9.3 implemented this it's core. This is why I wanted to write a blog
+post containing all the information to get you started on SSG/ISG (Incremental Static
+Generation) with Next.js.
+
+### Why SSG/ISG?
+
+Mostly for performance reasons: when you already have the HTML generated at build time, you can cache this file and serve it to the user requesting it very quickly.
+SSG/ISG will most probably help you to get better ranking on Google too, see https://9to5google.com/2020/05/28/google-search-speed/.
+
+### How to statically generate pages in Next.js
+
+#### Without data
+
+When you don't fetch data on your page, the default behaviour is that the page gets statically prerendered.
+Next.js will generate an HTML file for your page, and you can host this on any server.
+
+#### With data
+
+When you do want to fetch data from an external source, but still want to statically prerender your pages, this is also possible.
+There are 2 possible cases here:
+
+##### Define your own pages/URLs
+
+In this case, you can create your page under the `pages/` directory, for example `pages/blog.js`. Add the `getStaticProps` function to your page and export it.
+In this function, you can call any external data source to fetch data for your page.
+Since this is all done on the server during build time, you can even access a database directly if you wanted to.
+
+Next.js does not limit the external data sources, so you can use a REST API, JSON API, GraphQL API...
+You can find a repository with a ton of examples here: https://github.com/vercel/next.js/tree/canary/examples
+
+An example from the documentation:
+
+```jsx
+function Blog({ posts }) {
+  // Render posts...
+}
+
+// This function gets called at build time
+export async function getStaticProps() {
+  // Call an external API endpoint to get posts
+  const res = await fetch('https://.../posts');
+  const posts = await res.json();
+
+  // By returning { props: { posts } }, the Blog component
+  // will receive `posts` as a prop at build time
+  return {
+    props: {
+      posts,
+    },
+  };
+}
+
+export default Blog;
+```
+
+##### Pages/URLs coming from external source
+
+In this case, you will need to create a page with a dynamic route.
+Again there are 2 options for your dynamic routes:
+
+1. You can create a dynamic route where only 1 part of your URL is dynamic, for example: `pages/[id].js`, where the ID will be replaced with the ID coming from your external source
+2. You can create a dynamic catch all route where the whole URL is dynamic, for example `[...slug].js`, where ...slug could be `blog/nature/hike1` in your URL and comes from your external data source.
+
+Now how do you actually fetch the data to form the actual URLs for your inside your component?
+This is where the `getStaticPaths` function comes in. This is also an exported function.
+An example for a "simple" dynamic route with 1 part of the URL being dynamic:
+
+```jsx
+// This function gets called at build time
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+  const res = await fetch('https://.../posts');
+  const posts = await res.json();
+
+  // Get the paths we want to pre-render based on posts
+  const paths = posts.map(post => ({
+    params: { id: post.id },
+  }));
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: false };
+}
+```
+
+An example for a more complex dynamic route where the whole URL is coming from your external source:
+
+```jsx
+// This function gets called at build time
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+  const res = await fetch('https://.../posts');
+  const posts = await res.json();
+
+  // Get the paths we want to pre-render based on posts
+  const paths = posts.map(post => ({
+    params: { slug: post.slug }, // post.slug could be /blog/nature/hike1
+  }));
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: false };
+}
+```
+
+By adding this code, a page will be generated for every blog post we created in our external source at build time. So we'll have /blog/nature/hike1, /blog/nature/hike2, etc.. available to visit.
+With `fallback: false` set in the returned object, we are telling Next.js to return a 404 for every page requested that was not generated at build time.
+
+When you add a new blog post after you've built your application, for example /blog/nature/beachtrip, and want this to be picked up by Next.js you should use `fallback: true` or `fallback: 'blocking'`, and Next.js fetch the URLs from your external source again, and will create the page for your visitor.
+
+Basically `fallback: true` will be showing a loader or other placeholder component until the data is available.
+`fallback: 'blocking'` will do server-side rendering of the page for the first request so it will show an empty page until the server rendered the page, and then serve the static prerendered version for the next requests.
+
+More info on the `fallback` property can be found here: https://nextjs.org/docs/basic-features/data-fetching#the-fallback-key-required
+
+The `getStaticPaths` function should always be combined with the `getStaticProps` function, because you'll want to be fetching the data for the specific item you want to render.
+
+So in the same file, we could now add this:
+
+```jsx
+export async function getStaticProps({ params }) {
+  // params will contain the id you declared in your page's file name
+  const res = await fetch(`https://.../posts/${params.id}`);
+  const post = await res.json();
+
+  // By returning { props: { post } }, the Blog component
+  // will receive the specific `post` as a prop at build time
+  return {
+    props: {
+      post,
+    },
+  };
+}
+```
+
+**! When using the [...slug] dynamic route, the slug comes in as an array of string, one array element for each part of the URL, so /blog/nature/hike => ['blog', 'nature', 'hike']. Minimum example below !**
+
+```jsx
+export async function getStaticProps({ params }) {
+  // params will contain the slug you declared in your page's file name
+  const url = `${slug.join('/').toLowerCase()}`;
+  const res = await fetch(`https://.../posts/${url}`);
+  const post = await res.json();
+}
+```
+
+### Incremental static generation
+
+But what if the data you are using is dynamic too?
+Your blog post gets updated on your external data source, but at the moment our component will only be statically generated once at build time, and not regenerated when the blog data changes (for a new blog post, this will be picked up by Next.js as explained above).
+
+For this, Next.js added the `revalidate` property, which can be added to the object your return in your `getStaticProps` function.
+You pass a number into the value of this property corresponding to the minimum amount of seconds after which you want Next.js to regenerate the page.
+The page will only be regenerated when a request for this page comes in.
+
+Example:
+
+```jsx
+export async function getStaticProps() {
+  const res = await fetch('https://.../posts');
+  const posts = await res.json();
+
+  return {
+    props: {
+      posts,
+    },
+    revalidate: 1,
+  };
+}
+```
+
+If you notice the external data you are relying on changes too frequently, and you have to regenerate you pages all the time, SSG/ISG could not be the right option.
+Next.js also support SSR for use cases like this: https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
+
+Sadly, there is currently no option to tell Next.js to regenerate the page after a content change in your external data source with a build hook or something similar.
+There is a Github Discussion page which might be interesting to follow if you want to stay up-to-date on this topic: https://github.com/vercel/next.js/discussions/11552
+
+If you want to see a real life example, my personal website uses 2 external data sources (blogs from dev.to & data from Strava): https://thomasledoux.be. If you want to see the source code: https://github.com/thomasledoux1/website-thomas

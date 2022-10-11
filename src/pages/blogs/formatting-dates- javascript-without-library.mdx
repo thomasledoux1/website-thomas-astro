@@ -1,0 +1,49 @@
+---
+title: 'Formatting dates in javascript without a library'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# Formatting dates in javascript without a library
+
+Gone are the days where we needed libraries to simply format a date (yes I'm looking
+at you Moment.js). After ditching Moment.js about a year ago, because it's not good
+with tree-shaking and immutability, I landed on Day.js.
+
+This was definitely an upgrade compared to Moment.js purely looking at the size of the library you're importing, but it still felt strange to use a library to format a date.
+
+For a new project I'm working on, I did some research, and found out that Javascript has some solid date functions built in.
+
+Say I want to convert a UTC date to a human readable, localized string.
+
+```javascript
+const date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
+// Thu Dec 20 2012 04:00:00 GMT+0100 (Central European Standard Time)
+```
+
+The default already looks kind of ok, but my client wants it to be in Dutch, and wants the weekday to be written out fully (e.g. Wednesday).
+For this case, we can use the `toLocaleDateString()` function on the Javascript Date object.
+
+```javascript
+const date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
+console.log(
+  date.toLocaleDateString('nl-BE', {
+    weekday: 'long', // possible values: 'long', 'short', 'narrow'
+    year: 'numeric', // possible values: 'numeric', '2-digit'
+    month: 'short', // possible values: 'numeric', '2-digit', 'long', 'short', 'narrow'
+    day: 'numeric', // possible values: 'numeric', '2-digit'
+  })
+);
+// donderdag 20 dec. 2012
+```
+
+Super easy! And easy to customise too, you don't have to remember to use capitals, different digits (like dd-MM-yyyy etc.).
+Formatting without options (just a locale) will format the date the default way:
+
+```javascript
+console.log(date.toLocaleDateString('nl-BE'));
+// 20/12/2012
+```
+
+If you want to see more options, have a look at the MDN page: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString.
+
+So for simple conversions/formatting this can definitely do the trick, for more complex stuff (working with different timezones, adding/subtracting days...) I'd recommend using date-fns (https://github.com/date-fns/date-fns)!

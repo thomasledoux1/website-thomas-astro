@@ -1,0 +1,216 @@
+---
+title: 'Show off your Strava stats on your Next.js site (statically!)'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# Show off your Strava stats on your Next.js site (statically!)
+
+I had been playing with the idea to integrate my Strava stats on my website for a
+while, but never really did any research into it. Last week I decided it was time!
+I did not want to use the Strava embed, because frankly: it's ugly. ![image](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/rgakskfwe0hacvn35cr5.png)
+
+Luckily, Strava provides an API with all the information you need to build your own (prettier) widget.
+You do need to authenticate if you want to use the API, Strava uses OAuth2 for the authentication.
+
+However, before connecting with the API, we have to create a "Strava app" through the the following URL: https://www.strava.com/settings/api
+
+Once your created your app, you will see the following information:
+![image](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/w136gqcwtqrrsssgq3pe.png)
+
+Most important here is:
+
+- Client ID
+- Client secret
+- Access token (we will be requesting a new one later on)
+- Refresh token (we will be requesting a new one later on)
+
+The Authorization Callback Domain will not be important for us, since we will not be redirecting a user to a login page to login, we want to show our own stats.
+
+Now this is set up, we can move on to the fun part: communicating with the API, and extracting all the stats we need!
+Firstly, we will need to get an authorization code from the API. This is a one time process you need to go through.
+You can go to the following URL in your browser: https://www.strava.com/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=http://localhost&scope=read_all (replace YOUR_CLIENT_ID with your unique client ID as seen in the previous section).
+You should see a screen like this appear:
+![image](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/945z4q8yf9x1deegq68p.png)
+
+Once you clicked on 'Authorize' (sorry, my screenshot is in Dutch :D), you will be redirected to a URL much like the following: http://localhost/?state=&code=YOUR_CODE&scope=read,read_all (the actual code will be in the URL instead of YOUR_CODE).
+This is the code we need to talk to the API.
+
+With this code in hand, we can now request our initial access & refresh token from the API. Do a POST request (I used Postman) to https://www.strava.com/oauth/token?client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&code=YOUR_CODE&grant_type=authorization_code&scope=read_all (don't forget to replace the fields with your personal codes).
+This will return a response looking like this:
+
+```json
+{
+  "token_type": "Bearer",
+  "access_token": "YOUR_ACCESS_TOKEN",
+  "athlete": "SUMMARY",
+  "refresh_token": "YOUR_REFRESH_TOKEN",
+  "expires_at": 1531378346,
+  "state": "STRAVA"
+}
+```
+
+Because we will want to be refreshing the data we fetch from Strava regularly (daily), we will need to refresh our token for every request to the API. To refresh the token we will need to provide the last access & refresh token (which we received with the API call above).
+
+So we should store our latest access & refresh token somewhere securily.. I opted to do this in Firestore (https://firebase.google.com/docs/firestore), because it's a simple NOSQL solution, and it has a free tier!
+
+In my Firestore, I added a collection called `access_tokens` and added a document in there with my initial access_token and refresh_token.
+![image](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/djd8q99lp2meta2pgotp.png)
+
+I have a DB util file which contains the following code to connect and read/write to my Firestore.
+
+```javascript
+import admin from 'firebase-admin';
+
+if (!admin.apps.length) {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        type: 'service_account',
+        auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+        token_uri: 'https://oauth2.googleapis.com/token',
+        auth_provider_x509_cert_url:
+          'https://www.googleapis.com/oauth2/v1/certs',
+        client_x509_cert_url:
+          'https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-j3bwb%40personal-website-e4e38.iam.gserviceaccount.com',
+        project_id: process.env.PROJECT_ID,
+        private_key_id: process.env.PRIVATE_KEY_ID,
+        private_key: process.env.PRIVATE_KEY,
+        client_id: process.env.CLIENT_EMAIL,
+        client_email: process.env.CLIENT_EMAIL,
+      }),
+    });
+  } catch (error) {
+    console.log('Firebase admin initialization error', error.stack);
+  }
+}
+export default admin.firestore();
+```
+
+To link this up to my homepage, I use the built-in getStaticProps function from Next.js (https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation).
+
+In this function I first get the access_tokens from my Firestore, with the old access & refresh token I fetch new tokens from the Strava API.
+
+Once I have the new tokens I can use these to get the stats from my athlete profile! These new tokens I then write to my Firestore for the next fetch.
+
+Lastly, I added a `revalidate` option to the return of my getStaticProps function, so the data will be refetched every day, so basically Incremental Static Generation (https://nextjs.org/docs/basic-features/data-fetching#incremental-static-regeneration).
+
+```javascript
+export async function getStaticProps(context) {
+  const entries = await db.collection('access_tokens').get();
+  let [{ access_token, refresh_token }] = entries.docs.map(entry =>
+    entry.data()
+  );
+  const resToken = await fetch(
+    `https://www.strava.com/api/v3/oauth/token?client_id=${process.env.CLIENT_ID_STRAVA}&client_secret=${process.env.CLIENT_SECRET_STRAVA}&grant_type=refresh_token&refresh_token=${refresh_token}`,
+    {
+      method: 'POST',
+    }
+  );
+  const { access_token: newToken, refresh_token: newRefreshToken } =
+    await resToken.json();
+  const resStats = await fetch(
+    'https://www.strava.com/api/v3/athletes/40229513/stats',
+    {
+      headers: {
+        Authorization: `Bearer ${newToken}`,
+      },
+    }
+  );
+  db.collection('access_tokens').doc('CSXyda8OfK75Aw0vtbtZ').update({
+    access_token: newToken,
+    refresh_token: newRefreshToken,
+  });
+
+  const stravaStats = await resStats.json();
+
+  return {
+    props: {
+      stravaStats,
+    },
+    revalidate: 86400,
+  };
+}
+```
+
+The Strava stats you get back from this API call will look something like this:
+
+```json
+{
+  "biggest_ride_distance": 74704.8,
+  "biggest_climb_elevation_gain": 119.4,
+  "recent_ride_totals": {
+    "count": 9,
+    "distance": 375793.09765625,
+    "moving_time": 50529,
+    "elapsed_time": 54990,
+    "elevation_gain": 437.8953437805176,
+    "achievement_count": 0
+  },
+  "all_ride_totals": {
+    "count": 17,
+    "distance": 652268,
+    "moving_time": 93522,
+    "elapsed_time": 101368,
+    "elevation_gain": 854
+  },
+  "recent_run_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0,
+    "achievement_count": 0
+  },
+  "all_run_totals": {
+    "count": 43,
+    "distance": 319239,
+    "moving_time": 97278,
+    "elapsed_time": 97837,
+    "elevation_gain": 507
+  },
+  "recent_swim_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0,
+    "achievement_count": 0
+  },
+  "all_swim_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0
+  },
+  "ytd_ride_totals": {
+    "count": 12,
+    "distance": 458926,
+    "moving_time": 61865,
+    "elapsed_time": 66791,
+    "elevation_gain": 536
+  },
+  "ytd_run_totals": {
+    "count": 11,
+    "distance": 70315,
+    "moving_time": 19772,
+    "elapsed_time": 19897,
+    "elevation_gain": 73
+  },
+  "ytd_swim_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0
+  }
+}
+```
+
+I used the `all_run_totals` and `all_ride_totals` to build my widget.
+![image](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/xp2f9dg9yyqy0pm22v3b.png)
+
+The end result can be found on my website: https://www.thomasledoux.be/#stats.
+The source code is available on Github: https://github.com/thomasledoux1/website-thomas
+
+If you have any feedback let me know, happy to hear it!

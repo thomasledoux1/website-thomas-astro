@@ -195,11 +195,6 @@ li.gatsby {
     min-height: -webkit-fill-available;
   }
 }
-@layer base {
-  .link {
-    @apply decoration-4 decoration-solid underline-offset-2 decoration-primary underline;
-  }
-}
 
 body {
   @apply font-body;
@@ -213,4 +208,34 @@ h3 {
 
 .astro-code {
   @apply rounded-lg p-4 my-4;
+}
+
+.mdx a {
+  @apply decoration-4 decoration-solid underline-offset-4 decoration-primary underline;
+}
+
+.mdx p {
+  line-height: 1.75;
+  @apply break-words;
+}
+
+.mdx h2 {
+  @apply my-4;
+}
+
+.mdx h1 {
+  @apply mb-4 text-3xl;
+}
+
+.mdx p {
+  @apply mb-4;
+}
+
+.mdx code:not(pre code) {
+  @apply bg-secondary mx-1 px-1 py-[0.125rem];
+}
+
+.mdx code:not(pre code)::before,
+.mdx code:not(pre code)::after {
+  content: '`';
 }

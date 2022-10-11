@@ -1,12 +1,10 @@
 ---
 title: 'Highlighting navigation items on scroll in React with IntersectionObserver'
-layout: '../../layouts/Layout.astro'
+layout: '../../layouts/BlogLayout.astro'
 ---
 
-import '../../../styles/global.css';
+# Highlighting navigation items on scroll in React with IntersectionObserver
 
-<section class="container mx-auto">
-<h1 class="mb-4 text-2xl">Highlighting navigation items on scroll in React with IntersectionObserver</h1>
 This week I was working on my personal website (https://www.thomasledoux.be), and I needed my navigation items to be highlighted when scrolling to the linked section.
 I found some solutions with a scroll listener, but none using the widely supported Intersection Observer (https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 
@@ -51,9 +49,7 @@ React.useEffect(() => {
 }, [personalRef, portfolioRef, contactRef]);
 ```
 
-And that's it! The `active` class will be added to the navigation element which points to the `<section>`.
+And that's it! The `active` class will be added to the navigation element which points to the `<>`.
 By adding the return function at the end of the useEffect hook, we make sure the IntersectionObserver is cleaned up correctly.
 
 Full code can be found on https://github.com/thomasledoux1/website-thomas
-
-</section>

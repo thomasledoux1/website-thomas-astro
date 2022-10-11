@@ -1,0 +1,92 @@
+---
+title: 'Shipping minimal CSS with Next.js + purgeCSS'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# Shipping minimal CSS with Next.js + purgeCSS
+
+For a new project I'll be working on, the company asked to work with Bootstrap to
+be able to use the built-in grid, utility classes etc. When I think of Bootstrap,
+I think: a lot of CSS being added to the project which is never used.
+
+With the latest versions of Bootstrap, we have the possibility to only import the SCSS/LESS files for the features we will be using.
+For example:
+
+```scss
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/tables';
+@import '~bootstrap/scss/forms';
+```
+
+The problem with this approach is that these separate files still include a lot of CSS we will not be using in our application.
+
+So what I'd like to do instead, is import the whole bootstrap SCSS, and then delete the unused CSS when building the production output:
+
+```scss
+@import '~bootstrap/scss/bootstrap';
+```
+
+With this setup, the generated CSS has this size: ![cssbeforepurge](https://dev-to-uploads.s3.amazonaws.com/i/4rumyogkc0nop6c47tmc.PNG)
+
+This is a big CSS chunk for the one class from Bootstrap we're using:
+
+```jsx
+export default function Home() {
+  return (
+    <div className="container">
+      <span>Test</span>
+    </div>
+  );
+}
+```
+
+So it would be nice to get rid of this CSS in our production build.
+To achieve this, we'll be using <a href="https://purgecss.com/guides/next.html#customize-postcss-configuration-next-js-9-3">purgeCSS</a>.
+
+We just need to add a postcss.config.js file to override the default postCSS config Next.js uses (https://nextjs.org/docs/advanced-features/customizing-postcss-config).
+
+Our postcss.config.js will look like this:
+
+```javascript
+module.exports = {
+  plugins: [
+    'postcss-flexbugs-fixes',
+    [
+      'postcss-preset-env',
+      {
+        autoprefixer: {
+          flexbox: 'no-2009',
+        },
+        stage: 3,
+        features: {
+          'custom-properties': false,
+        },
+      },
+    ],
+    [
+      '@fullhuman/postcss-purgecss',
+      {
+        content: [
+          './pages/**/*.{js,jsx,ts,tsx}',
+          './components/**/*.{js,jsx,ts,tsx}',
+        ],
+        defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
+        safelist: ['html', 'body'],
+      },
+    ],
+  ],
+};
+```
+
+<b>
+  Don't forget to install the node_modules which are used by the postCSS config!
+  (postcss-flexbugs-fixes, @fullhuman/postcss-purgecss, postcss-preset-env,
+  autoprefixer).
+</b>
+
+When all this is done, you can create a new Next.js build (`npm run build`) and have the following result:
+![cssafterpurge](https://dev-to-uploads.s3.amazonaws.com/i/rzblno7p7vn2egyy17gh.PNG)
+
+Inside the CSS output, it only includes the CSS for the `container` class, and the CSS variables used by Bootstrap.
+
+That's a lot of CSS gone! Mission accomplished :-).

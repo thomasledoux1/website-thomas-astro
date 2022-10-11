@@ -1,0 +1,402 @@
+---
+title: 'Migrating my portfolio site from Next.js to Remix'
+layout: '../../layouts/BlogLayout.astro'
+---
+
+# Migrating my portfolio site from Next.js to Remix
+
+About a year ago, I decided to create a portfolio website with Next.js. I did this
+mostly to get familiar with the technology, but also to have a playground to test
+new features (which I could later implement at work :-)).
+
+But a month ago I started seeing a lot of praise for [Remix](https://remix.run/) on Twitter, and instantly wanted to give it a try.
+Remix is described by the founders as follows:
+
+> Remix is a full stack web framework that lets you focus on the user interface and work back through web fundamentals to deliver a fast, slick, and resilient user experience.
+
+**TLDR**
+Link to Remix site: https://www.thomasledoux.be
+Source code: https://github.com/thomasledoux1/website-thomas-remix
+Link to Next.js site: https://website-thomas.vercel.app
+Source code: https://github.com/thomasledoux1/website-thomas
+
+The first thing I wanted to test were the [**nested routes**](https://remix.run/docs/en/v1/guides/routing#what-are-nested-routes), which seemed like one of the top features of Remix.
+I use nested routes to create my contact page.
+
+```jsx
+// /routes/contact.tsx
+import { Outlet } from 'remix';
+
+<section id="contact" className="text-text pb-8 lg:pb-0">
+  <div className="container grid md:grid-cols-2 gap-6 content-center align-items">
+    <div className="flex flex-col justify-center">
+      <img
+        alt="Illustration of man sitting on a block"
+        src="/contact.svg"
+        width={645}
+        height={750}
+        className="max-h-[250px] lg:max-h-[500px]"
+      />
+    </div>
+    <div className="flex justify-center flex-col">
+      <Outlet />
+    </div>
+  </div>
+</section>;
+```
+
+So in my `/routes/contact.tsx` file I define the general structure of my contact page, with the parts I always want visible (in this case it's the `<img>`) in it.
+The `<Outlet>` is a special component from Remix which indicates where the nested routes should be rendered on your page.
+
+```jsx
+// /routes/contact/index.tsx
+
+import { redirect, useActionData } from 'remix';
+import type { ActionFunction } from 'remix';
+
+export const action: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
+  await fetch({
+    url: 'https://formspree.io/f/xzbgjqdq',
+    method: 'POST',
+    body: JSON.stringify({
+      email: formData.get('email'),
+      message: formData.get('message'),
+    }),
+  }).catch(e => {
+    throw new Error(e);
+  });
+  return redirect('/contact/thanks');
+};
+
+const Contact = () => {
+  return (
+    <>
+      <h2 className="mb-6 text-2xl font-bold">Drop me a message</h2>
+      <form method="post">
+        <label className="flex flex-col gap-2 mb-4" htmlFor="email">
+          Your e-mail
+          <input
+            className="py-2 px-4 bg-white border-secondary border-4 rounded-lg"
+            id="email"
+            type="email"
+            name="email"
+            placeholder="info@example.com"
+            required
+          />
+        </label>
+        <label className="flex flex-col gap-2" htmlFor="message">
+          Your message
+          <textarea
+            className="py-2 px-4 bg-white border-secondary border-4 rounded-lg"
+            rows={3}
+            id="message"
+            name="message"
+            placeholder="Hey, I would like to get in touch with you"
+            required
+          />
+        </label>
+
+        <button
+          className="px-8 mt-4 py-4 bg-primary text-white rounded-lg"
+          type="submit"
+        >
+          Submit
+        </button>
+      </form>
+    </>
+  );
+};
+```
+
+In `/routes/contact/index.tsx` I'm defining what should be shown inside the `<Outlet>` initially. This is a simple form, with some Remix magic added to it (I'll get into this later).
+You can see I'm executing an API call to Formspree, and once it's finished, I want to show a thank you message.
+By doing the redirect (`return redirect('/contact/thanks')`), I'm telling Remix to render the route `/contact/thanks.tsx` inside the `<Outlet>` instead of `/contact/index.tsx`.
+
+```jsx
+// /routes/contact/thanks.tsx
+const Thanks = () => (
+  <p>Thank you for your message! I&apos;ll get back to you shortly!</p>
+);
+export default Thanks;
+```
+
+Easy peasy!
+
+Another difference between Next.js & Remix is that in Remix everything is server side rendered by default, while Next.js gives you the choice to create static builds (SSG/ISR).
+Coming from Next.js where I was used to using incremental static regeneration, this kind of scared me. What if my API calls are slow? What if my API is down?
+For the API being slow part there is no real solution, but there's an option to add caching headers to the response, so the API only gets hit every so often.
+
+Example (this should be added to the route you want to cache on client/CDN):
+
+```jsx
+export function headers() {
+  return {
+    'Cache-Control': 'max-age=300, s-maxage=3600',
+  };
+}
+```
+
+Data loading should be done at the server side by default too (so we can prerender the complete HTML document before sending it to the client).
+To load data on the server, Remix provides a function called `loader` and a hook called `useLoaderData` to consume the data in your component.
+
+Example for my blog route:
+
+```tsx
+// /routes/blog.tsx
+import { MetaFunction, useLoaderData } from 'remix';
+import { v4 as uuidv4 } from 'uuid';
+
+export async function loader() {
+  const res = await fetch('https://dev.to/api/articles/me/published', {
+    headers: {
+      'api-key': process.env.DEV_KEY,
+    },
+  });
+  const blogs = await res.json();
+  return {
+    blogs,
+  };
+}
+
+const Blog = () => {
+  const { blogs } = useLoaderData<BlogData>();
+  const blogsToShow = blogs
+    ?.sort((a, b) => b.page_views_count - a.page_views_count)
+    .slice(0, 5);
+  return (
+    <section id="blog" className="text-text my-8">
+      <div className="container mx-auto flex flex-col items-center justify-center">
+        <h2 className="text-center text-2xl font-bold mb-6">
+          Personal blog - most read
+        </h2>
+        <div className="flex flex-col gap-6">
+          {blogsToShow?.map(blog => (
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              key={blog.id}
+              href={blog.url}
+              aria-label={blog.title}
+              className="transform border-4 border-purple rounded-xl transition-transform p-6 hover:scale-[1.02]"
+            >
+              <article className="relative rounded-lg text-textsm:mx-0">
+                <>
+                  <div className="flex justify-between">
+                    <div className="flex justify-between mb-3 items-start w-full">
+                      <h3 className="text-xl font-medium dark:text-white pr-4">
+                        {blog.title}
+                      </h3>
+                      <div className="flex flex-col md:flex-row items-center text-gray-500">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 md:mr-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                        <span>{blog.page_views_count}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="mb-3">{blog.description}</p>
+                  <ul className="flex flex-wrap">
+                    {blog.tag_list.map(tag => {
+                      const key = uuidv4();
+                      return (
+                        <li
+                          className={`text-sm my-1 py-1 px-4 mr-2 rounded-md ${tag}`}
+                          key={key}
+                        >
+                          {tag}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </>
+              </article>
+            </a>
+          ))}
+        </div>
+        <a
+          href="https://dev.to/thomasledoux1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-8 mt-4 py-4 bg-primary text-white rounded-lg"
+        >
+          Read more blogs
+        </a>
+      </div>
+    </section>
+  );
+};
+```
+
+You can see I'm loading the data from Dev.to through the `loader` function, and then consuming it using the `useLoaderData` hook. That's all there is to it! Remix polyfills `fetch` so you don't have to worry about using `node-fetch`.
+
+Remix also provides the option to [leave out all javascript](https://remix.run/docs/en/v1/guides/disabling-javascript), for your whole application, or just for some routes.
+This is handled by putting the `<Scripts>` tag in your `/app/root.tsx`, if you leave it out, no javascript will be loaded on your pages. I did this on my website, and everything still works as expected (data loading, contact form, setting cookies...).
+
+Managing & setting cookies is also a breeze in Remix.
+The following parts are needed for a cookie to store the choice of theme on my site:
+
+```jsx
+// /app/root.tsx
+
+import {
+  ActionFunction,
+  LoaderFunction,
+  useLoaderData,
+  useLocation,
+} from 'remix';
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const cookie = await parseCookie(request, theme);
+  if (!cookie.theme) cookie.theme = 'light';
+  return { theme: cookie.theme };
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const cookie = await parseCookie(request, theme);
+  const formData = await request.formData();
+  cookie.theme = formData.get('theme') || cookie.theme || 'light';
+  const returnUrl = formData.get('returnUrl') || '/';
+  const serializedCookie = await theme.serialize(cookie);
+  return redirect(returnUrl.toString(), {
+    headers: {
+      'Set-Cookie': serializedCookie,
+    },
+  });
+};
+
+export default function App() {
+  const cookie = useLoaderData();
+  return (
+    <Document>
+      <Layout theme={cookie.theme}>
+        <Outlet />
+      </Layout>
+    </Document>
+  );
+}
+```
+
+```jsx
+// /app/utils/parseCookie.ts
+
+import { Cookie } from 'remix';
+
+export const parseCookie = async (request: Request, cookie: Cookie) => {
+  const cookieHeader = request.headers.get('Cookie');
+  const parsedCookie = (await cookie.parse(cookieHeader)) || {};
+  return parsedCookie;
+};
+```
+
+```jsx
+// /app/cookie.ts
+
+import { createCookie } from 'remix';
+
+export const theme = createCookie('theme');
+```
+
+Using this code, I am able to get my `theme` cookie when the website is loaded (in `/app/root.tsx`), and I can change the styling of my website based on this.
+I can also change the theme by using a button in my navigation:
+
+```jsx
+import { Link, NavLink, useLocation } from '@remix-run/react';
+
+type NavigationProps = {
+  theme: string,
+};
+
+const Navigation = ({ theme }: NavigationProps) => {
+  const oppositeTheme = theme === 'light' ? 'dark' : 'light';
+  const location = useLocation();
+
+  return (
+    <nav className="fixed bg-purple dark:bg-darkgrey text-text h-16 w-full z-50">
+      <div className="flex h-full container mx-auto justify-between items-center px-4 lg:px-16">
+        <form method="post" action="/">
+          <input name="theme" type="hidden" value={oppositeTheme} />
+          <input name="returnUrl" type="hidden" value={location.pathname} />
+          <button
+            aria-label="Toggle Dark Mode"
+            type="submit"
+            id="darkModeToggle"
+            className="p-3 top-1 lg:top-auto overflow-hidden order-2 md:order-3 absolute left-2/4 transform -translate-x-2/4 md:translate-x-0 lg:transform-none md:relative md:left-0"
+          >
+            <div className="relative h-8 w-8">
+              <span className="absolute inset-0 dark:hidden">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  className="text-gray-800 dark:text-gray-200"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              </span>
+              <span className="absolute inset-0 hidden dark:inline-block">
+                <svg
+                  fill="currentColor"
+                  stroke="currentColor"
+                  className="text-gray-800  dark:text-gray-200"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </button>
+        </form>
+      </div>
+    </nav>
+  );
+};
+
+export default Navigation;
+```
+
+By using the `<form method="post" action="/">` I tell Remix to use the action defined in `/app/root.tsx`, and pass on the current URL, so the user gets redirected to the same URL, but with the cookie set!
+I know this isn't ideal for animating the transition of the theme etc, but it works without JS, and that was my main goal at this time.
+
+Some Lighthouse stats (both hosted on Vercel):
+
+Next.js:
+![Old site using Next.js](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/0m9jgnyo6zs1izij4vkm.png)
+
+Remix:
+![New site using Remix](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/nz81qyujboa64nwhc7ky.png)
+
+Both very fast, but Remix seems to really get the TTI a lot lower, probably because the load a lot of the needed resources in parallel, and partly also because no JS is loaded.
+
+Check my new Remix website here: https://www.thomasledoux.be.
+Source code: https://github.com/thomasledoux1/website-thomas-remix
+Old website can be found on https://website-thomas.vercel.app.
+Source code: https://github.com/thomasledoux1/website-thomas
