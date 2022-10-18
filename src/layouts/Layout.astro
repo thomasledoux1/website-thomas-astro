@@ -11,6 +11,13 @@ import '../../styles/global.css';
     <title>{title ?? frontmatter.title}</title>
     <meta content={title ?? frontmatter.title} property="og:title" />
     <meta content={title ?? frontmatter.title} property="twitter:title" />
+
+    <meta
+      content={frontmatter?.title
+        ? `https://website-thomas.vercel.app/api/og?title=${frontmatter.title}`
+        : 'https://website-thomas-astro.vercel.app/me.webp'}
+      property="og:image"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body class="flex flex-col">

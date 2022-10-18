@@ -11,15 +11,12 @@
   },
   "devDependencies": {
     "@astrojs/tailwind": "^2.1.0",
-    "@types/node": "^18.11.0",
     "astro": "^1.5.0"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.11.4",
     "@astrojs/vercel": "^2.2.0",
     "@supabase/supabase-js": "^2.0.0",
-    "@vercel/og": "^0.0.19",
-    "reading-time": "^1.5.0",
-    "satori": "^0.0.42"
+    "reading-time": "^1.5.0"
   }
 }
