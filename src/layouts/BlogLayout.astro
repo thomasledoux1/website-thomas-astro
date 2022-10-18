@@ -3,7 +3,7 @@ import Layout from './Layout.astro';
 const frontmatter = Astro.props.frontmatter;
 ---
 
-<Layout frontmatter={frontmatter}>
+<Layout description="Blog by Thomas Ledoux" frontmatter={frontmatter}>
   <slot />
   <script is:inline src="/update-view-count"></script>
 </Layout>
