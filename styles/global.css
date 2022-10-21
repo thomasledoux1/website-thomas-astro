@@ -3,28 +3,12 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Roboto';
+  font-family: 'Inter';
   font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local(''), url('/fonts/roboto-v29-latin-regular.woff2') format('woff2');
-}
-/* roboto-700 - latin */
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local(''), url('/fonts/roboto-v29-latin-700.woff2') format('woff2');
-}
-
-/* montserrat-700 - latin */
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local(''), url('/fonts/montserrat-v23-latin-700.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: optional;
+  src: local(''), url('/fonts/Inter.var.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 html {

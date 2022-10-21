@@ -1,7 +1,7 @@
 ---
 import Footer from '../components/Footer.astro';
 import Navigation from '../components/Navigation.astro';
-const { frontmatter, title, description } = Astro.props;
+const { frontmatter, title, description, preloadImageDesktop, preloadImageMobile } = Astro.props;
 import '../../styles/global.css';
 ---
 
@@ -19,6 +19,9 @@ import '../../styles/global.css';
         <meta name="author" content="Thomas Ledoux">
       ) : null
     }
+    <link as="font" crossorigin="anonymous" href="/fonts/Inter.var.woff2" rel="preload" type="font/woff2">
+    {preloadImageDesktop && preloadImageMobile ? <link rel="preload" as="image" href={preloadImageDesktop} imageSrcSet={`${preloadImageMobile} 480w, ${preloadImageDesktop}`} imageSizes="100vw" />
+ : null}
     <meta
       content={frontmatter?.title
         ? `https://website-thomas.vercel.app/api/og?title=${frontmatter.title}`

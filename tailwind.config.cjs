@@ -66,8 +66,8 @@ module.exports = {
         '-1': '-1',
       },
       fontFamily: {
-        heading: ['Montserrat', ...defaultTheme.fontFamily.sans],
-        body: ['Roboto', ...defaultTheme.fontFamily.sans],
+        heading: ['Inter', ...defaultTheme.fontFamily.sans],
+        body: ['Inter', ...defaultTheme.fontFamily.sans],
       },
     },
   },
