@@ -1,0 +1,166 @@
+---
+import Stars from '../components/Stars.astro';
+import TimelineItem from '../components/TimelineItem.astro';
+import Layout from '../layouts/Layout.astro';
+const age = Math.floor(
+  (new Date().getTime() - new Date('1991-07-11').getTime()) / 3.15576e10
+);
+const technologies = [
+  { name: 'React', numberOfStars: 4 },
+  { name: 'Vue.js', numberOfStars: 2 },
+  { name: 'Angular', numberOfStars: 2 },
+  { name: 'Gatsby.js', numberOfStars: 3 },
+  { name: 'Next.js', numberOfStars: 4 },
+  { name: 'React Native', numberOfStars: 3 },
+  { name: 'Swift', numberOfStars: 2 },
+  { name: 'Wordpress', numberOfStars: 3 },
+  { name: 'ES6', numberOfStars: 4 },
+  { name: 'HTML', numberOfStars: 5 },
+  { name: 'CSS', numberOfStars: 4 },
+];
+---
+
+<Layout
+  description="Thomas Ledoux' CV"
+  title="Thomas Ledoux - CV"
+  preloadImageDesktop="/me.webp"
+  preloadImageMobile="/me-mobile.webp"
+>
+  <section id="cv" class="container mx-auto px-4 lg:px-16 text-text my-8">
+    <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-16">
+      <div class="col-span-1">
+        <div class="text-center">
+          <img
+            class="rounded-full mx-auto w-[80%] max-w-[20rem] sm:max-w-none"
+            alt="Profile"
+            src="/me.webp"
+            width={640}
+            height={640}
+            sizes="(max-width: 600px) 320px, 800px"
+            srcset="/me-mobile.webp 320w, /me.webp 640w"
+          />
+          <p class="mt-4">Hello, is it me you&apos;re looking for?</p>
+        </div>
+      </div>
+      <div
+        class="col-span-1 mt-6 sm:mt-0 sm:col-span-2 flex flex-col justify-center"
+      >
+        <h1 class="text-2xl md:text-4xl mb-4 font-bold">A bit about me</h1>
+        <div class="leading-[1.6]">
+          <p>
+            Hi, I&apos;m Thomas. I&apos;m {age} years old, living in Ghent. I&apos;m
+            a professional <b>Frontend Developer</b>, currently working at{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link"
+              href="https://www.the-reference.be"
+            >
+              The Reference
+            </a>.
+          </p>
+          <p>
+            What I like most about Frontend development is the ever-changing
+            technology. New frameworks being released daily (one better than the
+            other...), constant improvements to existing frameworks, yearly new
+            features in ECMAScript..
+          </p>
+          <p>
+            I&apos;m always eager to discover the latest updates, apps,
+            technologies..!
+          </p>
+        </div>
+      </div>
+      <div class="col-span-1 mt-6 sm:mt-0">
+        <h2 class="text-xl lg:text-2xl mb-4 font-bold">Technologies</h2>
+        {
+          technologies.map(technology => (
+            <div class="flex justify-between mb-4">
+              <div>{technology.name}</div>
+              <Stars amount={technology.numberOfStars} />
+            </div>
+          ))
+        }
+      </div>
+      <div class="col-span-1 mt-6 sm:mt-0 sm:col-span-2">
+        <h2 class="text-xl lg:text-2xl mb-4 font-bold">My timeline</h2>
+        <div
+          class="flex w-full flex-col timeline-container relative after:bg-lightpurple after:transition-colors dark:after:bg-darkgrey after:absolute after:w-1 after:h-full"
+        >
+          <TimelineItem index={0}>
+            <time class="text-xs text-grey">October 2018 - now</time>
+            <p>
+              Frontend Developer at{' '}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link"
+                href="https://reference.be"
+              >
+                The Reference
+              </a>, Ghent
+            </p>
+          </TimelineItem>
+          <TimelineItem index={1}>
+            <time class="text-xs text-grey">
+              September 2017 - October 2018
+            </time>
+            <p>
+              Full Stack Developer at{' '}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link"
+                href="https://happsdevelopment.com"
+              >
+                Happs Development
+              </a>, Ghent
+            </p>
+          </TimelineItem>
+          <TimelineItem index={2}>
+            <time class="text-xs text-grey"> February 2017 - June 2017</time>
+            <p>
+              Internship as Swift Developer at{' '}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link"
+                href="https://getrialto.com"
+              >
+                Rialto
+              </a>, Ghent
+            </p>
+          </TimelineItem>
+          <TimelineItem index={3}>
+            <time class="text-xs text-grey"> September 2014 - June 2017</time>
+            <p>
+              Bachelor Applied Computer Sciences at{' '}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link"
+                href="https://hogent.be"
+              >
+                Hogeschool Gent
+              </a>
+            </p>
+          </TimelineItem>
+          <TimelineItem index={4}>
+            <time class="text-xs text-grey">May 2012 - August 2014</time>
+            <p>
+              Support Engineer at{' '}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link"
+                href="https://telenet.be"
+              >
+                Telenet
+              </a>, Lochristi
+            </p>
+          </TimelineItem>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

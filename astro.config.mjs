@@ -3,6 +3,7 @@ import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import { remarkReadingTime } from './src/utils/calculate-reading-time.mjs';
 import vercel from '@astrojs/vercel/edge';
+import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
         applyBaseStyles: false,
       },
     }),
+    react(),
     mdx(),
   ],
   output: 'server',

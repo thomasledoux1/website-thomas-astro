@@ -1,6 +1,18 @@
 ---
 import Footer from '../components/Footer.astro';
 import Navigation from '../components/Navigation.astro';
+interface Props {
+  title?: string
+  description?: string
+  preloadImageDesktop?: string
+  preloadImageMobile?: string
+  frontmatter?: {
+    minutesRead: string;
+    title: string;
+    file: string;
+    url: string;
+  };
+}
 const { frontmatter, title, description, preloadImageDesktop, preloadImageMobile } = Astro.props;
 import '../../styles/global.css';
 ---
@@ -8,9 +20,9 @@ import '../../styles/global.css';
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>{title ?? frontmatter.title}</title>
-    <meta content={title ?? frontmatter.title} property="og:title" />
-    <meta content={title ?? frontmatter.title} property="twitter:title" />
+    <title>{title ?? frontmatter?.title}</title>
+    <meta content={title ?? frontmatter?.title} property="og:title" />
+    <meta content={title ?? frontmatter?.title} property="twitter:title" />
     {
       description ? (
         <meta content={description} property="description" />
@@ -38,7 +50,6 @@ import '../../styles/global.css';
       }`}
     >
       <slot />
-      <!-- your content is injected here -->
     </main>
     <Footer />
   </body>

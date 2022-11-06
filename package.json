@@ -10,14 +10,16 @@
     "astro": "astro"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^2.1.1",
-    "astro": "^1.6.0"
+    "@astrojs/tailwind": "^2.1.2",
+    "astro": "^1.6.3"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.11.5",
-    "@astrojs/vercel": "^2.3.2",
-    "@supabase/supabase-js": "^2.0.4",
-    "@types/react": "^18.0.24",
+    "@astrojs/react": "^1.2.2",
+    "@astrojs/vercel": "^2.3.3",
+    "@supabase/supabase-js": "^2.0.5",
+    "@tanstack/react-query": "^4.14.3",
+    "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

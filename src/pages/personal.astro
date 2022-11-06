@@ -1,0 +1,64 @@
+---
+import '../../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+const age = Math.floor(
+  (new Date().getTime() - new Date('1991-07-11').getTime()) / 3.15576e10
+);
+---
+
+<Layout
+  description="Personal information about Thomas Ledoux"
+  title="Thomas Ledoux | Personal"
+>
+  <section
+    class="container mx-auto px-4 lg:px-16 my-8 lg:my-0 text-text dark:text-black"
+    id="personal"
+  >
+    <div
+      class="flex flex-col gap-y-8 md:grid md:grid-cols-2 md:gap-8 items-center content-center"
+    >
+      <img
+        width={194}
+        height={150}
+        class="min-h-[66.66%] min-w-[66.66%] mx-auto"
+        alt="Illustration of me working on laptop"
+        src="/personal.svg"
+      />
+      <div class="bg-purple rounded-lg p-6">
+        <div class="flex flex-col gap-y-4">
+          <h2 class="text-2xl font-bold">Personal Information</h2>
+          <p>
+            Hi, I&apos;m Thomas. I&apos;m {age} years old, living in Ghent.
+            <br />
+            I&apos;m a professional <b>Frontend Developer</b>, currently working
+            at The Reference.
+          </p>
+
+          <div>
+            <p>
+              In general I really love to travel. My favourite kind of holiday
+              is a roadtrip with a campervan, doing lots of hikes in nature and
+              going for a swim in the sea at the end of the day!
+              <br />
+              When I&apos;m not traveling I like to sport a lot. I play badminton,
+              cycle a lot, and I go for the occasional run.
+            </p>
+            <p>
+              I studied Applied Computer Sciences at Hogeschool Gent. I chose
+              the Mobile Development track, and went on Erasmus to Barcelona to
+              learn more about Swift and Java. <br />
+              After graduating I worked for the startup Happs as a full-stack developer,
+              where I created and maintained the website. <br />I also created
+              an app for a client in React Native during this period.
+            </p>
+            <p>
+              You can read more about my work in the{' '}
+              <a class="link" href="/portfolio">portfolio</a>{' '}
+              section .
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

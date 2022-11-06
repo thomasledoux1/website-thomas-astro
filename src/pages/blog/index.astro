@@ -1,11 +1,12 @@
 ---
 let posts = await Astro.glob('./*.mdx');
-import { createClient } from '@supabase/supabase-js';
 import Layout from '../../layouts/Layout.astro';
-const supabaseUrl = import.meta.env.SUPABASE_URL;
-const supabaseKey = import.meta.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-const { data: blogViewCounts } = await supabase.from('blogs').select();
+import { supabase } from '../../lib/supabase';
+const {
+  data: blogViewCounts,
+}: { data: { url: string; view_count: number }[] | null } = await supabase
+  .from('blogs')
+  .select();
 const postsWithViewCounts = posts
   .map(post => ({
     ...post,

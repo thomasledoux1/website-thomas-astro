@@ -1,13 +1,24 @@
 ---
 import Layout from './Layout.astro';
-const frontmatter = Astro.props.frontmatter;
+interface Props {
+  frontmatter: {
+    minutesRead: string;
+    title: string;
+    file: string;
+    url: string;
+  };
+}
+const { frontmatter } = Astro.props;
+import CommentsWrapper from '../components/CommentsWrapper';
+import { getCommentsForBlog } from '../lib/get-comments-for-blog';
+const comments = await getCommentsForBlog(frontmatter.url);
 ---
 
 <Layout
   description="Blog by Thomas Ledoux. Writes about Javascript/React/Next.js/Remix/Astro. Always looking to learn about the newest frameworks and features."
   frontmatter={frontmatter}
 >
-  <a href="/blogs" class="flex items-center gap-x-2 mb-4">
+  <a href="/blog" class="flex items-center gap-x-2 mb-4">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -24,5 +35,12 @@ const frontmatter = Astro.props.frontmatter;
     Back to overview
   </a>
   <slot />
-  <script is:inline src="/update-view-count"></script>
+  <div>
+    <CommentsWrapper
+      client:visible
+      initialComments={comments}
+      blogUrl={frontmatter.url}
+    />
+  </div>
+  <script is:inline src="/api/blogs/update-view-count"></script>
 </Layout>

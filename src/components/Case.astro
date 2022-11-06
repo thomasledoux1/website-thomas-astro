@@ -1,0 +1,47 @@
+---
+interface Props {
+  img?: string;
+  url: string;
+  logoAlt?: string;
+  logoWidth?: number;
+  tags: string[];
+}
+const { img, url, logoWidth, logoAlt, tags } = Astro.props;
+---
+
+<a
+  target="_blank"
+  rel="noopener noreferrer"
+  class="flex flex-col h-full p-6 border-4 border-purple rounded-xl lg:hover:scale-[1.04] transition-transform"
+  href={url}
+>
+  <div class="h-24 max-h-24 text-center mb-6 flex items-center justify-center">
+    {
+      img ? (
+        <img
+          width={logoWidth}
+          height={100}
+          alt={`Logo ${logoAlt}`}
+          src={img}
+          class="inline-block max-w-full lg:max-w-xs"
+        />
+      ) : (
+        <span class="text-3xl lg:text-4xl">{logoAlt}</span>
+      )
+    }
+  </div>
+  <slot />
+  <div class="flex flex-col mt-4 flex-grow justify-end">
+    <ul class="flex flex-wrap">
+      {
+        tags.map(tag => {
+          return (
+            <li class="bg-primary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
+              {tag}
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</a>
