@@ -2,7 +2,6 @@ import type { APIRoute } from 'astro';
 import { supabase } from '../../../lib/supabase';
 
 export const post: APIRoute = async ({ request }) => {
-  console.log(request);
   const formData = await request.formData();
   const comment = formData.get('comment');
   const author = formData.get('author');

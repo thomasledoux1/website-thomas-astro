@@ -36,7 +36,6 @@ const Comments = ({
     }
     setFormState('idle');
   };
-  console.log(upToDateCommentsQuery);
   return (
     <>
       <h2 className="text-xl lg:text-2xl mb-4 font-bold">Add a comment</h2>
