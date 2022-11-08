@@ -21,6 +21,7 @@ import '../../styles/global.css';
   <head>
     <link rel="preconnect" href="https://res.cloudinary.com" />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    {preloadImageDesktop ? <link rel="preload" fetchpriority="high" as="image" type="image/webp" href={preloadImageDesktop} imageSizes="100vw" /> : null}
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
     <meta content={title ?? frontmatter?.title} property="og:title" />
