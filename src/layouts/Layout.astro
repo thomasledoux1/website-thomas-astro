@@ -32,7 +32,6 @@ import '../../styles/global.css';
       ) : null
     }
     <link as="font" crossorigin="anonymous" href="/fonts/Inter.var.woff2" rel="preload" type="font/woff2">
-    {preloadImageDesktop && preloadImageMobile ? <link rel="preload" as="image" href={preloadImageDesktop} imageSrcSet={`${preloadImageMobile} 480w, ${preloadImageDesktop}`} imageSizes="100vw" />
  : null}
     <meta
       content={frontmatter?.title

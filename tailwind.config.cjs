@@ -8,6 +8,7 @@ module.exports = {
     './src/layouts/**/*.{js,ts,jsx,tsx,astro}',
     './src/components/**/*.{js,ts,jsx,tsx,astro}',
   ],
+  darkMode: 'class',
   theme: {
     container: {
       padding: {
