@@ -18,6 +18,10 @@ const technologies = [
   { name: 'HTML', numberOfStars: 5 },
   { name: 'CSS', numberOfStars: 4 },
 ];
+Astro.response.headers.set(
+  'cache-control',
+  'public, max-age=0, s-max-age=86400'
+);
 ---
 
 <Layout

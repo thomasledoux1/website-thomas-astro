@@ -1,6 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Case from '../components/Case.astro';
+Astro.response.headers.set(
+  'cache-control',
+  'public, max-age=0, s-max-age=86400'
+);
 ---
 
 <Layout
