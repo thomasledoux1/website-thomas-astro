@@ -4,8 +4,9 @@ import Navigation from '../components/Navigation.astro';
 interface Props {
   title?: string
   description?: string
-  preloadImageDesktop?: string
-  preloadImageMobile?: string
+  preloadImage?: string
+  preloadImageSizes?: string
+  preloadImageSrcSet?: string
   frontmatter?: {
     minutesRead: string;
     title: string;
@@ -13,7 +14,7 @@ interface Props {
     url: string;
   };
 }
-const { frontmatter, title, description, preloadImageDesktop, preloadImageMobile } = Astro.props;
+const { frontmatter, title, description, preloadImage, preloadImageSizes, preloadImageSrcSet } = Astro.props;
 import '../../styles/global.css';
 ---
 
@@ -21,7 +22,7 @@ import '../../styles/global.css';
   <head>
     <link rel="preconnect" href="https://res.cloudinary.com" />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-    {preloadImageDesktop ? <link rel="preload" fetchpriority="high" as="image" type="image/webp" href={preloadImageDesktop} imageSizes="100vw" /> : null}
+    {preloadImage ? <link rel="preload" fetchpriority="high" as="image" type="image/webp" imagesrcset={preloadImageSrcSet} href={preloadImage} imageSizes={preloadImageSizes} /> : null}
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
     <meta content={title ?? frontmatter?.title} property="og:title" />

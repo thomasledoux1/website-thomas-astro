@@ -10,14 +10,16 @@ Astro.response.headers.set(
 <Layout
   description="Thomas Ledoux' personal website"
   title="Thomas Ledoux - Home"
-  preloadImageDesktop="https://res.cloudinary.com/dzrea5zhv/image/upload/f_auto/q_80/v1583171588/me_qvrwky.jpg"
+  preloadImage="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
+  preloadImageSrcSet="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_300/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+  preloadImageSizes="(max-width: 767px) 75vw, 45vw"
 >
   <section
     id="hero"
-    class="container mx-auto relative lg:pt-0 items-center content-center flex text-text"
+    class="mx-auto relative lg:pt-0 items-center content-center flex text-text"
   >
     <div
-      class="gap-8 md:gap-0 grid md:grid-cols-2 items-center content-center justify-items-center"
+      class="gap-8 w-full grid md:grid-cols-2 items-center content-center justify-items-center"
     >
       <h1
         class="text-4xl font-bold md:text-6xl flex flex-col items-center md:items-start"
@@ -29,12 +31,14 @@ Astro.response.headers.set(
       </h1>
       <div class="w-3/4">
         <img
-          class="rounded-full"
+          class="rounded-full mx-auto"
           alt="Profile"
-          src="https://res.cloudinary.com/dzrea5zhv/image/upload/f_auto/q_80/v1583171588/me_qvrwky.jpg"
+          src="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
           fetchpriority="high"
           width={320}
           height={320}
+          srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_300/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+          sizes="(max-width: 767px) 75vw, 45vw"
         />
       </div>
     </div>

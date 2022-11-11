@@ -23,6 +23,8 @@ html {
   --secondary: #f5ebff;
   --lightpurple: #f0efff;
   --orange: #b55400;
+  --heroTextColor1: hsl(15 90% 55%);
+  --heroTextColor2: hsl(40 95% 55%);
 }
 
 body {
@@ -223,3 +225,21 @@ h3 {
 .mdx code:not(pre code)::after {
   content: '`';
 }
+/* 
+@keyframes title-part1 {
+  to {
+    background-position: 400% 0;
+  }
+}
+
+.test {
+  background: linear-gradient(
+      90deg,
+      var(--heroTextColor1),
+      var(--heroTextColor2),
+      var(--heroTextColor1)
+    )
+    0 0 / 400% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+} */
