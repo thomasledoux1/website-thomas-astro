@@ -23,8 +23,15 @@ html {
   --secondary: #f5ebff;
   --lightpurple: #f0efff;
   --orange: #b55400;
-  --heroTextColor1: hsl(15 90% 55%);
-  --heroTextColor2: hsl(40 95% 55%);
+
+  --heroTextColor1: #40c9ff;
+  --heroTextColor2: #e81cff;
+  --heroTextColor3: #0061ff;
+  --heroTextColor4: #60efff;
+  --heroTextColor3: #40c9ff;
+  --heroTextColor4: #e81cff;
+  --heroTextColor5: #00ff87;
+  --heroTextColor6: #60efff;
 }
 
 body {
@@ -225,14 +232,20 @@ h3 {
 .mdx code:not(pre code)::after {
   content: '`';
 }
-/* 
-@keyframes title-part1 {
+
+@keyframes title-animation {
   to {
     background-position: 400% 0;
   }
 }
 
-.test {
+.title-part {
+  color: transparent;
+  animation: 8s infinite linear title-animation;
+}
+
+.title-part:nth-child(2) {
+  will-change: background-position;
   background: linear-gradient(
       90deg,
       var(--heroTextColor1),
@@ -242,4 +255,30 @@ h3 {
     0 0 / 400% 100%;
   -webkit-background-clip: text;
   background-clip: text;
-} */
+}
+
+.title-part:nth-child(3) {
+  animation-delay: 1s;
+  background: linear-gradient(
+      90deg,
+      var(--heroTextColor3),
+      var(--heroTextColor4),
+      var(--heroTextColor3)
+    )
+    0 0 / 400% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.title-part:nth-child(4) {
+  animation-delay: 2s;
+  background: linear-gradient(
+      90deg,
+      var(--heroTextColor5),
+      var(--heroTextColor6),
+      var(--heroTextColor5)
+    )
+    0 0 / 400% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}

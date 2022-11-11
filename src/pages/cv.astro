@@ -27,8 +27,9 @@ Astro.response.headers.set(
 <Layout
   description="Thomas Ledoux' CV"
   title="Thomas Ledoux - CV"
-  preloadImageDesktop="/me.webp"
-  preloadImageMobile="/me-mobile.webp"
+  preloadImage="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
+  preloadImageSrcSet="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_300/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+  preloadImageSizes="(max-width: 767px) 75vw, 45vw"
 >
   <section id="cv" class="container mx-auto px-4 lg:px-16 text-text my-8">
     <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-16">
@@ -37,11 +38,12 @@ Astro.response.headers.set(
           <img
             class="rounded-full mx-auto w-[80%] max-w-[20rem] sm:max-w-none"
             alt="Profile"
-            src="/me.webp"
-            width={640}
-            height={640}
-            sizes="(max-width: 600px) 320px, 800px"
-            srcset="/me-mobile.webp 320w, /me.webp 640w"
+            src="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
+            fetchpriority="high"
+            width={320}
+            height={320}
+            srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_300/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+            sizes="(max-width: 767px) 75vw, 45vw"
           />
           <p class="mt-4">Hello, is it me you&apos;re looking for?</p>
         </div>
