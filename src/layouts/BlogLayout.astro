@@ -34,7 +34,9 @@ const comments = await getCommentsForBlog(frontmatter.url);
     </svg>
     Back to overview
   </a>
-  <slot />
+  <article>
+    <slot />
+  </article>
   <div>
     <CommentsWrapper
       client:visible

@@ -48,7 +48,7 @@ const Comments = ({
           Author
         </label>
         <input
-          className="py-2 px-4 bg-white border-secondary border-4 rounded-lg w-full"
+          className="py-2 px-4 bg-white border-secondary border-2 rounded-lg w-full"
           placeholder="Author"
           name="author"
           required
@@ -57,7 +57,7 @@ const Comments = ({
           Comment
         </label>
         <textarea
-          className="py-2 px-4 bg-white border-secondary border-4 rounded-lg w-full"
+          className="py-2 px-4 bg-white border-secondary border-2 rounded-lg w-full"
           placeholder="Comment"
           required
           rows={4}
@@ -65,7 +65,7 @@ const Comments = ({
         ></textarea>
         <button
           disabled={formState === 'loading'}
-          className="px-8 mt-4 py-4 bg-primary text-white rounded-lg lg:hover:scale-[1.04] transition-transform disabled:opacity-50 "
+          className="px-8 mt-4 py-4 bg-secondary text-white rounded-lg lg:hover:scale-[1.04] transition-transform disabled:opacity-50 "
           type="submit"
         >
           {formState === 'loading' ? 'Submitting' : 'Submit comment'}

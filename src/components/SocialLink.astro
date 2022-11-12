@@ -8,7 +8,7 @@ const { label, href } = Astro.props;
 
 <li class="w-6 h-6">
   <a
-    class="dark:text-purple transition-colors"
+    class="transition-colors"
     target="_blank"
     rel="noopener noreferrer"
     aria-label={label}
@@ -18,7 +18,7 @@ const { label, href } = Astro.props;
     {
       label === 'linkedin' ? (
         <svg
-          class="transition-[fill] hover:fill-[#0077B7] dark:hover:fill-purple"
+          class="transition-[fill] hover:fill-[#0077B7]"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1792 2048"
@@ -33,7 +33,7 @@ const { label, href } = Astro.props;
     {
       label === 'github' ? (
         <svg
-          class="transition-[background] rounded-full hover:bg-white dark:hover:bg-transparent"
+          class="transition-[background] rounded-full hover:bg-white"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1984 2048"
@@ -48,7 +48,7 @@ const { label, href } = Astro.props;
     {
       label === 'dev' ? (
         <svg
-          class="transition-[background] rounded-sm hover:bg-white dark:hover:bg-transparent"
+          class="transition-[background] rounded-sm hover:bg-white"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1792 2048"

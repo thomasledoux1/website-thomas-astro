@@ -1,20 +1,57 @@
 ---
+import classNames from 'classnames';
+const url = Astro.request.url;
 const linkClasses =
-  'relative before:absolute before:bottom-[-6px] md:before:bottom-[-4px] before:h-[4px] before:w-[0] before:mt-[4px] before:bg-white md:before:bg-primary before:transition-all before:duration-300';
+  'relative before:absolute before:bottom-[-6px] md:before:bottom-[-4px] before:h-[4px] before:w-[0] before:mt-[4px] before:bg-white md:before:bg-secondary before:transition-all before:duration-300 group-hover:before:w-full group-hover:after:w-full';
 ---
 
-<li>
-  <a href="/personal" class={linkClasses}> Personal</a>
+<li class="group">
+  <a
+    href="/personal"
+    class={classNames(linkClasses, {
+      'before:w-full after:w-full': url.includes('/personal'),
+    })}
+  >
+    Personal</a
+  >
 </li>
-<li>
-  <a href="/portfolio" class={linkClasses}> Portfolio</a>
+<li class="group">
+  <a
+    href="/portfolio"
+    class={classNames(linkClasses, {
+      'before:w-full after:w-full': url.includes('/portfolio'),
+    })}
+  >
+    Portfolio</a
+  >
 </li>
-<li>
-  <a href="/blog" class={linkClasses}> Blog</a>
+<li class="group">
+  <a
+    href="/blog"
+    class={classNames(linkClasses, {
+      'before:w-full after:w-full': url.includes('/blog'),
+    })}
+  >
+    Blog</a
+  >
 </li>
-<li>
-  <a href="/contact" class={linkClasses}> Contact</a>
+<li class="group">
+  <a
+    href="/contact"
+    class={classNames(linkClasses, {
+      'before:w-full after:w-full': url.includes('/contact'),
+    })}
+  >
+    Contact</a
+  >
 </li>
-<li>
-  <a href="/cv" class={linkClasses}> CV</a>
+<li class="group">
+  <a
+    href="/cv"
+    class={classNames(linkClasses, {
+      'before:w-full after:w-full': url.includes('/cv'),
+    })}
+  >
+    CV</a
+  >
 </li>

@@ -18,7 +18,7 @@ const { frontmatter, title, description, preloadImage, preloadImageSizes, preloa
 import '../../styles/global.css';
 ---
 
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <link rel="preconnect" href="https://res.cloudinary.com" />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
@@ -44,7 +44,7 @@ import '../../styles/global.css';
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
-  <body class="flex flex-col">
+  <body class="flex flex-col min-h-screen">
     <Navigation />
     <main
       class={`pt-24 pb-8 flex-grow flex flex-col justify-center container mx-auto ${

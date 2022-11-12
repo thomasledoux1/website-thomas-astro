@@ -12,44 +12,8 @@
 }
 
 html {
-  --purple: #f5ebff;
-  --darkpurple: #5851f9;
-  --primary: var(--darkpurple);
-  --text: #000;
-  --yellow: #f7df1e;
-  --blue: #2965f1;
-  --darkgray: #222831;
-  --beige: #eee;
-  --secondary: #f5ebff;
-  --lightpurple: #f0efff;
-  --orange: #b55400;
-
-  --heroTextColor1: #40c9ff;
-  --heroTextColor2: #e81cff;
-  --heroTextColor3: #0061ff;
-  --heroTextColor4: #60efff;
-  --heroTextColor3: #40c9ff;
-  --heroTextColor4: #e81cff;
-  --heroTextColor5: #00ff87;
-  --heroTextColor6: #60efff;
-}
-
-body {
-  @apply min-h-screen;
-}
-
-html.dark {
-  --primary: var(--orange);
-  --text: var(--beige);
-  --secondary: var(--darkgray);
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-.wrapper.dark progress[value]::-webkit-progress-value {
-  background-color: var(--primary);
+  --primary: #c6ebbe;
+  --secondary: #2c6e49;
 }
 
 .logo:hover .letter {
@@ -108,26 +72,6 @@ html {
   animation-delay: 1.3s;
 }
 
-.timeline-container::after {
-  left: calc(50% - 2px);
-}
-
-.timeline-item:after {
-  box-shadow: 1px -1px 1px rgba(0, 0, 0, 0.1);
-  top: calc(50% - 0.5rem);
-}
-
-.timeline-item:nth-child(even)::after {
-  box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.1);
-}
-
-nav ul li a.active:before,
-nav ul li a.active:after,
-nav ul li:hover a:before,
-nav ul li:hover a:after {
-  @apply w-full;
-}
-
 @keyframes bounce {
   50% {
     top: -5px;
@@ -138,73 +82,12 @@ nav ul li:hover a:after {
   }
 }
 
-section {
-  scroll-margin-top: 4rem;
-}
-
-li.css {
-  background-color: var(--blue);
-  color: #fff;
-}
-
-li.nextjs,
-li.discuss {
-  background-color: #000;
-  color: #fff;
-}
-
-li.react {
-  background-color: #222222;
-  color: #61daf6;
-}
-
-li.javascript {
-  background-color: var(--yellow);
-  color: #000;
-}
-
-li.html {
-  background-color: #f53900;
-  color: white;
-}
-
-li.performance {
-  background-color: #ffa364;
-  color: #000;
-}
-
-li.showdev {
-  background-color: #091b47;
-  color: #b2ffe1;
-}
-
-li.gatsby {
-  background-color: #663399;
-  color: #fff;
-}
-
-@supports (-webkit-touch-callout: none) {
-  body {
-    min-height: -webkit-fill-available;
-  }
-}
-
-body {
-  @apply font-body;
-}
-
-h1,
-h2,
-h3 {
-  @apply font-heading;
-}
-
 .astro-code {
   @apply rounded-lg p-4 my-4;
 }
 
 .mdx a {
-  @apply decoration-4 decoration-solid underline-offset-4 decoration-primary underline;
+  @apply decoration-4 decoration-solid underline-offset-[3px] decoration-secondary underline;
 }
 
 .mdx p {
@@ -225,7 +108,7 @@ h3 {
 }
 
 .mdx code:not(pre code) {
-  @apply bg-secondary mx-1 px-1 py-[0.125rem];
+  @apply bg-primary mx-1 px-1 py-[0.125rem];
 }
 
 .mdx code:not(pre code)::before,
@@ -242,43 +125,34 @@ h3 {
 .title-part {
   color: transparent;
   animation: 8s infinite linear title-animation;
-}
-
-.title-part:nth-child(2) {
-  will-change: background-position;
   background: linear-gradient(
       90deg,
-      var(--heroTextColor1),
-      var(--heroTextColor2),
-      var(--heroTextColor1)
+      var(--heroTitleColor1),
+      var(--heroTitleColor2),
+      var(--heroTitleColor1)
     )
     0 0 / 400% 100%;
   -webkit-background-clip: text;
   background-clip: text;
 }
 
-.title-part:nth-child(3) {
+.title-part:first-of-type {
+  --heroTitleColor1: #40c9ff;
+  --heroTitleColor2: #e81cff;
+}
+
+.title-part:nth-of-type(2) {
   animation-delay: 1s;
-  background: linear-gradient(
-      90deg,
-      var(--heroTextColor3),
-      var(--heroTextColor4),
-      var(--heroTextColor3)
-    )
-    0 0 / 400% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
+  --heroTitleColor1: #0061ff;
+  --heroTitleColor2: #60efff;
 }
 
-.title-part:nth-child(4) {
+.title-part:nth-of-type(3) {
   animation-delay: 2s;
-  background: linear-gradient(
-      90deg,
-      var(--heroTextColor5),
-      var(--heroTextColor6),
-      var(--heroTextColor5)
-    )
-    0 0 / 400% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
+  --heroTitleColor1: #00ff87;
+  --heroTitleColor2: #60efff;
+}
+
+.link {
+  @apply decoration-4 decoration-solid underline-offset-[3px] decoration-secondary underline;
 }

@@ -6,7 +6,7 @@ const { amount } = Astro.props;
   {
     // @ts-expect-error
     Array.apply(null, { length: 5 }).map((_, i) => (
-      <span class={`star ${i < amount ? 'text-primary' : 'text-white'}`}>
+      <span class={`star ${i < amount ? 'text-secondary' : 'text-white'}`}>
         <svg
           class="w-6 h-6"
           xmlns="http://www.w3.org/2000/svg"
