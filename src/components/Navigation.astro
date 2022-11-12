@@ -25,7 +25,7 @@ const logoLetterClass = 'letter inline-block top-0 relative';
     </ul>
     <ul
       id="mobileMenu"
-      class="md:hidden absolute flex flex-col w-full top-16 left-0 py-4 transition-transform items-center text-white bg-secondary transform-gpu gap-4 translate-x-full"
+      class="md:hidden absolute flex flex-col w-0 top-16 right-0 py-4 transition-[width] items-center text-white bg-secondary gap-4"
     >
       <NavigationItems />
     </ul>
@@ -75,9 +75,7 @@ const logoLetterClass = 'letter inline-block top-0 relative';
       document
         .getElementById('mobileMenuToggleBtnThirdline')
         ?.classList.toggle('top-5');
-      document
-        .getElementById('mobileMenu')
-        ?.classList.toggle('translate-x-full');
-      document.getElementById('mobileMenu')?.classList.toggle('translate-x-0');
+      document.getElementById('mobileMenu')?.classList.toggle('w-full');
+      document.getElementById('mobileMenu')?.classList.toggle('w-0');
     });
 </script>
