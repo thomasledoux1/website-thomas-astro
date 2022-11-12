@@ -7,9 +7,13 @@ const {
 }: { data: { url: string; view_count: number }[] | null } = await supabase
   .from('blogs')
   .select();
+console.log(Astro.request.headers.get('Accept-Language'));
 const postsWithViewCounts = posts
   .map(post => ({
     ...post,
+    formattedDate: new Date(post.frontmatter.date).toLocaleDateString(
+      Astro.request.headers.get('Accept-Language')?.split(',')?.[0] ?? 'en-US'
+    ),
     viewCount:
       blogViewCounts?.find(blogViewCount => blogViewCount.url === post.url)
         ?.view_count ?? 0,
@@ -18,52 +22,58 @@ const postsWithViewCounts = posts
 ---
 
 <Layout title="The Thomas Ledoux blog">
-  <section id="blog" class="container mx-auto px-4 lg:px-16 text-text">
+  <section id="blog" class="">
     <div class="flex flex-col items-center justify-center">
-      <h1 class="text-center text-2xl font-bold mb-6">
-        Personal blog - most read
-      </h1>
+      <h1 class="text-center text-2xl font-bold mb-6">Personal blog</h1>
       <div class="flex flex-col gap-6 items-center">
         {
           postsWithViewCounts.map(post => (
             <a
-              class="transform text-center border-2 border-secondary rounded-xl transition-transform p-6 lg:hover:scale-[1.04]"
+              class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform p-6 lg:hover:scale-[1.04]"
               href={post.url}
             >
-              <article class="relative rounded-lg text-textsm:mx-0">
+              <article class="relative rounded-lg  sm:mx-0">
+                <date class="text-sm">{post.formattedDate}</date>
                 <div class="flex justify-between">
-                  <div class="flex justify-between items-center w-full flex-col">
-                    <div class="flex justify-between gap-x-2 mb-3 items-center w-full">
-                      <h2 class="text-xl font-medium transition-colors">
-                        {post.frontmatter.title}
-                      </h2>
-                      {post.viewCount ? (
-                        <div class="flex flex-col md:flex-row items-center text-gray-500">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6 md:mr-2"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                            />
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                            />
-                          </svg>
-                          <span>{post.viewCount}</span>
-                        </div>
-                      ) : null}
-                    </div>
+                  <div class="flex justify-between lg:items-center w-full flex-col gap-y-2">
+                    <h2 class="text-xl font-medium transition-colors">
+                      {post.frontmatter.title}
+                    </h2>
+                    {post.viewCount ? (
+                      <div class="flex gap-x-1 items-center text-gray-500">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                        <span>{post.viewCount}</span>
+                      </div>
+                    ) : null}
                     <p>{post.frontmatter.minutesRead}ing time</p>
+                    <ul class="flex flex-wrap lg:justify-center w-full">
+                      {post.frontmatter.tags?.map((tag: string) => {
+                        return (
+                          <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
+                            {tag}
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
                 </div>
               </article>

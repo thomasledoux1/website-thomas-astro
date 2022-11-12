@@ -1,6 +1,8 @@
 ---
 title: 'Migrating my portfolio site from Next.js to Remix'
 layout: '../../layouts/BlogLayout.astro'
+tags: ['nextjs', 'remix', 'react', 'javascript']
+date: '2022-02-02T15:14:39.004Z'
 ---
 
 # Migrating my portfolio site from Next.js to Remix
@@ -27,7 +29,7 @@ I use nested routes to create my contact page.
 // /routes/contact.tsx
 import { Outlet } from 'remix';
 
-<section id="contact" className="text-text pb-8 lg:pb-0">
+<section id="contact" className=" pb-8 lg:pb-0">
   <div className="container grid md:grid-cols-2 gap-6 content-center align-items">
     <div className="flex flex-col justify-center">
       <img
@@ -165,7 +167,7 @@ const Blog = () => {
     ?.sort((a, b) => b.page_views_count - a.page_views_count)
     .slice(0, 5);
   return (
-    <section id="blog" className="text-text my-8">
+    <section id="blog" className=" my-8">
       <div className="container mx-auto flex flex-col items-center justify-center">
         <h2 className="text-center text-2xl font-bold mb-6">
           Personal blog - most read
@@ -180,7 +182,7 @@ const Blog = () => {
               aria-label={blog.title}
               className="transform border-4 border-purple rounded-xl transition-transform p-6 hover:scale-[1.02]"
             >
-              <article className="relative rounded-lg text-textsm:mx-0">
+              <article className="relative rounded-lg sm:mx-0">
                 <>
                   <div className="flex justify-between">
                     <div className="flex justify-between mb-3 items-start w-full">
@@ -329,7 +331,7 @@ const Navigation = ({ theme }: NavigationProps) => {
   const location = useLocation();
 
   return (
-    <nav className="fixed bg-purple dark:bg-darkgrey text-text h-16 w-full z-50">
+    <nav className="fixed bg-purple dark:bg-darkgrey  h-16 w-full z-50">
       <div className="flex h-full container mx-auto justify-between items-center px-4 lg:px-16">
         <form method="post" action="/">
           <input name="theme" type="hidden" value={oppositeTheme} />
