@@ -11,7 +11,7 @@ const { index } = Astro.props;
   <div class="rounded transition-colors sm:max-w-[80%] shadow p-4 relative">
     <slot />
     <span
-      class={`bg-white border-solid border-4 border-secondary rounded-full absolute w-4 h-4 top-timelineCircle ${
+      class={`bg-white border-solid border-4 border-secondary rounded-full absolute w-4 h-4 top-[calc(50%-0.5em)] ${
         index % 2 === 0 ? '-right-8' : '-left-8'
       }`}></span>
   </div>
