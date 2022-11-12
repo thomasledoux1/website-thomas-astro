@@ -7,7 +7,6 @@ const {
 }: { data: { url: string; view_count: number }[] | null } = await supabase
   .from('blogs')
   .select();
-console.log(Astro.request.headers.get('Accept-Language'));
 const postsWithViewCounts = posts
   .map(post => ({
     ...post,
