@@ -95,12 +95,24 @@ html {
   @apply break-words;
 }
 
+.mdx h4 {
+  @apply text-lg;
+}
+
+.mdx h3 {
+  @apply text-xl;
+}
+
 .mdx h2 {
-  @apply my-4;
+  @apply text-2xl;
 }
 
 .mdx h1 {
-  @apply mb-4 text-3xl;
+  @apply mt-0 text-3xl;
+}
+
+.mdx :is(h1, h2, h3, h4) {
+  @apply font-bold my-4 scroll-m-16;
 }
 
 .mdx p {

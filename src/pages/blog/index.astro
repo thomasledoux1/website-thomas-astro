@@ -17,18 +17,20 @@ const postsWithViewCounts = posts
       blogViewCounts?.find(blogViewCount => blogViewCount.url === post.url)
         ?.view_count ?? 0,
   }))
-  .sort((a, b) => b.viewCount - a.viewCount);
+  .sort(
+    (a, b) => +new Date(b.frontmatter.date) - +new Date(a.frontmatter.date)
+  );
 ---
 
 <Layout title="The Thomas Ledoux blog">
-  <section id="blog" class="">
+  <section>
     <div class="flex flex-col items-center justify-center">
       <h1 class="text-center text-2xl font-bold mb-6">Personal blog</h1>
       <div class="flex flex-col gap-6 items-center">
         {
           postsWithViewCounts.map(post => (
             <a
-              class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform p-6 lg:hover:scale-[1.04]"
+              class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform px-8 py-4 lg:hover:scale-[1.04]"
               href={post.url}
             >
               <article class="relative rounded-lg  sm:mx-0">
