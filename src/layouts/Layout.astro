@@ -44,10 +44,10 @@ import '../../styles/global.css';
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
-  <body class="flex flex-col min-h-screen">
+  <body class="flex flex-col">
     <Navigation />
     <main
-      class={`pt-24 pb-12 flex-grow flex flex-col justify-center container mx-auto ${
+      class={`pt-24 pb-12 flex-grow flex flex-col justify-center container mx-auto h-full ${
         frontmatter ? 'mdx' : ''
       }`}
     >
