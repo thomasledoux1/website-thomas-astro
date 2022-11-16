@@ -1,8 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-let prisma: PrismaClient;
+import { PrismaClient } from '@prisma/client/edge';
 
-if (typeof window === 'undefined') {
-  const prisma = new PrismaClient();
-}
+const prisma = new PrismaClient();
 
 export { prisma };
