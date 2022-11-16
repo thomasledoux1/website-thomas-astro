@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev --host",
     "start": "astro dev",
-    "build": "prisma generate && prisma migrate deploy && astro build",
+    "build": "prisma generate && astro build",
     "preview": "vercel dev",
     "astro": "astro"
   },
