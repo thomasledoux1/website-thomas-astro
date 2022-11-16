@@ -9,6 +9,7 @@ export const get: APIRoute = async ({ request }) => {
       await prisma.post.create({
         data: {
           view_count: 1,
+          like_count: 1,
           url,
         },
       });
@@ -16,7 +17,7 @@ export const get: APIRoute = async ({ request }) => {
       await prisma.post.update({
         where: { id: blog.id },
         data: {
-          view_count: blog.view_count + 1,
+          like_count: blog.like_count + 1,
         },
       });
     }

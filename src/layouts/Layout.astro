@@ -27,6 +27,7 @@ import '../../styles/global.css';
     <title>{title ?? frontmatter?.title}</title>
     <meta content={title ?? frontmatter?.title} property="og:title" />
     <meta content={title ?? frontmatter?.title} property="twitter:title" />
+    <meta name="twitter:card" content="summary_large_image" />
     {
       description ? (
         <meta content={description} property="description" />

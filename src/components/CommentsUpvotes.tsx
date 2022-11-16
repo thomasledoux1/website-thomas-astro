@@ -1,7 +1,7 @@
+import type { Comment } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
-import { Fragment, useRef, useState } from 'react';
-import type { Comment } from '../../types/comment';
-const Comments = ({
+import { useRef, useState } from 'react';
+const CommentsUpvotes = ({
   initialComments,
   blogUrl,
 }: {
@@ -89,4 +89,4 @@ const Comments = ({
   );
 };
 
-export default Comments;
+export default CommentsUpvotes;

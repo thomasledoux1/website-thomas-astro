@@ -1,10 +1,10 @@
+import type { Comment } from '@prisma/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { Comment } from '../../types/comment';
-import Comments from './Comments';
+import Comments from './CommentsUpvotes';
 
 const queryClient = new QueryClient();
 
-const CommentsWrapper = ({
+const CommentsUpvotesWrapper = ({
   initialComments,
   blogUrl,
 }: {
@@ -17,4 +17,4 @@ const CommentsWrapper = ({
     </QueryClientProvider>
   );
 };
-export default CommentsWrapper;
+export default CommentsUpvotesWrapper;

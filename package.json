@@ -11,16 +11,17 @@
   },
   "devDependencies": {
     "@astrojs/tailwind": "^2.1.2",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
     "astro": "^1.6.7",
     "prettier": "^2.7.1",
-    "prettier-plugin-astro": "^0.7.0",
-    "@types/react": "^18.0.25",
-    "@types/react-dom": "^18.0.8"
+    "prettier-plugin-astro": "^0.7.0"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.11.6",
     "@astrojs/react": "^1.2.2",
     "@astrojs/vercel": "^2.3.3",
+    "@prisma/client": "^4.6.1",
     "@supabase/supabase-js": "^2.1.0",
     "@tanstack/react-query": "^4.15.0",
     "classnames": "^2.3.2",

@@ -9,7 +9,7 @@ interface Props {
   };
 }
 const { frontmatter } = Astro.props;
-import CommentsWrapper from '../components/CommentsWrapper';
+import CommentsUpvotesWrapper from '../components/CommentsUpvotesWrapper';
 import { getCommentsForBlog } from '../lib/get-comments-for-blog';
 const comments = await getCommentsForBlog(frontmatter.url);
 ---
@@ -38,7 +38,7 @@ const comments = await getCommentsForBlog(frontmatter.url);
     <slot />
   </article>
   <div>
-    <CommentsWrapper
+    <CommentsUpvotesWrapper
       client:visible
       initialComments={comments}
       blogUrl={frontmatter.url}
