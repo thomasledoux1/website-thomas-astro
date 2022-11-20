@@ -12,24 +12,24 @@ since version 9.3 implemented this it's core. This is why I wanted to write a bl
 post containing all the information to get you started on SSG/ISG (Incremental Static
 Generation) with Next.js.
 
-### Why SSG/ISG?
+## Why SSG/ISG?
 
 Mostly for performance reasons: when you already have the HTML generated at build time, you can cache this file and serve it to the user requesting it very quickly.
 SSG/ISG will most probably help you to get better ranking on Google too, see https://9to5google.com/2020/05/28/google-search-speed/.
 
-### How to statically generate pages in Next.js
+## How to statically generate pages in Next.js
 
-#### Without data
+### Without data
 
 When you don't fetch data on your page, the default behaviour is that the page gets statically prerendered.
 Next.js will generate an HTML file for your page, and you can host this on any server.
 
-#### With data
+### With data
 
 When you do want to fetch data from an external source, but still want to statically prerender your pages, this is also possible.
 There are 2 possible cases here:
 
-##### Define your own pages/URLs
+#### Define your own pages/URLs
 
 In this case, you can create your page under the `pages/` directory, for example `pages/blog.js`. Add the `getStaticProps` function to your page and export it.
 In this function, you can call any external data source to fetch data for your page.
@@ -63,7 +63,7 @@ export async function getStaticProps() {
 export default Blog;
 ```
 
-##### Pages/URLs coming from external source
+#### Pages/URLs coming from external source
 
 In this case, you will need to create a page with a dynamic route.
 Again there are 2 options for your dynamic routes:
