@@ -1,0 +1,240 @@
+---
+title: 'Creating a blog with Astro and MDX'
+layout: '../../layouts/BlogLayout.astro'
+tags: ['astro', 'html', 'css', 'javascript']
+date: '2022-11-20T16:14:39.004Z'
+---
+
+# Creating a blog with Astro and MDX
+
+## Why?
+
+Ever since I started blogging, I wanted to do this on my personal website [thomasledoux.be](https://www.thomasledoux.be).
+Since it seemed rather difficult to set up Markdown/MDX support in Remix & Next.js (the 2 frameworks I use for my website before), I chose to write my blogs at [dev.to](https:///www.dev.to) instead.
+This worked really well for a while, but now I want to have more control over my blog's layout, analytics and to have MDX support.
+So I started building my own blog platform, and chose to do this with [Astro](https://astro.build)!
+
+## How?
+
+### Setting up Astro
+
+Setting up Astro is very easy.
+You can just run `npm create astro@latest` in your terminal, follow the steps, and you'll have your project up and running in seconds.
+Once your Astro project's set up, the next thing we'll do is adding MDX support.
+You can add MDX support through an [Integration](https://docs.astro.build/en/guides/integrations-guide) in Astro.
+This is as easy as running `npx astro add mdx` in your terminal.
+
+### Creating MDX blogs
+
+Once the MDX integration is installed, you can start using MDX components and pages in your application.
+You can get started by adding a folder `/blog` in the `/src/pages` folder.
+Inside this folder you then create your `.mdx` files, for example `best-features-nextjs-conf-2021.mdx`.
+At the top of your MDX files, you can add `frontmatter` properties.
+You can set up a `layout`, which will make your blog's content get rendered inside of the given `layout`.
+Inside the `frontmatter` properties you can also add custom properties, like `title`, `date`, `tags`, ...
+This will look like:
+
+```astro
+---
+title: 'The 3 best features announced at Next.js Conf 2021';
+layout: '../../layouts/BlogLayout.astro';
+tags: ['nextjs', 'javascript'];
+date: '2021-06-15T15:14:39.004Z';
+---
+```
+
+These properties will be available to use when you import the MDX component/page in another component/page, or when you use `Astro.glob()` to read MDX files from the filesystem.
+Your can use this a blog overview page to display the title, creation date and tags from the blog.
+
+```astro
+---
+let posts = await Astro.glob('./*.mdx');
+/* output: 
+[
+  {
+    title: 'The 3 best features announced at Next.js Conf 2021',
+    layout: '../../layouts/BlogLayout.astro',
+    tags: ['nextjs', 'javascript'],
+    date: '2021-06-15T15:14:39.004Z'
+  }
+]
+*/
+---
+
+<section>
+  {
+    posts.map(post => (
+      <article>
+        {post.frontmatter.title} - {post.frontmatter.title}
+        <div class="flex gap-x-4">
+          {post.frontmatter.tags.map(tag => (
+            <span>{tag}</span>
+          ))}
+        </div>
+      </article>
+    ))
+  }
+</section>
+```
+
+### Adding reading time for blog posts
+
+Astro makes it easy to add [Remark](https://github.com/remarkjs) or [Rehype](https://github.com/rehypejs/rehype) plugins to your markdown.
+You can extend add a `markdown` property to the Astro config file, an add a function/plugin to the `remarkPlugins` property (the `extendDefaultPlugins` property is added to make sure the default plugins aren't overwritten by this config change):
+
+```js
+import { remarkReadingTime } from './src/utils/calculate-reading-time.mjs';
+export default defineConfig({
+  integrations: [mdx()],
+  markdown: {
+    remarkPlugins: [remarkReadingTime],
+    extendDefaultPlugins: true,
+  },
+});
+```
+
+The `./src/utils/calculate-reading-time.mjs` file will look like this:
+
+```js
+import getReadingTime from 'reading-time';
+import { toString } from 'mdast-util-to-string';
+
+export function remarkReadingTime() {
+  return function (tree, { data }) {
+    const textOnPage = toString(tree);
+    const readingTime = getReadingTime(textOnPage);
+    // readingTime.text will give us minutes read as a friendly string,
+    // i.e. "3 min read"
+    data.astro.frontmatter.minutesRead = readingTime.text;
+  };
+}
+```
+
+So you'd use 2 external libraries `reading-time` and `mdast-util-to-string` to make this work. Don't forget to `npm install` these!
+Adding this to the Astro config, makes this data available in the `frontmatter` of all your MDX files.
+You can now start using this in our blog overview from earlier:
+
+```astro
+<section>
+  {
+    posts.map(post => (
+      <article>
+        <h2>
+          {post.frontmatter.title} - {post.frontmatter.date}
+        </h2>
+        <div class="flex gap-x-4">
+          {post.frontmatter.tags.map(tag => (
+            <span>{tag}</span>
+          ))}
+        </div>
+        <p>{post.frontmatter.minutesRead}ing time</p>
+      </article>
+    ))
+  }
+</section>
+```
+
+### Setting up SEO (meta tags, og:image)
+
+Because we are defining a `layout` to be used on our MDX pages, we can start using the `frontmatter` properties of the MDX page inside the `layout` because they are passed in the `Astro.props` object.
+These `frontmatter` properties can then be used to add something like a `<title>` and an og:image `<meta>` tag:
+
+```astro
+---
+const { frontmatter } = Astro.props;
+---
+
+<head>
+  <title>{frontmatter.title}</title>
+  <meta content={frontmatter.title} property="og:title" />
+  <meta content={frontmatter.title} property="twitter:title" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    content={`https://website-thomas.vercel.app/api/og?title=${frontmatter.title}`}
+    property="og:image"
+  />
+</head>
+```
+
+Note that in the example I'm using an API route of a different domain, this is because I'm using the `@vercel/og` package to generate the `og:image` based on the title of my blog post. You can read the docs [here](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation).
+I also added some sparkles to the background, based on the example provided by Vercel.
+The code for the `og:image` generation looks like this (created inside a Next.js API route on my[ Next.js site](https://github.com/thomasledoux1/website-thomas)):
+I'm using the `Inter` font, so if you want to use this too, make sure to [download the font files](https://google-webfonts-helper.herokuapp.com/fonts/inter?subsets=latin) and include them in your project.
+
+```jsx
+import {ImageResponse} from '@vercel/og'
+
+export const config = {
+  runtime: 'experimental-edge',
+}
+
+const font = fetch(new URL('../../assets/Inter.ttf', import.meta.url)).then(
+  res => res.arrayBuffer(),
+)
+
+export default function handler(req) {
+  const fontData = await font;
+
+  try {
+    const {searchParams} = new URL(req.url)
+    const hasTitle = searchParams.has('title')
+    const title = hasTitle
+      ? searchParams.get('title')?.slice(0, 100)
+      : 'My default title'
+
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            background: 'white',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            textAlign: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            fontFamily: 'Inter',
+            backgroundImage:
+              'radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)',
+            backgroundSize: '100px 100px',
+          }}
+        >
+          <div
+            style={{
+              width: '80%',
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <p style={{fontSize: 32}}>Thomas Ledoux&apos;s blog</p>
+            <p style={{fontSize: 64}}>{title}</p>
+          </div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 600,
+        fonts: [
+          {
+            name: 'Inter',
+            data: fontData,
+            style: 'normal',
+          },
+        ],
+      },
+    )
+  } catch (e) {
+    console.log(`${e.message}`)
+    return new Response(`Failed to generate the image`, {
+      status: 500,
+    })
+  }
+}
+```
+
+And that's it, my blog is now hosted on my own site!
+Go check it out at [https://www.thomasledoux.be/blog](https://www.thomasledoux.be/blog).
+In a next blog article, I'll dive deeper into how I added a system for comments on blogs, and analytics using Prisma and Planetscale for the DB stuff.

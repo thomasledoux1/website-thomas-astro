@@ -1,4 +1,6 @@
-let prisma;
+import type { PrismaClient } from '@prisma/client';
+
+let prisma: PrismaClient;
 
 if (process.env.NODE_ENV === 'development') {
   import('@prisma/client').then(mod => (prisma = new mod.PrismaClient()));
