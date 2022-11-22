@@ -3,9 +3,6 @@ import type { APIRoute } from 'astro';
 import satori, { init } from 'satori/wasm';
 import initYoga from 'yoga-wasm-web';
 
-// @ts-expect-error
-const yoga = initYoga(await fetch('/yoga.wasm').then(res => res.arrayBuffer()));
-init(yoga);
 export const config = {
   runtime: 'experimental-edge',
 };
@@ -16,6 +13,12 @@ const font = fetch(new URL('../../../assets/Inter.ttf', import.meta.url)).then(
 
 export const get: APIRoute = async ({ request }) => {
   const fontData = await font;
+
+  // @ts-expect-error
+  const yoga = initYoga(
+    await fetch('/yoga.wasm').then(res => res.arrayBuffer())
+  );
+  init(yoga);
 
   try {
     const { searchParams } = new URL(request.url);
