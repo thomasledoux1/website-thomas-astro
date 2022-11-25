@@ -1,9 +1,9 @@
-import type { APIRoute } from 'astro';
-import { prisma } from '../../../lib/prisma-client';
+import type { APIRoute } from "astro";
+import { prisma } from "../../../lib/prisma-client";
 
 export const get: APIRoute = async ({ request }) => {
-  if (import.meta.env.MODE !== 'development') {
-    const url = new URL(request.headers.get('referer') ?? '').pathname;
+  if (import.meta.env.MODE !== "development") {
+    const url = new URL(request.headers.get("referer") ?? "").pathname;
     const blog = await prisma.post.findFirst({ where: { url } });
     if (!blog) {
       await prisma.post.create({

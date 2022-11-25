@@ -1,8 +1,8 @@
 ---
-title: 'Easy way to integrate Google Maps in React'
-layout: '../../layouts/BlogLayout.astro'
-tags: ['nextjs', 'javascript', 'react']
-date: '2021-09-29T15:14:39.004Z'
+title: "Easy way to integrate Google Maps in React"
+layout: "../../layouts/BlogLayout.astro"
+tags: ["nextjs", "javascript", "react"]
+date: "2021-09-29T15:14:39.004Z"
 ---
 
 # Easy way to integrate Google Maps in React
@@ -16,13 +16,13 @@ documented](https://react-google-maps-api-docs.netlify.app/) too!
 Now, let's dive into the actual code to create a component using this package!
 
 ```jsx
-import React from 'react';
+import React from "react";
 import {
   GoogleMap,
   useJsApiLoader,
   Marker,
   InfoWindow,
-} from '@react-google-maps/api';
+} from "@react-google-maps/api";
 
 type OfficeNode = {
   id: string,
@@ -39,34 +39,34 @@ type OfficeNode = {
 export default function App() {
   const offices = [
     {
-      id: '1',
+      id: "1",
       field_address: {
-        locality: 'Gent',
-        postal_code: '9000',
-        address_line1: 'Veldstraat 1',
-        address_line2: 'a',
+        locality: "Gent",
+        postal_code: "9000",
+        address_line1: "Veldstraat 1",
+        address_line2: "a",
         latitude: 51.053589,
         longitude: 3.72242,
       },
     },
     {
-      id: '2',
+      id: "2",
       field_address: {
-        locality: 'Brussel',
-        postal_code: '1000',
-        address_line1: 'Nieuwstraat 1',
-        address_line2: 'a',
+        locality: "Brussel",
+        postal_code: "1000",
+        address_line1: "Nieuwstraat 1",
+        address_line2: "a",
         latitude: 50.85061,
         longitude: 4.35403,
       },
     },
     {
-      id: '3',
+      id: "3",
       field_address: {
-        locality: 'Antwerpen',
-        postal_code: '2000',
-        address_line1: 'Meir 1',
-        address_line2: 'a',
+        locality: "Antwerpen",
+        postal_code: "2000",
+        address_line1: "Meir 1",
+        address_line2: "a",
         latitude: 51.21878,
         longitude: 4.40559,
       },
@@ -76,13 +76,13 @@ export default function App() {
   const [selectedOffice, setSelectedOffice] =
     (React.useState < OfficeNode) | undefined | (null > null);
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: 'ENTER-YOUR-API-KEY-HERE',
+    id: "google-map-script",
+    googleMapsApiKey: "ENTER-YOUR-API-KEY-HERE",
   });
   const onLoad = React.useCallback(
-    mapInstance => {
+    (mapInstance) => {
       const bounds = new google.maps.LatLngBounds();
-      offices.forEach(office => {
+      offices.forEach((office) => {
         bounds.extend(
           new google.maps.LatLng(
             office.field_address.latitude,
@@ -96,7 +96,7 @@ export default function App() {
     [offices]
   );
   const onClickMarker = (officeId: string) => {
-    setSelectedOffice(offices.find(office => office.id === officeId));
+    setSelectedOffice(offices.find((office) => office.id === officeId));
   };
   return (
     <div className="App">
@@ -107,7 +107,7 @@ export default function App() {
             mapContainerClassName="c-office-overview__map"
             onLoad={onLoad}
           >
-            {offices.map(office => (
+            {offices.map((office) => (
               <Marker
                 key={office.id}
                 onClick={() => onClickMarker(office.id)}
@@ -126,9 +126,9 @@ export default function App() {
                 onCloseClick={() => setSelectedOffice(null)}
               >
                 <p>
-                  {selectedOffice.field_address.address_line1}{' '}
-                  {selectedOffice.field_address.address_line2} -{' '}
-                  {selectedOffice.field_address.postal_code}{' '}
+                  {selectedOffice.field_address.address_line1}{" "}
+                  {selectedOffice.field_address.address_line2} -{" "}
+                  {selectedOffice.field_address.postal_code}{" "}
                   {selectedOffice.field_address.locality}
                 </p>
               </InfoWindow>

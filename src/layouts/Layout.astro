@@ -22,7 +22,7 @@ import '../../styles/global.css';
   <head>
     <link rel="preconnect" href="https://res.cloudinary.com" />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-    {preloadImage ? <link rel="preload" fetchpriority="high" as="image" type="image/webp" imagesrcset={preloadImageSrcSet} href={preloadImage} imageSizes={preloadImageSizes} /> : null}
+    {preloadImage ? <link rel="preload" fetchpriority="high" as="image" type="image/webp" imageSrcSet={preloadImageSrcSet} href={preloadImage} imageSizes={preloadImageSizes} /> : null}
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
     <meta content={title ?? frontmatter?.title} property="og:title" />
@@ -44,6 +44,17 @@ import '../../styles/global.css';
       property="og:image"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+			import { webVitals } from "../lib/vitals";
+			let analyticsId = import.meta.env.PUBLIC_VERCEL_ANALYTICS_ID;
+			if (analyticsId) {
+				webVitals({
+					path: location.pathname,
+					params: location.search,
+					analyticsId,
+				});
+			}
+		</script>
   </head>
   <body class="flex flex-col">
     <Navigation />

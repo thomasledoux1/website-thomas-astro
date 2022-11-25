@@ -2,21 +2,21 @@
 let posts = await Astro.glob('./*.mdx');
 import Layout from '../../layouts/Layout.astro';
 import { prisma } from '../../lib/prisma-client';
-const blogDataDb = await prisma.post.findMany({
-  select: { view_count: true, url: true, like_count: true },
-});
+// const blogDataDb = await prisma.post.findMany({
+//   select: { view_count: true, url: true, like_count: true },
+// });
 const postsWithViewCounts = posts
   .map(post => ({
     ...post,
     formattedDate: new Date(post.frontmatter.date).toLocaleDateString(
       Astro.request.headers.get('Accept-Language')?.split(',')?.[0] ?? 'en-US'
     ),
-    viewCount:
-      blogDataDb?.find(blogFromDb => blogFromDb.url === post.url)?.view_count ??
-      null,
-    likeCount:
-      blogDataDb.find(blogFromDb => blogFromDb.url === post.url)?.like_count ??
-      null,
+    // viewCount:
+    //   blogDataDb?.find(blogFromDb => blogFromDb.url === post.url)?.view_count ??
+    //   null,
+    // likeCount:
+    //   blogDataDb.find(blogFromDb => blogFromDb.url === post.url)?.like_count ??
+    //   null,
   }))
   .sort(
     (a, b) => +new Date(b.frontmatter.date) - +new Date(a.frontmatter.date)
@@ -41,7 +41,7 @@ const postsWithViewCounts = posts
                     <h2 class="text-xl font-medium transition-colors">
                       {post.frontmatter.title}
                     </h2>
-                    {post.viewCount ? (
+                    <!-- {post.viewCount ? (
                       <div class="flex gap-x-1 items-center text-gray-500">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -65,8 +65,8 @@ const postsWithViewCounts = posts
                         </svg>
                         <span>{post.viewCount}</span>
                       </div>
-                    ) : null}
-                    {post.likeCount ? (
+                    ) : null} --!>
+                    <!-- {post.likeCount ? (
                       <>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +84,7 @@ const postsWithViewCounts = posts
                         </svg>
                         {post.likeCount}
                       </>
-                    ) : null}
+                    ) : null} --!>
                     <p>{post.frontmatter.minutesRead}ing time</p>
                     <ul class="flex flex-wrap lg:justify-center w-full">
                       {post.frontmatter.tags?.map((tag: string) => {

@@ -1,8 +1,8 @@
 ---
-title: 'Adding route transition animations in Remix'
-layout: '../../layouts/BlogLayout.astro'
-tags: ['remix', 'css', 'motion']
-date: '2022-05-29T15:14:39.004Z'
+title: "Adding route transition animations in Remix"
+layout: "../../layouts/BlogLayout.astro"
+tags: ["remix", "css", "motion"]
+date: "2022-05-29T15:14:39.004Z"
 ---
 
 # Adding route transition animations in Remix
@@ -19,8 +19,8 @@ The easiest way I found to do this, is using [Framer Motion](https://www.framer.
 This is what my App function looks like in `root.tsx` (the main entry point for the Remix app):
 
 ```tsx
-import { AnimatePresence, motion } from 'framer-motion';
-import { useOutlet, useLocation } from 'remix';
+import { AnimatePresence, motion } from "framer-motion";
+import { useOutlet, useLocation } from "remix";
 
 export default function App() {
   const outlet = useOutlet();
@@ -34,9 +34,9 @@ export default function App() {
           <AnimatePresence exitBeforeEnter initial={false}>
             <motion.main
               key={useLocation().pathname}
-              initial={{ x: '-10%', opacity: 0 }}
-              animate={{ x: '0', opacity: 1 }}
-              exit={{ y: '-10%', opacity: 0 }}
+              initial={{ x: "-10%", opacity: 0 }}
+              animate={{ x: "0", opacity: 1 }}
+              exit={{ y: "-10%", opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
               {outlet}

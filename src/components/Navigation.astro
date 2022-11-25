@@ -1,6 +1,6 @@
 ---
-import NavigationItems from './NavigationItems.astro';
-const logoLetterClass = 'letter inline-block top-0 relative';
+import NavigationItems from "./NavigationItems.astro";
+const logoLetterClass = "letter inline-block top-0 relative";
 ---
 
 <nav class="fixed bg-primary transition-colors h-16 w-full z-50">
@@ -52,30 +52,30 @@ const logoLetterClass = 'letter inline-block top-0 relative';
 </nav>
 <script>
   document
-    .getElementById('mobileMenuToggleBtn')
-    ?.addEventListener('click', () => {
+    .getElementById("mobileMenuToggleBtn")
+    ?.addEventListener("click", () => {
       document
-        .getElementById('mobileMenuToggleBtnFirstline')
-        ?.classList.toggle('rotate-[135deg]');
+        .getElementById("mobileMenuToggleBtnFirstline")
+        ?.classList.toggle("rotate-[135deg]");
       document
-        .getElementById('mobileMenuToggleBtnFirstline')
-        ?.classList.toggle('top-3');
+        .getElementById("mobileMenuToggleBtnFirstline")
+        ?.classList.toggle("top-3");
       document
-        .getElementById('mobileMenuToggleBtnSecondline')
-        ?.classList.toggle('opacity-0');
+        .getElementById("mobileMenuToggleBtnSecondline")
+        ?.classList.toggle("opacity-0");
       document
-        .getElementById('mobileMenuToggleBtnSecondline')
-        ?.classList.toggle('-left-[10rem]');
+        .getElementById("mobileMenuToggleBtnSecondline")
+        ?.classList.toggle("-left-[10rem]");
       document
-        .getElementById('mobileMenuToggleBtnThirdline')
-        ?.classList.toggle('-rotate-[135deg]');
+        .getElementById("mobileMenuToggleBtnThirdline")
+        ?.classList.toggle("-rotate-[135deg]");
       document
-        .getElementById('mobileMenuToggleBtnThirdline')
-        ?.classList.toggle('top-3');
+        .getElementById("mobileMenuToggleBtnThirdline")
+        ?.classList.toggle("top-3");
       document
-        .getElementById('mobileMenuToggleBtnThirdline')
-        ?.classList.toggle('top-5');
-      document.getElementById('mobileMenu')?.classList.toggle('scale-x-100');
-      document.getElementById('mobileMenu')?.classList.toggle('scale-x-0');
+        .getElementById("mobileMenuToggleBtnThirdline")
+        ?.classList.toggle("top-5");
+      document.getElementById("mobileMenu")?.classList.toggle("scale-x-100");
+      document.getElementById("mobileMenu")?.classList.toggle("scale-x-0");
     });
 </script>

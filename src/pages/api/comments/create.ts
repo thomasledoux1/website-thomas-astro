@@ -1,11 +1,11 @@
-import type { APIRoute } from 'astro';
-import { prisma } from '../../../lib/prisma-client';
+import type { APIRoute } from "astro";
+import { prisma } from "../../../lib/prisma-client";
 
 export const post: APIRoute = async ({ request }) => {
   const formData = await request.formData();
-  const comment = formData.get('comment') ?? '';
-  const author = formData.get('author') ?? '';
-  const blogUrl = formData.get('blogUrl') ?? '';
+  const comment = formData.get("comment") ?? "";
+  const author = formData.get("author") ?? "";
+  const blogUrl = formData.get("blogUrl") ?? "";
   const blog = await prisma.post.findFirst({
     where: { url: blogUrl as string },
   });

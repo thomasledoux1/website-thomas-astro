@@ -1,8 +1,8 @@
 ---
-title: 'Avoiding flash of unwanted animation on first render in React'
-layout: '../../layouts/BlogLayout.astro'
-tags: ['react', 'css', 'javascript']
-date: '2021-04-29T16:14:39.004Z'
+title: "Avoiding flash of unwanted animation on first render in React"
+layout: "../../layouts/BlogLayout.astro"
+tags: ["react", "css", "javascript"]
+date: "2021-04-29T16:14:39.004Z"
 ---
 
 # Avoiding flash of unwanted animation on first render in React
@@ -31,7 +31,7 @@ To avoid this behaviour, I had to find a way to only apply the transition once t
 For this use case, I found a custom `useIsMounted` hook useful.
 
 ```jsx
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect } from "react";
 
 const useIsMounted = () => {
   const isMounted = useRef(false);
@@ -50,7 +50,7 @@ Then in my component, I can easily import this hook and use it:
 ```jsx
 const Navigation = () => {
   const isMounted = useIsMounted();
-  return <div className={`navigation ${isMounted ? 'mounted' : ''}`}></div>;
+  return <div className={`navigation ${isMounted ? "mounted" : ""}`}></div>;
 };
 ```
 

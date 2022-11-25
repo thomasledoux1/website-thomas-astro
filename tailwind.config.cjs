@@ -1,12 +1,12 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require("tailwindcss/defaultTheme");
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  mode: 'jit',
+  mode: "jit",
   content: [
-    './src/pages/**/*.{astro,mdx}',
-    './src/layouts/**/*.{js,ts,jsx,tsx,astro}',
-    './src/components/**/*.{js,ts,jsx,tsx,astro}',
+    "./src/pages/**/*.{astro,mdx}",
+    "./src/layouts/**/*.{js,ts,jsx,tsx,astro}",
+    "./src/components/**/*.{js,ts,jsx,tsx,astro}",
   ],
   future: {
     hoverOnlyWhenSupported: true,
@@ -14,21 +14,21 @@ module.exports = {
   theme: {
     container: {
       padding: {
-        DEFAULT: '2rem',
-        sm: '3rem',
-        lg: '4rem',
-        xl: '5rem',
-        '2xl': '12rem',
+        DEFAULT: "2rem",
+        sm: "3rem",
+        lg: "4rem",
+        xl: "5rem",
+        "2xl": "12rem",
       },
     },
     extend: {
       colors: {
-        primary: 'var(--primary)',
-        secondary: 'var(--secondary)',
+        primary: "var(--primary)",
+        secondary: "var(--secondary)",
       },
       fontFamily: {
-        heading: ['Inter', ...defaultTheme.fontFamily.sans],
-        body: ['Inter', ...defaultTheme.fontFamily.sans],
+        heading: ["Inter", ...defaultTheme.fontFamily.sans],
+        body: ["Inter", ...defaultTheme.fontFamily.sans],
       },
     },
   },

@@ -1,12 +1,12 @@
 ---
-import '../../styles/global.css';
-import Layout from '../layouts/Layout.astro';
+import "../../styles/global.css";
+import Layout from "../layouts/Layout.astro";
 const age = Math.floor(
-  (new Date().getTime() - new Date('1991-07-11').getTime()) / 3.15576e10
+  (new Date().getTime() - new Date("1991-07-11").getTime()) / 3.15576e10
 );
 Astro.response.headers.set(
-  'cache-control',
-  'public, max-age=0, s-max-age=86400'
+  "cache-control",
+  "public, max-age=0, s-max-age=86400"
 );
 ---
 
@@ -53,8 +53,8 @@ Astro.response.headers.set(
               an app for a client in React Native during this period.
             </p>
             <p>
-              You can read more about my work in the{' '}
-              <a class="link" href="/portfolio">portfolio</a>{' '}
+              You can read more about my work in the{" "}
+              <a class="link" href="/portfolio">portfolio</a>{" "}
               section .
             </p>
           </div>

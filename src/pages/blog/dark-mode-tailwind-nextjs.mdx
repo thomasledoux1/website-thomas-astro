@@ -1,8 +1,8 @@
 ---
-title: 'Easy way to use Dark Mode in Next.js + Tailwind'
-layout: '../../layouts/BlogLayout.astro'
-tags: ['nextjs', 'javascript', 'css', 'tailwind']
-date: '2021-01-20T15:14:39.004Z'
+title: "Easy way to use Dark Mode in Next.js + Tailwind"
+layout: "../../layouts/BlogLayout.astro"
+tags: ["nextjs", "javascript", "css", "tailwind"]
+date: "2021-01-20T15:14:39.004Z"
 ---
 
 # Easy way to use Dark Mode in Next.js + Tailwind
@@ -22,7 +22,7 @@ To link this functionality up with Next.js I used the lightweight <b>next-themes
 After installing this library, simply change your \_app.js to include the ThemeProvider:
 
 ```jsx
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider } from "next-themes";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -43,7 +43,7 @@ export default MyApp;
 For the toggle button I used the following:
 
 ```jsx
-import { useTheme } from 'next-themes';
+import { useTheme } from "next-themes";
 
 const { theme, setTheme } = useTheme();
 
@@ -52,7 +52,7 @@ return (
     aria-label="Toggle Dark Mode"
     type="button"
     className="p-3 h-12 w-12 order-2 md:order-3"
-    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
   />
 );
 ```
