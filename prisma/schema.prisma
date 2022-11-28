@@ -12,7 +12,6 @@ datasource db {
 model Post {
   id         Int       @id @default(autoincrement())
   createdAt  DateTime  @default(now())
-  view_count Int
   url        String
   like_count Int @default(0)
   Comment    Comment[]

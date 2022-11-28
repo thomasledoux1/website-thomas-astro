@@ -3,7 +3,7 @@ let posts = await Astro.glob('./*.mdx');
 import Layout from '../../layouts/Layout.astro';
 import { prisma } from '../../lib/prisma-client';
 // const blogDataDb = await prisma.post.findMany({
-//   select: { view_count: true, url: true, like_count: true },
+//   select: { url: true, like_count: true },
 // });
 const postsWithViewCounts = posts
   .map(post => ({
@@ -11,9 +11,6 @@ const postsWithViewCounts = posts
     formattedDate: new Date(post.frontmatter.date).toLocaleDateString(
       Astro.request.headers.get('Accept-Language')?.split(',')?.[0] ?? 'en-US'
     ),
-    // viewCount:
-    //   blogDataDb?.find(blogFromDb => blogFromDb.url === post.url)?.view_count ??
-    //   null,
     // likeCount:
     //   blogDataDb.find(blogFromDb => blogFromDb.url === post.url)?.like_count ??
     //   null,
