@@ -9,27 +9,23 @@ export const post: APIRoute = async ({ request }) => {
   const blog = await prisma.post.findFirst({
     where: { url: blogUrl as string },
   });
-  if (!blog) {
-    await prisma.post.create({
-      data: {
-        url: blogUrl as string,
-        Comment: {
+
+  await prisma.comment.create({
+    data: {
+      author: author as string,
+      text: comment as string,
+      post: {
+        connectOrCreate: {
           create: {
-            author: author as string,
-            text: comment as string,
+            url: blogUrl as string,
+          },
+          where: {
+            id: blog?.id,
           },
         },
       },
-    });
-  } else {
-    await prisma.comment.create({
-      data: {
-        author: author as string,
-        text: comment as string,
-        postId: blog.id,
-      },
-    });
-  }
+    },
+  });
 
   return new Response(null, {
     status: 200,
