@@ -1,0 +1,214 @@
+---
+title: 'Adding Vercel og:image generation to Astro project with Edge function'
+layout: '../../layouts/BlogLayout.astro'
+tags: ['javascript', 'edge', 'vercel']
+date: '2022-12-10T16:14:39.004Z'
+---
+
+# Adding Vercel og:image generation to Astro project with Edge function
+
+In a [previous blog post](https://www.thomasledoux.be/blog/create-blog-astro-mdx), I mentioned that I was using a Next.js project to run the `@vercel/og` logic to generate my og:images for my blog posts.
+This is now no longer needed, I figured out how to run this in my Astro blog project (this site ;-)).
+
+A few changes were needed for this.
+The original code in my Next.js project looked like this:
+
+```jsx
+// /pages/api/og.jsx
+
+import { ImageResponse } from '@vercel/og';
+
+export const config = {
+  runtime: 'experimental-edge',
+};
+
+const font = fetch(new URL('../../assets/Inter.ttf', import.meta.url)).then(
+  res => res.arrayBuffer()
+);
+
+export default async function handler(req) {
+  const fontData = await font;
+
+  try {
+    const { searchParams } = new URL(req.url);
+
+    // ?title=<title>
+    const hasTitle = searchParams.has('title');
+    const title = hasTitle
+      ? searchParams.get('title')?.slice(0, 200)
+      : 'My default title';
+
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            background: 'white',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            textAlign: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            fontFamily: 'Inter',
+            backgroundImage:
+              'radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)',
+            backgroundSize: '100px 100px',
+          }}
+        >
+          <div
+            style={{
+              width: '80%',
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <p style={{ fontSize: 32 }}>Thomas Ledoux&apos;s blog</p>
+            <p style={{ fontSize: 64 }}>{title}</p>
+          </div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 600,
+        fonts: [
+          {
+            name: 'Inter',
+            data: fontData,
+            style: 'normal',
+          },
+        ],
+      }
+    );
+  } catch (e) {
+    console.log(`${e.message}`);
+    return new Response(`Failed to generate the image`, {
+      status: 500,
+    });
+  }
+}
+```
+
+As you can see, JSX code is being used to build up the output for my og:image.
+Using JSX code inside an serverless/edge API function only works inside the `/api` folder inside Next.js projects deployed to Vercel.
+On other frameworks deployed to Vercel (like Astro), this is [not possible](https://vercel.com/docs/concepts/functions/serverless-functions/supported-languages#node.js).
+When attempting this, I got error messages like the following: `vc-file-system:api/og.js:25:8: ERROR: The JSX syntax extension is not currently enabled`.
+
+So I had to find a way around using JSX inside the API function.
+Luckily, the `ImageResponse` function also allows for ["React-elements-like" objects](https://github.com/vercel/satori#use-without-jsx) to be used.
+Using the example provided on the link above, I created the following Edge API Route inside my Astro project:
+
+```javascript
+// /api/og.js
+
+import { ImageResponse } from '@vercel/og';
+
+export const config = {
+  runtime: 'experimental-edge',
+};
+
+const font = fetch(new URL('../assets/Inter.ttf', import.meta.url)).then(res =>
+  res.arrayBuffer()
+);
+
+export default async function handler(req) {
+  const fontData = await font;
+
+  try {
+    const { searchParams } = new URL(req.url);
+
+    // ?title=<title>
+    const hasTitle = searchParams.has('title');
+    const title = hasTitle
+      ? searchParams.get('title')?.slice(0, 200)
+      : 'My default title';
+
+    const html = {
+      type: 'div',
+      props: {
+        children: [
+          {
+            type: 'div',
+            props: {
+              style: {
+                width: '80%',
+                display: 'flex',
+                flexDirection: 'column',
+                textAlign: 'center',
+                alignItems: 'center',
+              },
+              children: [
+                {
+                  type: 'p',
+                  props: {
+                    style: { fontSize: 32 },
+                    children: 'Blog by Thomas Ledoux',
+                  },
+                },
+                {
+                  type: 'p',
+                  props: {
+                    style: { fontSize: 64 },
+                    children: title,
+                  },
+                },
+              ],
+            },
+          },
+        ],
+        style: {
+          background: 'white',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          textAlign: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          fontFamily: 'Inter',
+          backgroundImage:
+            'radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)',
+          backgroundSize: '100px 100px',
+        },
+      },
+    };
+
+    return new ImageResponse(html, {
+      width: 1200,
+      height: 600,
+      fonts: [
+        {
+          name: 'Inter',
+          data: fontData,
+          style: 'normal',
+        },
+      ],
+    });
+  } catch (e) {
+    console.log(`${e.message}`);
+    return new Response(`Failed to generate the image`, {
+      status: 500,
+    });
+  }
+}
+```
+
+Now, I want the API route to be picked up by Vercel.
+By default the Astro build command will not pick up these API routes in the root directory (since they are part of the (vercel build command)[https://github.com/withastro/astro/issues/5451#issuecomment-1339720682]).
+So to get this working in my use case, I switched to using the (Vercel CLI)[https://vercel.com/docs/cli] to build and deploy my project.
+After installing the cli globally with `npm i -g vercel`, I can run `vercel build` to build my project locally, and run `vercel deploy --prebuilt` afterwards to deploy the locally created build directly to Vercel.
+I also opted to disable the automatic deployments on pushes to my git repository, since I'm doing the deployments through the CLI now.
+Disabling the automatic deployments was done by adding a `vercel.json` file in the root directory, containing the following:
+
+```json
+{
+  "git": {
+    "deploymentEnabled": false
+  }
+}
+```
+
+Hopefully this helps other people wanting to use serverless/edge API functions in their Astro projects.
+Source code can be found [here](https://github.com/thomasledoux1/website-thomas-astro).
