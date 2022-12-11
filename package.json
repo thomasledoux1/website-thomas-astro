@@ -31,8 +31,6 @@
     "@vercel/analytics": "^0.1.5",
     "@vercel/og": "^0.0.21",
     "classnames": "^2.3.2",
-    "mjml": "^4.13.0",
-    "nodemailer": "^6.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reading-time": "^1.5.0",

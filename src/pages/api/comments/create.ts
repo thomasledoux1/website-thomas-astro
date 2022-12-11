@@ -1,39 +1,49 @@
 import type { APIRoute } from 'astro';
-import nodemailer from 'nodemailer';
 import { prisma } from '../../../lib/prisma-client';
-import mjml2html from 'mjml';
-
-let transporter = nodemailer.createTransport({
-  host: 'smtp.sendgrid.net',
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: 'apikey',
-    pass: process.env.SENDGRID_API_KEY,
-  },
-});
 
 async function sendMail(blogUrl: string, author: string, comment: string) {
-  const htmlOutput = mjml2html(`
-    <mjml>
-      <mj-body>
-        <mj-section>
-          <mj-column>
-            <mj-text>
-              A new comment was added to blog ${blogUrl} by ${author}:
-              ${comment}
-            </mj-text>
-          </mj-column>
-        </mj-section>
-      </mj-body>
-    </mjml>`);
+  try {
+    fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        personalizations: [
+          {
+            to: [
+              {
+                email: process.env.EMAIL_TO,
+                name: 'Thomas Ledoux',
+              },
+            ],
+          },
+        ],
+        from: {
+          email: 'info@thomasledoux.be',
+          name: 'Thomas Ledoux',
+        },
+        replyTo: {
+          email: 'info@thomasledoux.be',
+          name: 'Thomas Ledoux',
+        },
+        subject: `New comment on ${blogUrl}`,
+        content: [
+          {
+            type: 'text/html',
+            value: `<p>New comment on <b>${blogUrl}</b> by <b>${author}</b>: ${comment}</p>`,
+          },
+        ],
+      }),
+    });
+  } catch (error: any) {
+    console.error(error);
 
-  await transporter.sendMail({
-    from: '"Thomas Ledoux" <info@thomasledoux.be>',
-    to: process.env.EMAIL_TO,
-    subject: `New comment on post ${blogUrl}`,
-    html: htmlOutput.html,
-  });
+    if (error.response) {
+      console.error(error.response.body);
+    }
+  }
 }
 
 export const post: APIRoute = async ({ request }) => {
