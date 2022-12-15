@@ -1,5 +1,5 @@
 ---
-import Layout from "./Layout.astro";
+import Layout from './Layout.astro';
 interface Props {
   frontmatter: {
     minutesRead: string;
@@ -9,9 +9,7 @@ interface Props {
   };
 }
 const { frontmatter } = Astro.props;
-import CommentsUpvotesWrapper from "../components/CommentsUpvotesWrapper";
-import { getCommentsForBlog } from "../lib/get-comments-for-blog";
-const comments = await getCommentsForBlog(frontmatter.url);
+import CommentsUpvotesWrapper from '../components/CommentsUpvotesWrapper';
 ---
 
 <Layout
@@ -38,10 +36,6 @@ const comments = await getCommentsForBlog(frontmatter.url);
     <slot />
   </article>
   <div>
-    <CommentsUpvotesWrapper
-      client:visible
-      initialComments={comments}
-      blogUrl={frontmatter.url}
-    />
+    <CommentsUpvotesWrapper client:visible blogUrl={frontmatter.url} />
   </div>
 </Layout>

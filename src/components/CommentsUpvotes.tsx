@@ -1,15 +1,9 @@
-import type { Comment } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import { useRef, useState } from "react";
-const CommentsUpvotes = ({
-  initialComments,
-  blogUrl,
-}: {
-  initialComments?: Comment[];
-  blogUrl: string;
-}) => {
+import type { Comment } from '@prisma/client';
+import { useQuery } from '@tanstack/react-query';
+import { useRef, useState } from 'react';
+const CommentsUpvotes = ({ blogUrl }: { blogUrl: string }) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [formState, setFormState] = useState<"idle" | "loading">("idle");
+  const [formState, setFormState] = useState<'idle' | 'loading'>('idle');
   const upToDateCommentsQuery = useQuery({
     queryKey: [`comments-${blogUrl}`],
     queryFn: async () => {
@@ -19,22 +13,24 @@ const CommentsUpvotes = ({
       const allCommentsInDbJson = await allCommentsInDb.json();
       return allCommentsInDbJson as Comment[];
     },
-    initialData: initialComments,
   });
   const onSubmit = async (e: React.FormEvent) => {
-    setFormState("loading");
+    setFormState('loading');
     e.preventDefault();
     if (e.currentTarget) {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
-      formData.set("blogUrl", blogUrl);
-      await fetch("/api/comments/create", {
-        method: "POST",
-        body: formData,
+      await fetch('/api/comments/create', {
+        method: 'POST',
+        body: JSON.stringify({
+          author: formData.get('author'),
+          comment: formData.get('comment'),
+          blogUrl,
+        }),
       });
       formRef.current?.reset();
       upToDateCommentsQuery.refetch();
     }
-    setFormState("idle");
+    setFormState('idle');
   };
   return (
     <>
@@ -64,18 +60,18 @@ const CommentsUpvotes = ({
           name="comment"
         ></textarea>
         <button
-          disabled={formState === "loading"}
+          disabled={formState === 'loading'}
           className="px-8 mt-4 py-4 bg-secondary text-white rounded-lg lg:hover:scale-[1.04] transition-transform disabled:opacity-50 "
           type="submit"
         >
-          {formState === "loading" ? "Submitting" : "Submit comment"}
+          {formState === 'loading' ? 'Submitting' : 'Submit comment'}
         </button>
       </form>
 
       <h2 className="text-xl lg:text-2xl mb-4 font-bold">Comments</h2>
       {upToDateCommentsQuery?.data && upToDateCommentsQuery?.data.length > 0 ? (
         <div className="flex flex-col gap-y-4">
-          {upToDateCommentsQuery?.data?.map((comment) => (
+          {upToDateCommentsQuery?.data?.map(comment => (
             <div key={comment.id} className="flex flex-col">
               <h3 className="font-bold">{comment.author}</h3>
               <div>{comment.text}</div>

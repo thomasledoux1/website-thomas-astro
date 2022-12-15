@@ -1,19 +1,12 @@
 ---
 let posts = await Astro.glob('./*.mdx');
 import Layout from '../../layouts/Layout.astro';
-import { prisma } from '../../lib/prisma-client';
-// const blogDataDb = await prisma.post.findMany({
-//   select: { url: true, like_count: true },
-// });
 const postsWithViewCounts = posts
   .map(post => ({
     ...post,
     formattedDate: new Date(post.frontmatter.date).toLocaleDateString(
       Astro.request.headers.get('Accept-Language')?.split(',')?.[0] ?? 'en-US'
     ),
-    // likeCount:
-    //   blogDataDb.find(blogFromDb => blogFromDb.url === post.url)?.like_count ??
-    //   null,
   }))
   .sort(
     (a, b) => +new Date(b.frontmatter.date) - +new Date(a.frontmatter.date)
@@ -38,50 +31,6 @@ const postsWithViewCounts = posts
                     <h2 class="text-xl font-medium transition-colors">
                       {post.frontmatter.title}
                     </h2>
-                    <!-- {post.viewCount ? (
-                      <div class="flex gap-x-1 items-center text-gray-500">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-6 w-6"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                          />
-                        </svg>
-                        <span>{post.viewCount}</span>
-                      </div>
-                    ) : null} --!>
-                    <!-- {post.likeCount ? (
-                      <>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width={1.5}
-                          stroke="currentColor"
-                          class="w-6 h-6"
-                        >
-                          <path
-                            stroke-line-cap="round"
-                            stroke-line-join="round"
-                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                          />
-                        </svg>
-                        {post.likeCount}
-                      </>
-                    ) : null} --!>
                     <p>{post.frontmatter.minutesRead}ing time</p>
                     <ul class="flex flex-wrap lg:justify-center w-full">
                       {post.frontmatter.tags?.map((tag: string) => {

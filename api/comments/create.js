@@ -1,9 +1,18 @@
-import type { APIRoute } from 'astro';
-import { prisma } from '../../../lib/prisma-client';
+let prisma;
+let fetcher;
 
-async function sendMail(blogUrl: string, author: string, comment: string) {
+if (process.env.NODE_ENV === 'development') {
+  import('@prisma/client.js').then(mod => (prisma = new mod.PrismaClient()));
+} else {
+  import('@prisma/client/edge.js').then(
+    mod => (prisma = new mod.PrismaClient())
+  );
+}
+import('node-fetch').then(mod => (fetcher = mod.default));
+
+async function sendMail(blogUrl, author, comment) {
   try {
-    fetch('https://api.sendgrid.com/v3/mail/send', {
+    fetcher('https://api.sendgrid.com/v3/mail/send', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
@@ -37,7 +46,7 @@ async function sendMail(blogUrl: string, author: string, comment: string) {
         ],
       }),
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     if (error.response) {
@@ -46,38 +55,37 @@ async function sendMail(blogUrl: string, author: string, comment: string) {
   }
 }
 
-export const post: APIRoute = async ({ request }) => {
-  const formData = await request.formData();
-  const comment = formData.get('comment') ?? '';
-  const author = formData.get('author') ?? '';
-  const blogUrl = formData.get('blogUrl') ?? '';
+export default async function handler(req, res) {
+  const { comment, author, blogUrl } = await JSON.parse(req.body);
   const blog = await prisma.post.findFirst({
-    where: { url: blogUrl as string },
+    where: { url: blogUrl },
   });
 
-  await prisma.comment.create({
-    data: {
-      author: author as string,
-      text: comment as string,
-      post: {
-        connectOrCreate: {
-          create: {
-            url: blogUrl as string,
-          },
-          where: {
-            id: blog?.id ?? 0,
+  try {
+    await prisma.comment.create({
+      data: {
+        author: author ?? '',
+        text: comment ?? '',
+        post: {
+          connectOrCreate: {
+            create: {
+              url: blogUrl ?? '',
+            },
+            where: {
+              id: blog?.id ?? 0,
+            },
           },
         },
       },
-    },
-  });
+    });
+  } catch (err) {
+    console.error('Error saving comment', err);
+  }
   try {
-    sendMail(blogUrl as string, author as string, comment as string);
+    sendMail(blogUrl, author, comment);
   } catch (err) {
     console.error('Error sending email', err);
   }
 
-  return new Response(null, {
-    status: 200,
-  });
-};
+  return res.status(200).send({});
+}

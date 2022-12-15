@@ -47,14 +47,12 @@ import '../../styles/global.css';
     <script defer src="/_vercel/insights/script.js"></script>
     <script>
 			import { webVitals } from "../lib/vitals";
-			let analyticsId = import.meta.env.PUBLIC_VERCEL_ANALYTICS_ID;
-			if (analyticsId) {
-				webVitals({
-					path: location.pathname,
-					params: location.search,
-					analyticsId,
-				});
-			}
+			
+      webVitals({
+        path: location.pathname,
+        params: location.search,
+        analyticsId: 'Z8ALnhWYTfGZLPIKYZ7oZzxG5yf',
+      });
 		</script>
   </head>
   <body class="flex flex-col">

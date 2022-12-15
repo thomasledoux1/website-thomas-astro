@@ -2,6 +2,9 @@
   "name": "@example/basics",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": "18.12.1"
+  },
   "scripts": {
     "dev": "astro dev --host",
     "start": "astro dev",
@@ -31,6 +34,7 @@
     "@vercel/analytics": "^0.1.5",
     "@vercel/og": "^0.0.21",
     "classnames": "^2.3.2",
+    "node-fetch": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reading-time": "^1.5.0",

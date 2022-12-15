@@ -8,7 +8,7 @@ const font = fetch(new URL('../assets/Inter.ttf', import.meta.url)).then(res =>
   res.arrayBuffer()
 );
 
-export default async function handler(req) {
+export default async function handler(req, res) {
   const fontData = await font;
 
   try {
@@ -83,8 +83,6 @@ export default async function handler(req) {
     });
   } catch (e) {
     console.log(`${e.message}`);
-    return new Response(`Failed to generate the image`, {
-      status: 500,
-    });
+    return res.status(500).json({ error: 'Failed to generate the image' });
   }
 }
