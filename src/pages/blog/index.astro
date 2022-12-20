@@ -1,16 +1,15 @@
 ---
-let posts = await Astro.glob('./*.mdx');
+import { getCollection } from 'astro:content';
+const allBlogPosts = await getCollection('blog');
 import Layout from '../../layouts/Layout.astro';
-const postsWithViewCounts = posts
+const postsWithFormattedDate = allBlogPosts
   .map(post => ({
     ...post,
-    formattedDate: new Date(post.frontmatter.date).toLocaleDateString(
+    formattedDate: new Date(post.data.date).toLocaleDateString(
       Astro.request.headers.get('Accept-Language')?.split(',')?.[0] ?? 'en-US'
     ),
   }))
-  .sort(
-    (a, b) => +new Date(b.frontmatter.date) - +new Date(a.frontmatter.date)
-  );
+  .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
 ---
 
 <Layout title="The Thomas Ledoux blog">
@@ -19,33 +18,37 @@ const postsWithViewCounts = posts
       <h1 class="text-center text-2xl font-bold mb-6">Personal blog</h1>
       <div class="flex flex-col gap-6 items-center">
         {
-          postsWithViewCounts.map(post => (
-            <a
-              class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform px-8 py-4 lg:hover:scale-[1.04]"
-              href={post.url}
-            >
-              <article class="relative rounded-lg  sm:mx-0">
-                <date class="text-sm">{post.formattedDate}</date>
-                <div class="flex justify-between">
-                  <div class="flex justify-between lg:items-center w-full flex-col gap-y-2">
-                    <h2 class="text-xl font-medium transition-colors">
-                      {post.frontmatter.title}
-                    </h2>
-                    <p>{post.frontmatter.minutesRead}ing time</p>
-                    <ul class="flex flex-wrap lg:justify-center w-full">
-                      {post.frontmatter.tags?.map((tag: string) => {
-                        return (
-                          <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
-                            {tag}
-                          </li>
-                        );
-                      })}
-                    </ul>
+          postsWithFormattedDate.map(async post => {
+            const { injectedFrontmatter } = await post.render();
+
+            return (
+              <a
+                class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform px-8 py-4 lg:hover:scale-[1.04]"
+                href={`/blog/${post.slug}`}
+              >
+                <article class="relative rounded-lg  sm:mx-0">
+                  <date class="text-sm">{post.formattedDate}</date>
+                  <div class="flex justify-between">
+                    <div class="flex justify-between lg:items-center w-full flex-col gap-y-2">
+                      <h2 class="text-xl font-medium transition-colors">
+                        {post.data.title}
+                      </h2>
+                      <p>{injectedFrontmatter.minutesRead}ing time</p>
+                      <ul class="flex flex-wrap lg:justify-center w-full">
+                        {post.data.tags?.map((tag: string) => {
+                          return (
+                            <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
+                              {tag}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </article>
-            </a>
-          ))
+                </article>
+              </a>
+            );
+          })
         }
       </div>
     </div>

@@ -1,10 +1,10 @@
 export default async function handler(req, res) {
-  fetch(process.env.FORMSPREE_URL, {
-    method: 'post',
+  await fetch(process.env.FORMSPREE_URL, {
+    method: 'POST',
     headers: {
       Accept: 'application/json',
     },
-    body: formData,
+    body: JSON.stringify(req.body),
   }).catch(e => console.error(e));
   return res.redirect(301, '/contact/thanks');
 }

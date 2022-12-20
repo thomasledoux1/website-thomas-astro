@@ -1,0 +1,18 @@
+---
+import { getCollection, CollectionEntry } from 'astro:content';
+
+const blogs = await getCollection('blog');
+const { slug } = Astro.params;
+console.log(slug);
+const page = blogs.find(blog => blog.slug === slug);
+console.log(page);
+if (!page) return Astro.redirect('/404');
+
+interface Props {
+  // Optionally use `CollectionEntry` for type safety
+  entry: CollectionEntry<'blog'>;
+}
+const { Content } = await page.render();
+---
+
+<Content />
