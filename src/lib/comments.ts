@@ -1,7 +1,20 @@
 import type { Comment } from '@prisma/client';
-import { prisma } from './prisma';
+import type { PrismaClient } from '@prisma/client/index.js';
+
+let prisma: PrismaClient | undefined;
+
+if (process.env.NODE_ENV === 'development') {
+  import('@prisma/client/index.js').then(
+    mod => (prisma = new mod.PrismaClient())
+  );
+} else {
+  import('@prisma/client/edge.js').then(
+    mod => (prisma = new mod.PrismaClient())
+  );
+}
 
 export const getComments = async (blogUrl: string) => {
+  console.log('prisma client: ', prisma);
   const comments = await prisma?.post.findFirst({
     where: { url: (blogUrl as string | undefined) ?? undefined },
     include: { Comment: true },
