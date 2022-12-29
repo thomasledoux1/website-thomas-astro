@@ -1,25 +1,30 @@
 import type { Comment } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-const CommentsUpvotes = ({ blogUrl }: { blogUrl: string }) => {
+const Comments = ({
+  blogUrl,
+  initialComments,
+}: {
+  blogUrl: string;
+  initialComments?: Comment[];
+}) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [formState, setFormState] = useState<'idle' | 'loading'>('idle');
   const upToDateCommentsQuery = useQuery({
     queryKey: [`comments-${blogUrl}`],
     queryFn: async () => {
-      const allCommentsInDb = await fetch(
-        `/api/comments/list?blogUrl=${blogUrl}`
-      );
+      const allCommentsInDb = await fetch(`/api/comments?blogUrl=${blogUrl}`);
       const allCommentsInDbJson = await allCommentsInDb.json();
       return allCommentsInDbJson as Comment[];
     },
+    initialData: initialComments,
   });
   const onSubmit = async (e: React.FormEvent) => {
     setFormState('loading');
     e.preventDefault();
     if (e.currentTarget) {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
-      await fetch('/api/comments/create', {
+      await fetch('/api/comments', {
         method: 'POST',
         body: JSON.stringify({
           author: formData.get('author'),
@@ -85,4 +90,4 @@ const CommentsUpvotes = ({ blogUrl }: { blogUrl: string }) => {
   );
 };
 
-export default CommentsUpvotes;
+export default Comments;

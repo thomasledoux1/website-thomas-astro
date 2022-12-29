@@ -1,5 +1,6 @@
 ---
 import Layout from './Layout.astro';
+const { frontmatter } = Astro.props;
 interface Props {
   frontmatter: {
     minutesRead: string;
@@ -8,8 +9,34 @@ interface Props {
     url: string;
   };
 }
-const { frontmatter } = Astro.props;
-import CommentsUpvotesWrapper from '../components/CommentsUpvotesWrapper';
+import type { PrismaClient } from '@prisma/client/index.js';
+
+let prisma: PrismaClient | undefined;
+console.log(import.meta.env);
+
+if (import.meta.env.MODE === 'development') {
+  import('@prisma/client/index.js').then(
+    mod => (prisma = new mod.PrismaClient())
+  );
+} else {
+  import('@prisma/client/edge.js').then(
+    mod =>
+      (prisma = new mod.PrismaClient({
+        datasources: {
+          db: {
+            url: import.meta.env.DATABASE_URL,
+          },
+        },
+      }))
+  );
+}
+const comments = await prisma?.post.findFirst({
+  where: { url: (frontmatter?.url as string | undefined) ?? undefined },
+  include: { Comment: true },
+  orderBy: { createdAt: 'asc' },
+});
+const initialComments = comments?.Comment;
+import CommentsWrapper from '../components/CommentsWrapper';
 ---
 
 <Layout
@@ -36,6 +63,10 @@ import CommentsUpvotesWrapper from '../components/CommentsUpvotesWrapper';
     <slot />
   </article>
   <div>
-    <CommentsUpvotesWrapper client:visible blogUrl={frontmatter.url} />
+    <CommentsWrapper
+      client:visible
+      blogUrl={frontmatter.url}
+      initialComments={initialComments}
+    />
   </div>
 </Layout>
