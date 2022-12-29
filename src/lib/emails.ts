@@ -5,7 +5,7 @@ export async function sendMail(
   fetch('https://api.sendgrid.com/v3/mail/send', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
+      Authorization: `Bearer ${import.meta.env.SENDGRID_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -13,7 +13,7 @@ export async function sendMail(
         {
           to: [
             {
-              email: process.env.EMAIL_TO,
+              email: import.meta.env.EMAIL_TO,
               name: 'Thomas Ledoux',
             },
           ],
