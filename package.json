@@ -23,7 +23,7 @@
   "dependencies": {
     "@astrojs/mdx": "^0.14.0",
     "@astrojs/react": "^1.2.2",
-    "@astrojs/vercel": "^2.4.0",
+    "@astrojs/vercel": "^2.3.4",
     "@prisma/client": "^4.8.0",
     "@tanstack/react-query": "^4.20.4",
     "@vercel/og": "^0.0.21",
