@@ -3,6 +3,7 @@ import type { PrismaClient } from '@prisma/client/index.js';
 
 let prisma: PrismaClient | undefined;
 
+console.log(import.meta.env);
 if (import.meta.env.MODE === 'development') {
   import('@prisma/client/index.js').then(
     mod => (prisma = new mod.PrismaClient())
