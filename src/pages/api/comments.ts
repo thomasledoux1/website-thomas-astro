@@ -3,7 +3,7 @@ import type { Comment } from '@prisma/client';
 import type { PrismaClient } from '@prisma/client/index.js';
 
 let prisma: PrismaClient | undefined;
-console.log(import.meta.env);
+console.log(process.env);
 
 if (import.meta.env.MODE === 'development') {
   import('@prisma/client/index.js').then(
