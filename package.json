@@ -21,7 +21,7 @@
     "prisma": "^4.8.0"
   },
   "dependencies": {
-    "@astrojs/mdx": "^0.14.0",
+    "@astrojs/mdx": "^0.12.0",
     "@astrojs/react": "^1.2.2",
     "@astrojs/vercel": "^2.3.4",
     "@prisma/client": "^4.8.0",
