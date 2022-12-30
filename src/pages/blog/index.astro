@@ -21,6 +21,7 @@ const postsWithViewCounts = posts
         {
           postsWithViewCounts.map(post => (
             <a
+              rel="prefetch"
               class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform px-8 py-4 lg:hover:scale-[1.04]"
               href={post.url}
             >
