@@ -1,26 +1,26 @@
 ---
-import Stars from "../components/Stars.astro";
-import TimelineItem from "../components/TimelineItem.astro";
-import Layout from "../layouts/Layout.astro";
+import Stars from '../components/Stars.astro';
+import TimelineItem from '../components/TimelineItem.astro';
+import Layout from '../layouts/Layout.astro';
 const age = Math.floor(
-  (new Date().getTime() - new Date("1991-07-11").getTime()) / 3.15576e10
+  (new Date().getTime() - new Date('1991-07-11').getTime()) / 3.15576e10
 );
 const technologies = [
-  { name: "React", numberOfStars: 4 },
-  { name: "Vue.js", numberOfStars: 2 },
-  { name: "Angular", numberOfStars: 2 },
-  { name: "Gatsby.js", numberOfStars: 3 },
-  { name: "Next.js", numberOfStars: 4 },
-  { name: "React Native", numberOfStars: 3 },
-  { name: "Swift", numberOfStars: 2 },
-  { name: "Wordpress", numberOfStars: 3 },
-  { name: "ES6", numberOfStars: 4 },
-  { name: "HTML", numberOfStars: 5 },
-  { name: "CSS", numberOfStars: 4 },
+  { name: 'React', numberOfStars: 4 },
+  { name: 'Vue.js', numberOfStars: 2 },
+  { name: 'Angular', numberOfStars: 2 },
+  { name: 'Gatsby.js', numberOfStars: 3 },
+  { name: 'Next.js', numberOfStars: 4 },
+  { name: 'React Native', numberOfStars: 3 },
+  { name: 'Swift', numberOfStars: 2 },
+  { name: 'Wordpress', numberOfStars: 3 },
+  { name: 'ES6', numberOfStars: 4 },
+  { name: 'HTML', numberOfStars: 5 },
+  { name: 'CSS', numberOfStars: 4 },
 ];
 Astro.response.headers.set(
-  "cache-control",
-  "public, max-age=0, s-max-age=86400"
+  'cache-control',
+  'public, max-age=0, s-max-age=86400'
 );
 ---
 
@@ -28,7 +28,7 @@ Astro.response.headers.set(
   description="Thomas Ledoux' CV"
   title="Thomas Ledoux - CV"
   preloadImage="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
-  preloadImageSrcSet="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_300/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+  preloadImageSrcSet="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_450/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
   preloadImageSizes="(max-width: 767px) 75vw, 45vw"
 >
   <section>
@@ -42,7 +42,7 @@ Astro.response.headers.set(
             fetchpriority="high"
             width={320}
             height={320}
-            srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_300/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+            srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_450/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
             sizes="(max-width: 767px) 75vw, 45vw"
           />
           <p class="mt-4">Hello, is it me you&apos;re looking for?</p>
@@ -55,7 +55,7 @@ Astro.response.headers.set(
         <div class="leading-[1.6]">
           <p>
             Hi, I&apos;m Thomas. I&apos;m {age} years old, living in Ghent. I&apos;m
-            a professional <b>Frontend Developer</b>, currently working at{" "}
+            a professional <b>Frontend Developer</b>, currently working at{' '}
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -80,7 +80,7 @@ Astro.response.headers.set(
       <div class="col-span-1 mt-6 sm:mt-0">
         <h2 class="text-xl lg:text-2xl mb-4 font-bold">Technologies</h2>
         {
-          technologies.map((technology) => (
+          technologies.map(technology => (
             <div class="flex justify-between mb-4">
               <div>{technology.name}</div>
               <Stars amount={technology.numberOfStars} />
@@ -96,7 +96,7 @@ Astro.response.headers.set(
           <TimelineItem index={0}>
             <time class="text-xs text-grey">October 2018 - now</time>
             <p>
-              Frontend Developer at{" "}
+              Frontend Developer at{' '}
               <a
                 target="_blank"
                 rel="noopener noreferrer"
@@ -112,7 +112,7 @@ Astro.response.headers.set(
               September 2017 - October 2018
             </time>
             <p>
-              Full Stack Developer at{" "}
+              Full Stack Developer at{' '}
               <a
                 target="_blank"
                 rel="noopener noreferrer"
@@ -126,7 +126,7 @@ Astro.response.headers.set(
           <TimelineItem index={2}>
             <time class="text-xs text-grey"> February 2017 - June 2017</time>
             <p>
-              Internship as Swift Developer at{" "}
+              Internship as Swift Developer at{' '}
               <a
                 target="_blank"
                 rel="noopener noreferrer"
@@ -140,7 +140,7 @@ Astro.response.headers.set(
           <TimelineItem index={3}>
             <time class="text-xs text-grey"> September 2014 - June 2017</time>
             <p>
-              Bachelor Applied Computer Sciences at{" "}
+              Bachelor Applied Computer Sciences at{' '}
               <a
                 target="_blank"
                 rel="noopener noreferrer"
@@ -154,7 +154,7 @@ Astro.response.headers.set(
           <TimelineItem index={4}>
             <time class="text-xs text-grey">May 2012 - August 2014</time>
             <p>
-              Support Engineer at{" "}
+              Support Engineer at{' '}
               <a
                 target="_blank"
                 rel="noopener noreferrer"

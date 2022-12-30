@@ -1,5 +1,7 @@
 ---
 import Layout from './Layout.astro';
+import CommentsWrapper from '../components/CommentsWrapper';
+import { prisma } from '../lib/prisma';
 const { frontmatter } = Astro.props;
 interface Props {
   frontmatter: {
@@ -9,41 +11,19 @@ interface Props {
     url: string;
   };
 }
-import type { PrismaClient } from '@prisma/client/index.js';
-
-let prisma: PrismaClient | undefined;
-console.log(import.meta.env);
-
-if (import.meta.env.MODE === 'development') {
-  import('@prisma/client/index.js').then(
-    mod => (prisma = new mod.PrismaClient())
-  );
-} else {
-  import('@prisma/client/edge.js').then(
-    mod =>
-      (prisma = new mod.PrismaClient({
-        datasources: {
-          db: {
-            url: import.meta.env.DATABASE_URL,
-          },
-        },
-      }))
-  );
-}
 const comments = await prisma?.post.findFirst({
   where: { url: (frontmatter?.url as string | undefined) ?? undefined },
   include: { Comment: true },
   orderBy: { createdAt: 'asc' },
 });
 const initialComments = comments?.Comment;
-import CommentsWrapper from '../components/CommentsWrapper';
 ---
 
 <Layout
   description="Blog by Thomas Ledoux. Writes about Javascript/React/Next.js/Remix/Astro. Always looking to learn about the newest frameworks and features."
   frontmatter={frontmatter}
 >
-  <a href="/blog" class="flex items-center gap-x-2 mb-4">
+  <a rel="prefetch" href="/blog" class="flex items-center gap-x-2 mb-4">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"

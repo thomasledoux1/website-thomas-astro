@@ -1,26 +1,6 @@
 import type { APIRoute } from 'astro';
 import type { Comment } from '@prisma/client';
-import type { PrismaClient } from '@prisma/client/index.js';
-
-let prisma: PrismaClient | undefined;
-console.log(process.env);
-
-if (import.meta.env.MODE === 'development') {
-  import('@prisma/client/index.js').then(
-    mod => (prisma = new mod.PrismaClient())
-  );
-} else {
-  import('@prisma/client/edge.js').then(
-    mod =>
-      (prisma = new mod.PrismaClient({
-        datasources: {
-          db: {
-            url: import.meta.env.DATABASE_URL,
-          },
-        },
-      }))
-  );
-}
+import { prisma } from '../../lib/prisma';
 
 const sendMail = async (
   subject: string,
