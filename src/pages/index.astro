@@ -1,9 +1,9 @@
 ---
-import "../../styles/global.css";
-import Layout from "../layouts/Layout.astro";
+import '../../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 Astro.response.headers.set(
-  "cache-control",
-  "public, max-age=0, s-max-age=86400"
+  'cache-control',
+  'public, max-age=0, s-max-age=86400'
 );
 ---
 
@@ -36,7 +36,7 @@ Astro.response.headers.set(
           fetchpriority="high"
           width={320}
           height={320}
-          srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_300/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+          srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_450/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
           sizes="(max-width: 767px) 75vw, 45vw"
         />
       </div>
