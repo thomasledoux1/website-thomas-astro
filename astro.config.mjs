@@ -18,6 +18,11 @@ export default defineConfig({
     mdx(),
     prefetch(),
   ],
+  vite: {
+    define: {
+      'process.env.NODE_ENV': `'${process.env.NODE_ENV}'`,
+    },
+  },
   output: 'server',
   experimental: {
     contentCollections: true,

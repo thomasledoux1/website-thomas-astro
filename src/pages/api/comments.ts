@@ -47,7 +47,7 @@ export const get: APIRoute = async ({ request }) => {
     });
   }
   const comments = await prisma?.post.findFirst({
-    where: { url: (blogUrl as string | undefined) ?? undefined },
+    where: { url: (blogUrl as string) ?? undefined },
     include: { Comment: true },
     orderBy: { createdAt: 'asc' },
   });
