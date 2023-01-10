@@ -1,8 +1,7 @@
-const pagesImportResult = import.meta.glob('./blog/*.mdx', { eager: true });
-const pages = Object.values(pagesImportResult);
+const blogsImportResult = import.meta.glob('./blog/*.mdx', { eager: true });
+const blogs = Object.values(blogsImportResult);
 
 export const get = () => {
-  console.log(pages);
   return {
     body: `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -12,10 +11,10 @@ export const get = () => {
   <url><loc>https://www.thomasledoux.be/cv</loc></url>
   <url><loc>https://www.thomasledoux.be/personal</loc></url>
   <url><loc>https://www.thomasledoux.be/portfolio</loc></url>
-    ${pages
+    ${blogs
       .map(
-        page => `<url>
-    <loc>https://www.thomasledoux.be${page.url}</loc>
+        blog => `<url>
+    <loc>https://www.thomasledoux.be${blog.url}</loc>
   </url>`
       )
       .join('')}
