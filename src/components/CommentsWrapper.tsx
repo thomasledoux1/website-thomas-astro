@@ -9,7 +9,7 @@ const CommentsWrapper = ({
   initialComments,
 }: {
   blogUrl: string;
-  initialComments?: Comment[];
+  initialComments?: Comment[] | undefined;
 }) => {
   return (
     <QueryClientProvider client={queryClient}>

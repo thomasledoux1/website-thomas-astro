@@ -11,8 +11,11 @@ interface Props {
     url: string;
   };
 }
+const blogUrl = frontmatter.url.replace('src/content', '').replace('.mdx', '');
 const comments = await prisma?.post.findFirst({
-  where: { url: (frontmatter?.url as string | undefined) ?? undefined },
+  where: {
+    url: blogUrl,
+  },
   include: { Comment: true },
   orderBy: { createdAt: 'asc' },
 });
@@ -45,7 +48,7 @@ const initialComments = comments?.Comment;
   <div>
     <CommentsWrapper
       client:visible
-      blogUrl={frontmatter.url}
+      blogUrl={blogUrl}
       initialComments={initialComments}
     />
   </div>

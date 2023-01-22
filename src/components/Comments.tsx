@@ -1,21 +1,25 @@
 import type { Comment } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
+import { client } from '../lib/trpcClient';
 const Comments = ({
   blogUrl,
   initialComments,
 }: {
   blogUrl: string;
-  initialComments?: Comment[];
+  initialComments?: Comment[] | undefined;
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [formState, setFormState] = useState<'idle' | 'loading'>('idle');
+  const [formState, setFormState] = useState<'idle' | 'loading' | 'error'>(
+    'idle'
+  );
   const upToDateCommentsQuery = useQuery({
     queryKey: [`comments-${blogUrl}`],
     queryFn: async () => {
-      const allCommentsInDb = await fetch(`/api/comments?blogUrl=${blogUrl}`);
-      const allCommentsInDbJson = await allCommentsInDb.json();
-      return allCommentsInDbJson as Comment[];
+      console.log(blogUrl);
+      const data = await client.query('comments', { blogUrl });
+      console.log(data);
+      return data.comments;
     },
     initialData: initialComments,
   });
@@ -24,18 +28,19 @@ const Comments = ({
     e.preventDefault();
     if (e.currentTarget) {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
-      await fetch('/api/comments', {
-        method: 'POST',
-        body: JSON.stringify({
-          author: formData.get('author'),
-          comment: formData.get('comment'),
-          blogUrl,
-        }),
+      const comment = await client.mutation('comment', {
+        author: (formData.get('author') as string | undefined) ?? '',
+        comment: (formData.get('comment') as string | undefined) ?? '',
+        blogUrl,
       });
-      formRef.current?.reset();
-      upToDateCommentsQuery.refetch();
+      if (comment) {
+        formRef.current?.reset();
+        upToDateCommentsQuery.refetch();
+        setFormState('idle');
+      } else {
+        setFormState('error');
+      }
     }
-    setFormState('idle');
   };
   return (
     <>
@@ -64,6 +69,11 @@ const Comments = ({
           rows={4}
           name="comment"
         ></textarea>
+        {formState === 'error' ? (
+          <div className="text-red-600 font-bold">
+            Error while submitting comment. Try again later.
+          </div>
+        ) : null}
         <button
           disabled={formState === 'loading'}
           className="px-8 mt-4 py-4 bg-secondary text-white rounded-lg lg:hover:scale-[1.04] transition-transform disabled:opacity-50 "

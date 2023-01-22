@@ -19,7 +19,7 @@ import Layout from '../../layouts/Layout.astro';
       </div>
       <div class="flex justify-center flex-col">
         <h2 class="mb-6 text-2xl font-bold">Drop me a message</h2>
-        <form method="post" action="/api/contact">
+        <form id="contact-form">
           <label class="flex flex-col gap-2 mb-4" for="email">
             Your e-mail
             <input
@@ -53,3 +53,20 @@ import Layout from '../../layouts/Layout.astro';
     </div>
   </section>
 </Layout>
+<script>
+  import { client } from '../../lib/trpcClient';
+
+  document
+    .getElementById('contact-form')
+    ?.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (e.target) {
+        const formData = new FormData(e.target as HTMLFormElement);
+        client.mutation('contact', {
+          email: formData.get('email') as string,
+          message: formData.get('message') as string,
+        });
+        window.location.href = '/contact/thanks';
+      }
+    });
+</script>

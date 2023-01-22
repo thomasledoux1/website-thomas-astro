@@ -19,8 +19,7 @@
     "astro": "^1.9.1",
     "prettier": "^2.8.2",
     "prettier-plugin-astro": "^0.7.2",
-    "prisma": "^4.8.1",
-    "edge-runtime": "^2.0.2"
+    "prisma": "^4.9.0"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.14.0",
@@ -28,10 +27,11 @@
     "@astrojs/react": "^1.2.2",
     "@astrojs/rss": "^2.0.0",
     "@astrojs/vercel": "^2.4.0",
-    "@prisma/client": "^4.8.1",
+    "@prisma/client": "^4.9.0",
     "@tanstack/react-query": "^4.22.0",
-    "@trpc/client": "^10.8.1",
-    "@trpc/server": "^10.8.1",
+    "@trpc/client": "^9.27.3",
+    "@trpc/server": "^9.27.3",
+    "astro-trpc": "^0.3.2",
     "classnames": "^2.3.2",
     "node-fetch": "^3.3.0",
     "react": "^18.2.0",

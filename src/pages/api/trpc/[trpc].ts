@@ -1,24 +1,37 @@
-import { initTRPC } from '@trpc/server';
+import { createAstroTRPCApiHandler } from 'astro-trpc';
+import * as trpc from '@trpc/server';
 import { z } from 'zod';
-import { prisma } from './lib/prisma';
+import { prisma } from '../../../lib/prisma';
 import type { Comment } from '@prisma/client';
-import { sendMail } from './lib/email';
+import { sendMail } from '../../../lib/email';
 
-const t = initTRPC.create();
-
-const publicProcedure = t.procedure;
-const router = t.router;
-
-const commentAndContactrouter = router({
-  createComment: publicProcedure
-    .input(
-      z.object({
-        author: z.string(),
-        comment: z.string(),
-        blogUrl: z.string(),
-      })
-    )
-    .mutation(async ({ input }) => {
+// the tRPC router
+export const appRouter = trpc
+  .router()
+  .query('comments', {
+    input: z.object({
+      blogUrl: z.string(),
+    }),
+    async resolve({ input }) {
+      const comments = await prisma?.post.findFirst({
+        where: { url: input.blogUrl },
+        include: { Comment: true },
+        orderBy: { createdAt: 'asc' },
+      });
+      console.log(comments);
+      const allCommentsInDbForPost = comments?.Comment;
+      return {
+        comments: allCommentsInDbForPost,
+      };
+    },
+  })
+  .mutation('comment', {
+    input: z.object({
+      author: z.string(),
+      comment: z.string(),
+      blogUrl: z.string(),
+    }),
+    async resolve({ input }) {
       let commentInDb: Comment | undefined;
       const blog = await prisma?.post.findFirst({
         where: { url: input.blogUrl },
@@ -51,29 +64,14 @@ const commentAndContactrouter = router({
         console.error('Error saving comment', err);
         return null;
       }
+    },
+  })
+  .mutation('contact', {
+    input: z.object({
+      email: z.string(),
+      message: z.string(),
     }),
-  getComments: publicProcedure
-    .input(z.object({ blogUrl: z.string() }))
-    .query(async ({ input }) => {
-      const comments = await prisma?.post.findFirst({
-        where: { url: input.blogUrl },
-        include: { Comment: true },
-        orderBy: { createdAt: 'asc' },
-      });
-      console.log(comments);
-      const allCommentsInDbForPost = comments?.Comment;
-      return {
-        comments: allCommentsInDbForPost,
-      };
-    }),
-  sendContactMail: publicProcedure
-    .input(
-      z.object({
-        message: z.string(),
-        email: z.string(),
-      })
-    )
-    .mutation(async ({ input }) => {
+    async resolve({ input }) {
       fetch(import.meta.env.FORMSPREE_URL!, {
         method: 'post',
         headers: {
@@ -84,7 +82,14 @@ const commentAndContactrouter = router({
           message: input.message,
         }),
       }).catch(e => console.error(e));
-    }),
-});
+    },
+  });
 
-export type AppRouter = typeof commentAndContactrouter;
+// type definition of the router
+export type AppRouter = typeof appRouter;
+
+// API handler
+export const all = createAstroTRPCApiHandler({
+  router: appRouter,
+  createContext: () => null,
+});
