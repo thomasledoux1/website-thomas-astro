@@ -1,6 +1,6 @@
 ---
+export const prerender = true;
 import { getCollection, CollectionEntry } from 'astro:content';
-
 const blogs = await getCollection('blog');
 const { slug } = Astro.params;
 const page = blogs.find(blog => blog.slug === slug);

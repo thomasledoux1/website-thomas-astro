@@ -19,7 +19,7 @@ const postsWithFormattedDate = allBlogPosts
       <div class="flex flex-col gap-6 items-center">
         {
           postsWithFormattedDate.map(async post => {
-            const { injectedFrontmatter } = await post.render();
+            const { remarkPluginFrontmatter } = await post.render();
 
             return (
               <a
@@ -34,7 +34,7 @@ const postsWithFormattedDate = allBlogPosts
                       <h2 class="text-xl font-medium transition-colors">
                         {post.data.title}
                       </h2>
-                      <p>{injectedFrontmatter.minutesRead}ing time</p>
+                      <p>{remarkPluginFrontmatter.minutesRead}ing time</p>
                       <ul class="flex flex-wrap lg:justify-center w-full">
                         {post.data.tags?.map((tag: string) => {
                           return (

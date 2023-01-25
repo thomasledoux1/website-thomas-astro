@@ -12,7 +12,7 @@ interface Props {
   };
 }
 const comments = await prisma?.post.findFirst({
-  where: { url: (frontmatter?.url as string | undefined) ?? undefined },
+  where: { url: frontmatter?.url },
   include: { Comment: true },
   orderBy: { createdAt: 'asc' },
 });

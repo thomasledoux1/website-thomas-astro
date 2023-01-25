@@ -1,9 +1,10 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Case from "../components/Case.astro";
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import Case from '../components/Case.astro';
 Astro.response.headers.set(
-  "cache-control",
-  "public, max-age=0, s-max-age=86400"
+  'cache-control',
+  'public, max-age=0, s-max-age=86400'
 );
 ---
 
@@ -22,11 +23,11 @@ Astro.response.headers.set(
           logoAlt="Karaton"
           img="/logokaraton.png"
           logoWidth={218}
-          tags={["mongodb", "expressjs", "angular", "nodejs"]}
+          tags={['mongodb', 'expressjs', 'angular', 'nodejs']}
         >
           <p class="mb-4">
             For Happs Development I created and maintained the <b>Angular</b>{
-              " "
+              ' '
             }
             website for Karaton where speech therapists and parents of dyslexic could
             follow up on the progress their children/patients are making in the Karaton
@@ -47,11 +48,11 @@ Astro.response.headers.set(
           logoAlt="Rialto"
           img="/logorialto.webp"
           logoWidth={321}
-          tags={["swift", "ios"]}
+          tags={['swift', 'ios']}
         >
           <p class="mb-4">
             At my internship for Rialto I created an iOS app from scratch in{
-              " "
+              ' '
             }
             <b>Swift</b> where real estate companies could easily manage their listings.
           </p>
@@ -70,7 +71,7 @@ Astro.response.headers.set(
           logoAlt="Carlier Rekenen"
           img="/logocarlier.webp"
           logoWidth={100}
-          tags={["react-native", "react"]}
+          tags={['react-native', 'react']}
         >
           <p class="mb-4">
             While working at Happs Development I also created a mobile
@@ -93,7 +94,7 @@ Astro.response.headers.set(
           logoAlt="Carglass"
           img="/logocarglass.png"
           logoWidth={374}
-          tags={["sitecore", "react", "less"]}
+          tags={['sitecore', 'react', 'less']}
         >
           <p class="mb-4">
             At my current job at The Reference I help maintain the website for
@@ -115,7 +116,7 @@ Astro.response.headers.set(
           logoAlt="Nationale Loterij"
           img="/logonalo.webp"
           logoWidth={240}
-          tags={["sitecore", "react", "sass"]}
+          tags={['sitecore', 'react', 'sass']}
         >
           <p class="mb-4">
             One of the other clients I work for at The Reference is Nationale
@@ -138,11 +139,11 @@ Astro.response.headers.set(
           logoAlt="Achter De Regenboog"
           img="/logoachterderegenboog.webp"
           logoWidth={150}
-          tags={["wordpress", "html", "css"]}
+          tags={['wordpress', 'html', 'css']}
         >
           <p class="mb-4">
             In my free time I like to experiment with other frameworks and
-            technologies too, this is why I made a website using{" "}
+            technologies too, this is why I made a website using{' '}
             <b>Wordpress</b> for a friend of mine who started a psychologists practice.
           </p>
           <p class="mb-4">
@@ -159,7 +160,7 @@ Astro.response.headers.set(
           logoAlt="DeckDeckGo"
           img="/logodeckdeckgo.webp"
           logoWidth={100}
-          tags={["open source", "hacktoberfest", "stencil", "typescript"]}
+          tags={['open source', 'hacktoberfest', 'stencil', 'typescript']}
         >
           <p class="mb-4">
             In 2020 I participated in <b>Hacktoberfest</b> for the first time ever.
@@ -167,7 +168,7 @@ Astro.response.headers.set(
             to, and landed on DeckDeckGo.
           </p>
           <p>
-            It was a lot of fun to coloborate with other <b>open source</b>{" "}
+            It was a lot of fun to coloborate with other <b>open source</b>{' '}
             contributors, and to work in a new technological stack. I&apos;m definitely
             going to continue contributing to open source in the future!
           </p>
@@ -177,7 +178,7 @@ Astro.response.headers.set(
           logoAlt="Accent Jobs"
           img="/logoaccent.webp"
           logoWidth={532}
-          tags={["gatsby", "drupal", "typescript", "emotion"]}
+          tags={['gatsby', 'drupal', 'typescript', 'emotion']}
         >
           <p class="mb-4">
             At the end of 2020, I got the opportunity to work on a project
@@ -194,12 +195,12 @@ Astro.response.headers.set(
           logoAlt="Port Of Antwerp"
           img="/logopoa.webp"
           logoWidth={199}
-          tags={["nextjs", "drupal", "typescript", "tailwind", "algolia"]}
+          tags={['nextjs', 'drupal', 'typescript', 'tailwind', 'algolia']}
         >
           <p class="mb-4">
             Starting february 2021, we started working on a new website for the
             Port of Antwerp. This website uses the MACH stack as mentioned
-            above, but with <b>Next.js</b> instead of Gatsby, and{" "}
+            above, but with <b>Next.js</b> instead of Gatsby, and{' '}
             <b>Tailwind</b> for styling!
           </p>
           <p>
@@ -216,12 +217,12 @@ Astro.response.headers.set(
           img="/logosd.webp"
           logoWidth={377}
           tags={[
-            "nextjs",
-            "drupal",
-            "typescript",
-            "bootstrap",
-            "algolia",
-            "kubernetes",
+            'nextjs',
+            'drupal',
+            'typescript',
+            'bootstrap',
+            'algolia',
+            'kubernetes',
           ]}
         >
           <p class="mb-4">
@@ -240,10 +241,10 @@ Astro.response.headers.set(
           logoAlt="Sibelco"
           img="/logosibelco.webp"
           logoWidth={305}
-          tags={["nextjs", "kontent.ai", "typescript", "tailwind", "algolia"]}
+          tags={['nextjs', 'kontent.ai', 'typescript', 'tailwind', 'algolia']}
         >
           <p class="mb-4">
-            Sibelco was the first client for who we worked with{" "}
+            Sibelco was the first client for who we worked with{' '}
             <b>Kontent.ai</b>, which was a really great experience to work with.
             We also started using <b>Storybook</b> for the first time at The Reference
             in this project, which helped us a lot to prototype fast, and create
@@ -252,7 +253,7 @@ Astro.response.headers.set(
           <p>
             In this project I coached 4 people, while also actively developing
             new features. The greatest part was setting up the <b>Algolia</b>{
-              " "
+              ' '
             }
             integrations to index the materials and products, which was a breeze
             with Algolia.
@@ -261,7 +262,7 @@ Astro.response.headers.set(
         <Case
           url="/"
           logoAlt="thomas ledoux"
-          tags={["remix", "typescript", "tailwind"]}
+          tags={['remix', 'typescript', 'tailwind']}
         >
           <p class="mb-4">
             I like to use my personal website as a playground for new ideas and

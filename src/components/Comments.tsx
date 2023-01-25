@@ -6,7 +6,7 @@ const Comments = ({
   initialComments,
 }: {
   blogUrl: string;
-  initialComments?: Comment[];
+  initialComments?: Comment[] | undefined;
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [formState, setFormState] = useState<'idle' | 'loading'>('idle');
