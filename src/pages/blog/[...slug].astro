@@ -1,16 +1,15 @@
 ---
-export const prerender = true;
-import { getCollection, CollectionEntry } from 'astro:content';
-const blogs = await getCollection('blog');
+import { getEntryBySlug } from 'astro:content';
 const { slug } = Astro.params;
-const page = blogs.find(blog => blog.slug === slug);
-if (!page) return Astro.redirect('/404');
-
-interface Props {
-  // Optionally use `CollectionEntry` for type safety
-  entry: CollectionEntry<'blog'>;
+if (!slug) {
+  return Astro.redirect('/404');
 }
-const { Content } = await page.render();
+const entry = await getEntryBySlug('blog', slug);
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+const { Content } = await entry.render();
 ---
 
 <Content />
