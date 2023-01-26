@@ -1,11 +1,9 @@
 ---
-title: "Show off your Strava stats on your Next.js site (statically!)"
-layout: "../../layouts/BlogLayout.astro"
-tags: ["nextjs", "react"]
-date: "2022-03-23T15:14:39.004Z"
+title: 'Show off your Strava stats on your Next.js site (statically!)'
+layout: '../../layouts/BlogLayout.astro'
+tags: ['nextjs', 'react']
+date: '2022-03-23T15:14:39.004Z'
 ---
-
-# Show off your Strava stats on your Next.js site (statically!)
 
 I had been playing with the idea to integrate my Strava stats on my website for a
 while, but never really did any research into it. Last week I decided it was time!
@@ -61,19 +59,19 @@ In my Firestore, I added a collection called `access_tokens` and added a documen
 I have a DB util file which contains the following code to connect and read/write to my Firestore.
 
 ```javascript
-import admin from "firebase-admin";
+import admin from 'firebase-admin';
 
 if (!admin.apps.length) {
   try {
     admin.initializeApp({
       credential: admin.credential.cert({
-        type: "service_account",
-        auth_uri: "https://accounts.google.com/o/oauth2/auth",
-        token_uri: "https://oauth2.googleapis.com/token",
+        type: 'service_account',
+        auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+        token_uri: 'https://oauth2.googleapis.com/token',
         auth_provider_x509_cert_url:
-          "https://www.googleapis.com/oauth2/v1/certs",
+          'https://www.googleapis.com/oauth2/v1/certs',
         client_x509_cert_url:
-          "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-j3bwb%40personal-website-e4e38.iam.gserviceaccount.com",
+          'https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-j3bwb%40personal-website-e4e38.iam.gserviceaccount.com',
         project_id: process.env.PROJECT_ID,
         private_key_id: process.env.PRIVATE_KEY_ID,
         private_key: process.env.PRIVATE_KEY,
@@ -82,7 +80,7 @@ if (!admin.apps.length) {
       }),
     });
   } catch (error) {
-    console.log("Firebase admin initialization error", error.stack);
+    console.log('Firebase admin initialization error', error.stack);
   }
 }
 export default admin.firestore();
@@ -98,27 +96,27 @@ Lastly, I added a `revalidate` option to the return of my getStaticProps functio
 
 ```javascript
 export async function getStaticProps(context) {
-  const entries = await db.collection("access_tokens").get();
-  let [{ access_token, refresh_token }] = entries.docs.map((entry) =>
+  const entries = await db.collection('access_tokens').get();
+  let [{ access_token, refresh_token }] = entries.docs.map(entry =>
     entry.data()
   );
   const resToken = await fetch(
     `https://www.strava.com/api/v3/oauth/token?client_id=${process.env.CLIENT_ID_STRAVA}&client_secret=${process.env.CLIENT_SECRET_STRAVA}&grant_type=refresh_token&refresh_token=${refresh_token}`,
     {
-      method: "POST",
+      method: 'POST',
     }
   );
   const { access_token: newToken, refresh_token: newRefreshToken } =
     await resToken.json();
   const resStats = await fetch(
-    "https://www.strava.com/api/v3/athletes/40229513/stats",
+    'https://www.strava.com/api/v3/athletes/40229513/stats',
     {
       headers: {
         Authorization: `Bearer ${newToken}`,
       },
     }
   );
-  db.collection("access_tokens").doc("CSXyda8OfK75Aw0vtbtZ").update({
+  db.collection('access_tokens').doc('CSXyda8OfK75Aw0vtbtZ').update({
     access_token: newToken,
     refresh_token: newRefreshToken,
   });

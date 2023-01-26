@@ -1,11 +1,9 @@
 ---
-title: "Formatting dates in javascript without a library"
-layout: "../../layouts/BlogLayout.astro"
-tags: ["javascript"]
-date: "2021-05-17T15:14:39.004Z"
+title: 'Formatting dates in javascript without a library'
+layout: '../../layouts/BlogLayout.astro'
+tags: ['javascript']
+date: '2021-05-17T15:14:39.004Z'
 ---
-
-# Formatting dates in javascript without a library
 
 Gone are the days where we needed libraries to simply format a date (yes I'm looking
 at you Moment.js). After ditching Moment.js about a year ago, because it's not good
@@ -28,11 +26,11 @@ For this case, we can use the `toLocaleDateString()` function on the Javascript 
 ```javascript
 const date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
 console.log(
-  date.toLocaleDateString("nl-BE", {
-    weekday: "long", // possible values: 'long', 'short', 'narrow'
-    year: "numeric", // possible values: 'numeric', '2-digit'
-    month: "short", // possible values: 'numeric', '2-digit', 'long', 'short', 'narrow'
-    day: "numeric", // possible values: 'numeric', '2-digit'
+  date.toLocaleDateString('nl-BE', {
+    weekday: 'long', // possible values: 'long', 'short', 'narrow'
+    year: 'numeric', // possible values: 'numeric', '2-digit'
+    month: 'short', // possible values: 'numeric', '2-digit', 'long', 'short', 'narrow'
+    day: 'numeric', // possible values: 'numeric', '2-digit'
   })
 );
 // donderdag 20 dec. 2012
@@ -42,7 +40,7 @@ Super easy! And easy to customise too, you don't have to remember to use capital
 Formatting without options (just a locale) will format the date the default way:
 
 ```javascript
-console.log(date.toLocaleDateString("nl-BE"));
+console.log(date.toLocaleDateString('nl-BE'));
 // 20/12/2012
 ```
 

@@ -1,11 +1,9 @@
 ---
-title: "Migrating my portfolio site from Next.js to Remix"
-layout: "../../layouts/BlogLayout.astro"
-tags: ["nextjs", "remix", "react", "javascript"]
-date: "2022-02-02T15:14:39.004Z"
+title: 'Migrating my portfolio site from Next.js to Remix'
+layout: '../../layouts/BlogLayout.astro'
+tags: ['nextjs', 'remix', 'react', 'javascript']
+date: '2022-02-02T15:14:39.004Z'
 ---
-
-# Migrating my portfolio site from Next.js to Remix
 
 About a year ago, I decided to create a portfolio website with Next.js. I did this
 mostly to get familiar with the technology, but also to have a playground to test
@@ -27,7 +25,7 @@ I use nested routes to create my contact page.
 
 ```jsx
 // /routes/contact.tsx
-import { Outlet } from "remix";
+import { Outlet } from 'remix';
 
 <section id="contact" className=" pb-8 lg:pb-0">
   <div className="container grid md:grid-cols-2 gap-6 content-center align-items">
@@ -53,22 +51,22 @@ The `<Outlet>` is a special component from Remix which indicates where the neste
 ```jsx
 // /routes/contact/index.tsx
 
-import { redirect, useActionData } from "remix";
-import type { ActionFunction } from "remix";
+import { redirect, useActionData } from 'remix';
+import type { ActionFunction } from 'remix';
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   await fetch({
-    url: "https://formspree.io/f/xzbgjqdq",
-    method: "POST",
+    url: 'https://formspree.io/f/xzbgjqdq',
+    method: 'POST',
     body: JSON.stringify({
-      email: formData.get("email"),
-      message: formData.get("message"),
+      email: formData.get('email'),
+      message: formData.get('message'),
     }),
-  }).catch((e) => {
+  }).catch(e => {
     throw new Error(e);
   });
-  return redirect("/contact/thanks");
+  return redirect('/contact/thanks');
 };
 
 const Contact = () => {
@@ -134,7 +132,7 @@ Example (this should be added to the route you want to cache on client/CDN):
 ```jsx
 export function headers() {
   return {
-    "Cache-Control": "max-age=300, s-maxage=3600",
+    'Cache-Control': 'max-age=300, s-maxage=3600',
   };
 }
 ```
@@ -146,13 +144,13 @@ Example for my blog route:
 
 ```tsx
 // /routes/blog.tsx
-import { MetaFunction, useLoaderData } from "remix";
-import { v4 as uuidv4 } from "uuid";
+import { MetaFunction, useLoaderData } from 'remix';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function loader() {
-  const res = await fetch("https://dev.to/api/articles/me/published", {
+  const res = await fetch('https://dev.to/api/articles/me/published', {
     headers: {
-      "api-key": process.env.DEV_KEY,
+      'api-key': process.env.DEV_KEY,
     },
   });
   const blogs = await res.json();
@@ -173,7 +171,7 @@ const Blog = () => {
           Personal blog - most read
         </h2>
         <div className="flex flex-col gap-6">
-          {blogsToShow?.map((blog) => (
+          {blogsToShow?.map(blog => (
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -216,7 +214,7 @@ const Blog = () => {
                   </div>
                   <p className="mb-3">{blog.description}</p>
                   <ul className="flex flex-wrap">
-                    {blog.tag_list.map((tag) => {
+                    {blog.tag_list.map(tag => {
                       const key = uuidv4();
                       return (
                         <li
@@ -263,23 +261,23 @@ import {
   LoaderFunction,
   useLoaderData,
   useLocation,
-} from "remix";
+} from 'remix';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const cookie = await parseCookie(request, theme);
-  if (!cookie.theme) cookie.theme = "light";
+  if (!cookie.theme) cookie.theme = 'light';
   return { theme: cookie.theme };
 };
 
 export const action: ActionFunction = async ({ request }) => {
   const cookie = await parseCookie(request, theme);
   const formData = await request.formData();
-  cookie.theme = formData.get("theme") || cookie.theme || "light";
-  const returnUrl = formData.get("returnUrl") || "/";
+  cookie.theme = formData.get('theme') || cookie.theme || 'light';
+  const returnUrl = formData.get('returnUrl') || '/';
   const serializedCookie = await theme.serialize(cookie);
   return redirect(returnUrl.toString(), {
     headers: {
-      "Set-Cookie": serializedCookie,
+      'Set-Cookie': serializedCookie,
     },
   });
 };
@@ -299,10 +297,10 @@ export default function App() {
 ```jsx
 // /app/utils/parseCookie.ts
 
-import { Cookie } from "remix";
+import { Cookie } from 'remix';
 
 export const parseCookie = async (request: Request, cookie: Cookie) => {
-  const cookieHeader = request.headers.get("Cookie");
+  const cookieHeader = request.headers.get('Cookie');
   const parsedCookie = (await cookie.parse(cookieHeader)) || {};
   return parsedCookie;
 };
@@ -311,23 +309,23 @@ export const parseCookie = async (request: Request, cookie: Cookie) => {
 ```jsx
 // /app/cookie.ts
 
-import { createCookie } from "remix";
+import { createCookie } from 'remix';
 
-export const theme = createCookie("theme");
+export const theme = createCookie('theme');
 ```
 
 Using this code, I am able to get my `theme` cookie when the website is loaded (in `/app/root.tsx`), and I can change the styling of my website based on this.
 I can also change the theme by using a button in my navigation:
 
 ```jsx
-import { Link, NavLink, useLocation } from "@remix-run/react";
+import { Link, NavLink, useLocation } from '@remix-run/react';
 
 type NavigationProps = {
   theme: string,
 };
 
 const Navigation = ({ theme }: NavigationProps) => {
-  const oppositeTheme = theme === "light" ? "dark" : "light";
+  const oppositeTheme = theme === 'light' ? 'dark' : 'light';
   const location = useLocation();
 
   return (

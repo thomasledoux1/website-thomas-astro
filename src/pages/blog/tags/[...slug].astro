@@ -1,8 +1,18 @@
 ---
+const { slug } = Astro.params;
 import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
 const allBlogPosts = await getCollection('blog');
-import Layout from '../../layouts/Layout.astro';
-const postsWithFormattedDate = allBlogPosts
+if (!slug) {
+  return Astro.redirect('/404');
+}
+if (
+  !allBlogPosts.some(blogPost => blogPost.data.tags.some(tag => tag === slug))
+) {
+  return Astro.redirect('/404');
+}
+const postsWithTag = allBlogPosts
+  .filter(blogPost => blogPost.data.tags.some(tag => tag === slug))
   .map(post => ({
     ...post,
     formattedDate: new Date(post.data.date).toLocaleDateString('en-BE', {
@@ -10,17 +20,21 @@ const postsWithFormattedDate = allBlogPosts
       month: 'short',
       year: 'numeric',
     }),
-  }))
-  .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+  }));
 ---
 
-<Layout title="The Thomas Ledoux blog">
+<Layout
+  title={`The Thomas Ledoux blog | ${slug}`}
+  description={`All my blogs about ${slug}`}
+>
   <section>
     <div class="flex flex-col items-center justify-center">
-      <h1 class="text-center text-2xl font-bold mb-6">Personal blog</h1>
+      <h1 class="text-center text-2xl font-bold mb-6">
+        All my blogs about {slug}
+      </h1>
       <div class="flex flex-col gap-6 items-center">
         {
-          postsWithFormattedDate.map(async post => {
+          postsWithTag.map(async post => {
             const { remarkPluginFrontmatter } = await post.render();
 
             return (
@@ -53,6 +67,26 @@ const postsWithFormattedDate = allBlogPosts
             );
           })
         }
+        <a
+          rel="prefetch"
+          href="/blog"
+          class="flex items-center gap-x-2 mb-4 decoration-4 decoration-solid underline-offset-[3px] decoration-secondary underline"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width={1.5}
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+          </svg>
+          Back to overview
+        </a>
       </div>
     </div>
   </section>

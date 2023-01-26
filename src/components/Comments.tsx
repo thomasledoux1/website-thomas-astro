@@ -15,10 +15,12 @@ const Comments = ({
     queryFn: async () => {
       const allCommentsInDb = await fetch(`/api/comments?blogUrl=${blogUrl}`);
       const allCommentsInDbJson = await allCommentsInDb.json();
+      console.log(allCommentsInDbJson);
       return allCommentsInDbJson as Comment[];
     },
     initialData: initialComments,
   });
+  console.log(upToDateCommentsQuery.data);
   const onSubmit = async (e: React.FormEvent) => {
     setFormState('loading');
     e.preventDefault();

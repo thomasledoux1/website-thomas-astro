@@ -1,11 +1,9 @@
 ---
-title: "The best way to load and use Google Fonts in Next.js + Tailwind"
-layout: "../../layouts/BlogLayout.astro"
-tags: ["html", "nextjs", "performance"]
-date: "2021-02-15T15:14:39.004Z"
+title: 'The best way to load and use Google Fonts in Next.js + Tailwind'
+layout: '../../layouts/BlogLayout.astro'
+tags: ['html', 'nextjs', 'performance']
+date: '2021-02-15T15:14:39.004Z'
 ---
-
-# The best way to load and use Google Fonts in Next.js + Tailwind
 
 I was setting up a new project today with Next.js and tailwindcss, and I had to use
 Roboto as a font.{' '}
@@ -60,7 +58,7 @@ import Document, {
   Head,
   Main,
   NextScript,
-} from "next/document";
+} from 'next/document';
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -114,13 +112,13 @@ The next and final part is actually using the font in Tailwind, and applying it 
 This is super easy in Tailwind, this just requires an extension of the default theme:
 
 ```javascript
-const defaultTheme = require("tailwindcss/defaultTheme");
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Roboto", ...defaultTheme.fontFamily.sans],
+        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
       },
     },
   },

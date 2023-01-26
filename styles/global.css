@@ -87,7 +87,7 @@ html {
   @apply rounded-lg p-4 my-4;
 }
 
-.mdx a {
+.mdx a:not(.tag) {
   @apply decoration-4 decoration-solid underline-offset-[3px] decoration-secondary underline;
 }
 
@@ -121,12 +121,7 @@ html {
 }
 
 .mdx code:not(pre code) {
-  @apply bg-primary mx-1 px-1 py-[0.125rem];
-}
-
-.mdx code:not(pre code)::before,
-.mdx code:not(pre code)::after {
-  content: '`';
+  @apply bg-primary mx-1 px-1 py-[0.125rem] rounded-[0.25rem];
 }
 
 @keyframes title-animation {
