@@ -2,25 +2,23 @@
 const { slug } = Astro.params;
 import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
-const allBlogPosts = await getCollection('blog');
 if (!slug) {
   return Astro.redirect('/404');
 }
-if (
-  !allBlogPosts.some(blogPost => blogPost.data.tags.some(tag => tag === slug))
-) {
+const allBlogPostsWithTag = await getCollection('blog', blog =>
+  blog.data.tags.some(tag => tag === slug)
+);
+if (allBlogPostsWithTag.length === 0) {
   return Astro.redirect('/404');
 }
-const postsWithTag = allBlogPosts
-  .filter(blogPost => blogPost.data.tags.some(tag => tag === slug))
-  .map(post => ({
-    ...post,
-    formattedDate: new Date(post.data.date).toLocaleDateString('en-BE', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }),
-  }));
+const postsWithTag = allBlogPostsWithTag.map(post => ({
+  ...post,
+  formattedDate: new Date(post.data.date).toLocaleDateString('en-BE', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }),
+}));
 ---
 
 <Layout
