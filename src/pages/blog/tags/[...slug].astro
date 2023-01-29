@@ -2,6 +2,17 @@
 export const prerender = true;
 const { slug } = Astro.params;
 import { getCollection } from 'astro:content';
+import PostPreview from '../../../components/PostPreview.astro';
+import Tags from '../../../components/Tags.astro';
+const blogs = await getCollection('blog');
+const tags = blogs
+  .map(blog => blog.data.tags)
+  .flat()
+  .reduce<{ [key: string]: number }>(function (result, c) {
+    var count = result[c] || 0;
+    result[c] = count + 1;
+    return result;
+  }, {});
 import Layout from '../../../layouts/Layout.astro';
 export async function getStaticPaths() {
   const blogs = await getCollection('blog');
@@ -37,38 +48,17 @@ const postsWithTag = allBlogPostsWithTag.map(post => ({
       <h1 class="text-center text-2xl font-bold mb-6">
         All blogs about {slug}
       </h1>
+      <Tags tags={tags} slug={slug} />
       <div class="flex flex-col gap-6 items-center">
         {
           postsWithTag.map(async post => {
             const { remarkPluginFrontmatter } = await post.render();
 
             return (
-              <a
-                rel="prefetch"
-                class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform px-8 py-4 lg:hover:scale-[1.04]"
-                href={`/blog/${post.slug}`}
-              >
-                <article class="relative rounded-lg  sm:mx-0">
-                  <date class="text-sm">{post.formattedDate}</date>
-                  <div class="flex justify-between">
-                    <div class="flex justify-between lg:items-center w-full flex-col gap-y-2">
-                      <h2 class="text-xl font-medium transition-colors">
-                        {post.data.title}
-                      </h2>
-                      <p>{remarkPluginFrontmatter?.minutesRead}ing time</p>
-                      <ul class="flex flex-wrap lg:justify-center w-full">
-                        {post.data.tags?.map((tag: string) => {
-                          return (
-                            <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
-                              {tag}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </div>
-                </article>
-              </a>
+              <PostPreview
+                minutesRead={remarkPluginFrontmatter?.minutesRead}
+                post={post}
+              />
             );
           })
         }

@@ -1,0 +1,38 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'> & { formattedDate: string };
+  minutesRead?: string;
+}
+const { post, minutesRead } = Astro.props;
+---
+
+<a
+  rel="prefetch"
+  class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform px-4 lg:px-8 py-2 lg:py-4 lg:hover:scale-[1.04]"
+  href={`/blog/${post.slug}`}
+>
+  <article class="relative rounded-lg sm:mx-0">
+    <date class="text-sm">{post.formattedDate}</date>
+    <div class="flex justify-between">
+      <div class="flex justify-between lg:items-center w-full flex-col gap-y-2">
+        <h2 class="text-xl font-medium transition-colors">
+          {post.data.title}
+        </h2>
+        <p>{minutesRead}ing time</p>
+        <ul class="flex flex-wrap lg:justify-center w-full">
+          {
+            post.data.tags?.map((tag: string) => {
+              return (
+                <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
+                  {tag}
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    </div>
+  </article>
+</a>

@@ -1,0 +1,37 @@
+---
+import clsx from 'clsx';
+interface Props {
+  tags: { [key: string]: number };
+  slug?: string;
+}
+const { tags, slug } = Astro.props;
+---
+
+<div class="flex justify-center gap-3 flex-wrap mb-4">
+  {
+    Object.entries(tags)
+      .sort(([, a], [, b]) => b - a)
+      .map(([tag, number]) =>
+        tag === slug ? (
+          <span
+            class={clsx('rounded-md text-sm py-1 px-4', {
+              'border-secondary border-2 text-secondary': tag !== slug,
+              'bg-secondary text-white inline-flex items-center': tag === slug,
+            })}
+          >
+            {tag} ({number})
+          </span>
+        ) : (
+          <a
+            class={clsx('rounded-md text-sm py-1 px-4', {
+              'border-secondary border-2 text-secondary': tag !== slug,
+              'bg-secondary text-white': tag === slug,
+            })}
+            href={`/blog/tags/${tag}`}
+          >
+            {tag} ({number})
+          </a>
+        )
+      )
+  }
+</div>

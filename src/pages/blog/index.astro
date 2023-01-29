@@ -1,5 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
+import PostPreview from '../../components/PostPreview.astro';
+import Tags from '../../components/Tags.astro';
 const allBlogPosts = await getCollection('blog');
 import Layout from '../../layouts/Layout.astro';
 const tags = allBlogPosts
@@ -26,52 +28,17 @@ const postsWithFormattedDate = allBlogPosts
   <section>
     <div class="flex flex-col items-center justify-center flex-wrap">
       <h1 class="text-center text-2xl font-bold mb-6">Personal blog</h1>
-      <div class="flex justify-center gap-3 flex-wrap mb-4">
-        {
-          Object.entries(tags)
-            .sort(([, a], [, b]) => b - a)
-            .map(([tag, number]) => (
-              <a
-                class="border-secondary border-2 text-secondary text-sm py-1 px-4 rounded-md tag font-semibold"
-                href={`/blog/tags/${tag}`}
-              >
-                {tag} ({number})
-              </a>
-            ))
-        }
-      </div>
+      <Tags tags={tags} />
       <div class="flex flex-col gap-6 items-center">
         {
           postsWithFormattedDate.map(async post => {
             const { remarkPluginFrontmatter } = await post.render();
 
             return (
-              <a
-                rel="prefetch"
-                class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform px-8 py-4 lg:hover:scale-[1.04]"
-                href={`/blog/${post.slug}`}
-              >
-                <article class="relative rounded-lg  sm:mx-0">
-                  <date class="text-sm">{post.formattedDate}</date>
-                  <div class="flex justify-between">
-                    <div class="flex justify-between lg:items-center w-full flex-col gap-y-2">
-                      <h2 class="text-xl font-medium transition-colors">
-                        {post.data.title}
-                      </h2>
-                      <p>{remarkPluginFrontmatter?.minutesRead}ing time</p>
-                      <ul class="flex flex-wrap lg:justify-center w-full">
-                        {post.data.tags?.map((tag: string) => {
-                          return (
-                            <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
-                              {tag}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </div>
-                </article>
-              </a>
+              <PostPreview
+                post={post}
+                minutesRead={remarkPluginFrontmatter?.minutesRead}
+              />
             );
           })
         }
