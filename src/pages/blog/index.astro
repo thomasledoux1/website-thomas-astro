@@ -2,6 +2,14 @@
 import { getCollection } from 'astro:content';
 const allBlogPosts = await getCollection('blog');
 import Layout from '../../layouts/Layout.astro';
+const tags = allBlogPosts
+  .map(blog => blog.data.tags)
+  .flat()
+  .reduce<{ [key: string]: number }>(function (result, c) {
+    var count = result[c] || 0;
+    result[c] = count + 1;
+    return result;
+  }, {});
 const postsWithFormattedDate = allBlogPosts
   .map(post => ({
     ...post,
@@ -16,8 +24,22 @@ const postsWithFormattedDate = allBlogPosts
 
 <Layout title="The Thomas Ledoux blog">
   <section>
-    <div class="flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center flex-wrap">
       <h1 class="text-center text-2xl font-bold mb-6">Personal blog</h1>
+      <div class="flex justify-center gap-3 flex-wrap mb-4">
+        {
+          Object.entries(tags)
+            .sort(([, a], [, b]) => b - a)
+            .map(([tag, number]) => (
+              <a
+                class="border-secondary border-2 text-secondary text-sm py-1 px-4 rounded-md tag font-semibold"
+                href={`/blog/tags/${tag}`}
+              >
+                {tag} ({number})
+              </a>
+            ))
+        }
+      </div>
       <div class="flex flex-col gap-6 items-center">
         {
           postsWithFormattedDate.map(async post => {

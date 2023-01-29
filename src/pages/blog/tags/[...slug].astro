@@ -1,7 +1,14 @@
 ---
+export const prerender = true;
 const { slug } = Astro.params;
 import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
+export async function getStaticPaths() {
+  const blogs = await getCollection('blog');
+  return [...new Set(blogs.map(blog => blog.data.tags).flat())].map(tag => ({
+    params: { slug: tag },
+  }));
+}
 if (!slug) {
   return Astro.redirect('/404');
 }
@@ -23,12 +30,12 @@ const postsWithTag = allBlogPostsWithTag.map(post => ({
 
 <Layout
   title={`The Thomas Ledoux blog | ${slug}`}
-  description={`All my blogs about ${slug}`}
+  description={`All blogs about ${slug}`}
 >
   <section>
     <div class="flex flex-col items-center justify-center">
       <h1 class="text-center text-2xl font-bold mb-6">
-        All my blogs about {slug}
+        All blogs about {slug}
       </h1>
       <div class="flex flex-col gap-6 items-center">
         {
