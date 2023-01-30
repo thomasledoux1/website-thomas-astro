@@ -9,18 +9,22 @@ const { post, minutesRead } = Astro.props;
 ---
 
 <a
-  rel="prefetch"
-  class="transform lg:text-center border-2 border-secondary rounded-xl transition-transform px-4 lg:px-8 py-2 lg:py-4 lg:hover:scale-[1.04]"
+  class="transform lg:text-center rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
   href={`/blog/${post.slug}`}
 >
-  <article class="relative rounded-lg sm:mx-0">
-    <date class="text-sm">{post.formattedDate}</date>
-    <div class="flex justify-between">
-      <div class="flex justify-between lg:items-center w-full flex-col gap-y-2">
-        <h2 class="text-xl font-medium transition-colors">
-          {post.data.title}
-        </h2>
-        <p>{minutesRead}ing time</p>
+  <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
+    <img class="rounded-t-xl aspect-[1.5]" src={post.data.image} />
+    <div class="flex px-6 py-4 flex-grow flex-col">
+      <date class="text-sm">{post.formattedDate}</date>
+      <div
+        class="flex lg:items-center w-full flex-col gap-y-2 justify-between flex-grow"
+      >
+        <div>
+          <h2 class="text-xl font-medium transition-colors">
+            {post.data.title}
+          </h2>
+          <p>{minutesRead}ing time</p>
+        </div>
         <ul class="flex flex-wrap lg:justify-center w-full">
           {
             post.data.tags?.map((tag: string) => {

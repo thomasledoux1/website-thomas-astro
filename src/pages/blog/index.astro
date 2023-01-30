@@ -26,10 +26,14 @@ const postsWithFormattedDate = allBlogPosts
 
 <Layout title="The Thomas Ledoux blog">
   <section>
-    <div class="flex flex-col items-center justify-center flex-wrap">
-      <h1 class="text-center text-2xl font-bold mb-6">Personal blog</h1>
+    <div
+      class="flex flex-col items-center justify-center flex-wrap gap-y-4 lg:gap-y-6"
+    >
+      <h1 class="text-center text-2xl font-bold">Personal blog</h1>
       <Tags tags={tags} />
-      <div class="flex flex-col gap-6 items-center">
+      <div
+        class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center auto-rows-min mt-4"
+      >
         {
           postsWithFormattedDate.map(async post => {
             const { remarkPluginFrontmatter } = await post.render();

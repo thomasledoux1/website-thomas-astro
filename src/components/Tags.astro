@@ -7,31 +7,36 @@ interface Props {
 const { tags, slug } = Astro.props;
 ---
 
-<div class="flex justify-center gap-3 flex-wrap mb-4">
+<div class="flex justify-center gap-3 flex-wrap">
   {
     Object.entries(tags)
       .sort(([, a], [, b]) => b - a)
-      .map(([tag, number]) =>
-        tag === slug ? (
-          <span
-            class={clsx('rounded-md text-sm py-1 px-4', {
-              'border-secondary border-2 text-secondary': tag !== slug,
-              'bg-secondary text-white inline-flex items-center': tag === slug,
-            })}
-          >
-            {tag} ({number})
-          </span>
-        ) : (
-          <a
-            class={clsx('rounded-md text-sm py-1 px-4', {
-              'border-secondary border-2 text-secondary': tag !== slug,
-              'bg-secondary text-white': tag === slug,
-            })}
-            href={`/blog/tags/${tag}`}
-          >
-            {tag} ({number})
-          </a>
-        )
-      )
+      .map(([tag, number]) => (
+        <a
+          class={clsx('rounded-md text-sm py-1 px-4 inline-flex items-center', {
+            'border-secondary border-2 text-secondary': tag !== slug,
+            'bg-secondary text-white': tag === slug,
+          })}
+          href={tag === slug ? '/blog' : `/blog/tags/${tag}`}
+        >
+          {tag} ({number}){' '}
+          {tag === slug ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width={1.5}
+              stroke="currentColor"
+              class="w-3 h-3 ml-2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : null}
+        </a>
+      ))
   }
 </div>

@@ -12,19 +12,19 @@
     "prettier": "prettier --write ."
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^3.0.0",
+    "@astrojs/tailwind": "^3.0.1",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "astro": "^2.0.1",
+    "astro": "^2.0.4",
     "prettier": "^2.8.3",
     "prettier-plugin-astro": "^0.7.2",
     "prisma": "^4.9.0",
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@astrojs/mdx": "^0.15.0",
-    "@astrojs/prefetch": "^0.1.1",
-    "@astrojs/react": "^2.0.0",
+    "@astrojs/mdx": "^0.15.2",
+    "@astrojs/prefetch": "^0.1.2",
+    "@astrojs/react": "^2.0.2",
     "@astrojs/rss": "^2.1.0",
     "@astrojs/vercel": "^3.0.0",
     "@prisma/client": "^4.9.0",
