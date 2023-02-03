@@ -4,8 +4,10 @@ import type { CollectionEntry } from 'astro:content';
 interface Props {
   post: CollectionEntry<'blog'> & { formattedDate: string };
   minutesRead?: string;
+  index: number;
 }
-const { post, minutesRead } = Astro.props;
+const { post, minutesRead, index } = Astro.props;
+const loading = index > 3 ? 'lazy' : undefined;
 ---
 
 <a
@@ -13,7 +15,11 @@ const { post, minutesRead } = Astro.props;
   href={`/blog/${post.slug}`}
 >
   <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
-    <img class="rounded-t-xl aspect-[1.5]" src={post.data.image} />
+    <img
+      loading={loading}
+      class="rounded-t-xl aspect-[1.5]"
+      src={post.data.image}
+    />
     <div class="flex px-6 py-4 flex-grow flex-col">
       <date class="text-sm">{post.formattedDate}</date>
       <div

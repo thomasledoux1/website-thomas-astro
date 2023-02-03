@@ -1,42 +1,54 @@
 ---
-import clsx from 'clsx';
+import Tag from './Tag.astro';
 interface Props {
   tags: { [key: string]: number };
   slug?: string;
 }
 const { tags, slug } = Astro.props;
+const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
 ---
 
-<div class="flex justify-center gap-3 flex-wrap">
+<div class="flex gap-3 flex-wrap">
   {
-    Object.entries(tags)
-      .sort(([, a], [, b]) => b - a)
+    sortedTags
+      .slice(0, 5)
       .map(([tag, number]) => (
-        <a
-          class={clsx('rounded-md text-sm py-1 px-4 inline-flex items-center', {
-            'border-secondary border-2 text-secondary': tag !== slug,
-            'bg-secondary text-white': tag === slug,
-          })}
-          href={tag === slug ? '/blog' : `/blog/tags/${tag}`}
-        >
-          {tag} ({number}){' '}
-          {tag === slug ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width={1.5}
-              stroke="currentColor"
-              class="w-3 h-3 ml-2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : null}
-        </a>
+        <Tag tag={tag} number={number} isActive={tag === slug} />
       ))
   }
+  {
+    sortedTags.length > 5 ? (
+      <>
+        <div id="more-tags" class="hidden md:contents">
+          {sortedTags.slice(5).map(([tag, number]) => (
+            <Tag tag={tag} number={number} isActive={tag === slug} />
+          ))}
+        </div>
+      </>
+    ) : null
+  }
 </div>
+{
+  sortedTags.length > 5 ? (
+    <button
+      id="load-more-tags"
+      class="md:hidden px-4 mt-4 py-2 bg-secondary text-white rounded-lg lg:hover:scale-[1.04] transition-transform"
+    >
+      + More tags
+    </button>
+  ) : null
+}
+
+<script>
+  document.getElementById('load-more-tags')?.addEventListener('click', () => {
+    if (document.getElementById('more-tags')?.classList.contains('hidden')) {
+      document.getElementById('load-more-tags')!.innerText = '- Less tags';
+      document.getElementById('more-tags')?.classList.remove('hidden');
+      document.getElementById('more-tags')?.classList.add('contents');
+    } else {
+      document.getElementById('load-more-tags')!.innerText = '+ More tags';
+      document.getElementById('more-tags')?.classList.add('hidden');
+      document.getElementById('more-tags')?.classList.remove('contents');
+    }
+  });
+</script>
