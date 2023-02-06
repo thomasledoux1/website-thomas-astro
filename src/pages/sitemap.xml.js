@@ -1,5 +1,11 @@
-const blogsImportResult = import.meta.glob('./blog/*.mdx', { eager: true });
+const blogsImportResult = import.meta.glob('../content/blog/*.mdx', {
+  eager: true,
+});
 const blogs = Object.values(blogsImportResult);
+const uniqueTags = [
+  ...new Set(blogs.map(blog => blog.frontmatter.tags).flat()),
+];
+console.log(uniqueTags);
 
 export const get = () => {
   return {
@@ -14,10 +20,19 @@ export const get = () => {
     ${blogs
       .map(
         blog => `<url>
-    <loc>https://www.thomasledoux.be${blog.url}</loc>
+    <loc>https://www.thomasledoux.be${blog.url
+      .replace('src/content', '')
+      .replace('.mdx', '')}</loc>
   </url>`
       )
       .join('')}
+          ${uniqueTags
+            .map(
+              tag => `<url>
+    <loc>https://www.thomasledoux.be/blog/tags/${tag}</loc>
+  </url>`
+            )
+            .join('')}
   </urlset>`,
   };
 };
