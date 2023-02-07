@@ -50,10 +50,10 @@ const convertedDate = new Date(frontmatter.date).toLocaleDateString('en-BE', {
   </a>
   <article>
     <h1>{frontmatter.title}</h1>
-    <div class="flex gap-x-4 items-center mb-4">
+    <div class="flex flex-col lg:flex-row gap-4 lg:items-center mb-4">
       <time class="text-gray-500">{convertedDate}</time>
-      <span class="text-gray-500">|</span>
-      <div class="flex gap-x-2">
+      <span class="text-gray-500 hidden lg:inline-block">|</span>
+      <div class="flex gap-x-2 flex-wrap gap-y-2">
         {
           frontmatter.tags.map(tag => (
             <a
