@@ -8,14 +8,7 @@ if (import.meta.env.MODE === 'development') {
   );
 } else {
   import('@prisma/client/edge.js').then(
-    mod =>
-      (prisma = new mod.PrismaClient({
-        datasources: {
-          db: {
-            url: import.meta.env.DATABASE_URL,
-          },
-        },
-      }))
+    mod => (prisma = new mod.PrismaClient())
   );
 }
 
