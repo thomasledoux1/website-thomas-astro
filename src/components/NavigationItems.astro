@@ -1,5 +1,6 @@
 ---
-import classNames from 'classnames';
+import clsx from 'clsx';
+
 const url = Astro.request.url;
 const linkClasses =
   'relative before:absolute before:bottom-[-6px] md:before:bottom-[-4px] before:h-[4px] before:w-[0] before:mt-[4px] before:bg-white md:before:bg-secondary before:transition-all before:duration-300 group-hover:before:w-full group-hover:after:w-full';
@@ -9,7 +10,7 @@ const linkClasses =
   <a
     rel="prefetch"
     href="/personal"
-    class={classNames(linkClasses, {
+    class={clsx(linkClasses, {
       'before:w-full after:w-full': url.includes('/personal'),
     })}
   >
@@ -20,7 +21,7 @@ const linkClasses =
   <a
     rel="prefetch"
     href="/portfolio"
-    class={classNames(linkClasses, {
+    class={clsx(linkClasses, {
       'before:w-full after:w-full': url.includes('/portfolio'),
     })}
   >
@@ -31,7 +32,7 @@ const linkClasses =
   <a
     rel="prefetch"
     href="/blog"
-    class={classNames(linkClasses, {
+    class={clsx(linkClasses, {
       'before:w-full after:w-full': url.includes('/blog'),
     })}
   >
@@ -42,7 +43,7 @@ const linkClasses =
   <a
     rel="prefetch"
     href="/contact"
-    class={classNames(linkClasses, {
+    class={clsx(linkClasses, {
       'before:w-full after:w-full': url.includes('/contact'),
     })}
   >
@@ -53,7 +54,7 @@ const linkClasses =
   <a
     rel="prefetch"
     href="/cv"
-    class={classNames(linkClasses, {
+    class={clsx(linkClasses, {
       'before:w-full after:w-full': url.includes('/cv'),
     })}
   >

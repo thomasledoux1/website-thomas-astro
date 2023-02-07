@@ -40,7 +40,10 @@ const sendMail = async (
 export const get: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
   const params = new URLSearchParams(url.search);
-  const blogUrl = params.get('blogUrl');
+  const blogUrl = params
+    .get('blogUrl')
+    ?.replace('src/content', '')
+    .replace('.mdx', '');
   if (!blogUrl) {
     return new Response('No blog url provided', {
       status: 400,

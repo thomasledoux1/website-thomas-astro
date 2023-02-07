@@ -15,11 +15,11 @@
     "@astrojs/tailwind": "^3.0.1",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "astro": "^2.0.6",
+    "astro": "^2.0.7",
     "prettier": "^2.8.3",
-    "prettier-plugin-astro": "^0.7.2",
-    "prisma": "^4.9.0",
-    "typescript": "^4.9.4"
+    "prettier-plugin-astro": "^0.8.0",
+    "prisma": "^4.10.0",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.16.0",
@@ -27,16 +27,12 @@
     "@astrojs/react": "^2.0.2",
     "@astrojs/rss": "^2.1.0",
     "@astrojs/vercel": "^3.0.1",
-    "@prisma/client": "^4.9.0",
-    "@tanstack/react-query": "^4.22.4",
-    "@trpc/client": "^10.9.0",
-    "@trpc/server": "^10.9.0",
-    "classnames": "^2.3.2",
+    "@prisma/client": "^4.10.0",
+    "@tanstack/react-query": "^4.24.4",
     "clsx": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reading-time": "^1.5.0",
-    "web-vitals": "^3.1.1",
-    "zod": "^3.20.2"
+    "web-vitals": "^3.1.1"
   }
 }

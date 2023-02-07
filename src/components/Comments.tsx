@@ -14,8 +14,12 @@ const Comments = ({
     queryKey: [`comments-${blogUrl}`],
     queryFn: async () => {
       const allCommentsInDb = await fetch(`/api/comments?blogUrl=${blogUrl}`);
-      const allCommentsInDbJson = await allCommentsInDb.json();
-      return allCommentsInDbJson as Comment[];
+      const allCommentsInDbJson = (await allCommentsInDb.json()) as Comment[];
+      const sortedComments = allCommentsInDbJson.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      return sortedComments;
     },
     initialData: initialComments,
   });
@@ -78,7 +82,17 @@ const Comments = ({
         <div className="flex flex-col gap-y-4">
           {upToDateCommentsQuery?.data?.map(comment => (
             <div key={comment.id} className="flex flex-col">
-              <h3 className="font-bold">{comment.author}</h3>
+              <div className="flex items-center gap-x-2">
+                <h3 className="font-bold !my-0">{comment.author}</h3>
+                <span>|</span>
+                <span className="text-sm text-gray-500">
+                  {new Date(comment.createdAt).toLocaleDateString('en-BE', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </span>
+              </div>
               <div>{comment.text}</div>
             </div>
           ))}

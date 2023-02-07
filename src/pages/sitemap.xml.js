@@ -5,7 +5,6 @@ const blogs = Object.values(blogsImportResult);
 const uniqueTags = [
   ...new Set(blogs.map(blog => blog.frontmatter.tags).flat()),
 ];
-console.log(uniqueTags);
 
 export const get = () => {
   return {

@@ -18,7 +18,9 @@ const comments = await prisma?.post.findFirst({
   include: { Comment: true },
   orderBy: { createdAt: 'asc' },
 });
-const initialComments = comments?.Comment;
+const initialComments = comments?.Comment.sort(
+  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+);
 const convertedDate = new Date(frontmatter.date).toLocaleDateString('en-BE', {
   day: 'numeric',
   month: 'short',
@@ -69,7 +71,7 @@ const convertedDate = new Date(frontmatter.date).toLocaleDateString('en-BE', {
   <div>
     <CommentsWrapper
       client:visible
-      blogUrl={frontmatter.url}
+      blogUrl={frontmatter.url.replace('src/content', '').replace('.mdx', '')}
       initialComments={initialComments}
     />
   </div>

@@ -88,7 +88,7 @@ html {
 }
 
 .mdx a:not(.tag) {
-  @apply decoration-4 decoration-solid underline-offset-[3px] decoration-secondary underline;
+  @apply decoration-[3px] decoration-solid underline-offset-[3px] decoration-secondary underline;
 }
 
 .mdx p {
@@ -162,7 +162,7 @@ html {
 }
 
 .link {
-  @apply decoration-4 decoration-solid underline-offset-[3px] decoration-secondary underline;
+  @apply decoration-[3px] decoration-solid underline-offset-[3px] decoration-secondary underline;
 }
 
 body {
