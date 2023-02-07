@@ -1,14 +1,15 @@
 ---
-import { getEntryBySlug } from 'astro:content';
-const { slug } = Astro.params;
-if (!slug) {
-  return Astro.redirect('/404');
-}
-const entry = await getEntryBySlug('blog', slug);
-if (!entry) {
-  return Astro.redirect('/404');
+export const prerender = true;
+import { getCollection } from 'astro:content';
+export async function getStaticPaths() {
+  const blogs = await getCollection('blog');
+  return blogs.map(blog => ({
+    params: { slug: blog.slug },
+    props: { entry: blog },
+  }));
 }
 
+const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
 
