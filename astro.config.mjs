@@ -27,7 +27,9 @@ export default defineConfig({
   experimental: {
     contentCollections: true,
   },
-  adapter: vercel(),
+  adapter: vercel({
+    analytics: true,
+  }),
   markdown: {
     remarkPlugins: [remarkReadingTime],
     extendDefaultPlugins: true,
