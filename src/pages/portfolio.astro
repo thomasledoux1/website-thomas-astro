@@ -260,22 +260,42 @@ Astro.response.headers.set(
           </p>
         </Case>
         <Case
+          url="https://www.brachot.com"
+          logoAlt="Brachot"
+          img="/logobrachot.svg"
+          logoWidth={300}
+          tags={['nextjs', 'typescript', 'tailwind', 'commercetools']}
+        >
+          <p class="mb-4">
+            This was the first e-commerce project I worked on. For this project
+            we worked with Commercetools, a headless & API-first commerce
+            engine. There was a lot of learning to do regarding their APIs, but
+            we managed to get it working very well in the end.
+          </p>
+          <p>
+            This was also the first project where I worked with next-auth for
+            authentication, which connected with Azure ADB2C, so clients of
+            Brachot can easily login with their existing accounts. Technically
+            one of the more challenging projects I worked on, but the more
+            satisfying!
+          </p>
+        </Case>
+        <Case
           url="/"
           logoAlt="thomas ledoux"
-          tags={['remix', 'typescript', 'tailwind']}
+          tags={['astro', 'typescript', 'tailwind']}
         >
           <p class="mb-4">
             I like to use my personal website as a playground for new ideas and
             new technologies. The site used to be built in Next.js, but since
             I&apos;ve been using Next.js frequently at work, I wanted to try
-            something new: Remix.
+            something new: Astro.
           </p>
           <p>
-            The conversion of the project wasn&apos;t very hard, and I ended up
-            learning a lot about the web fundamentals, since that&apos;s the
-            base Remix is built on. I noticed the TTI being a lot lower too,
-            because of the smarter way of doing network requests in Remix. So
-            far, I&apos;m sold!
+            The conversion of the project wasn&apos;t very hard, since I could
+            easily copy over the JSX, since the Astro syntax is very close to
+            it. The DX is unmatched, and it's so fast!. No Javascript loaded by
+            default is a huge win for my site.
           </p>
         </Case>
       </div>

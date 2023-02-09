@@ -42,13 +42,15 @@ const latestBlog = blogs.sort(
           sizes="(max-width: 767px) 75vw, 45vw"
         />
       </div>
-      <a
-        href={`/blog/${latestBlog?.slug}`}
-        class="cursor-pointer lg:fixed lg:mt-0 lg:left-1/2 lg:-translate-x-1/2 lg:bottom-20 bg-secondary text-white px-8 py-4 border-l-8 border-l-primary"
-      >
-        <h2 class="text-lg font-bold">Latest blog post</h2>
-        {latestBlog?.data.title}
-      </a>
+      <div class="lg:fixed flex lg:left-1/2 lg:-translate-x-1/2 lg:bottom-20">
+        <a
+          href={`/blog/${latestBlog?.slug}`}
+          class="cursor-pointer bg-secondary text-white px-8 py-4 border-l-8 border-l-primary transition-transform hover:scale-[1.02]"
+        >
+          <h2 class="text-lg font-bold">Latest blog post</h2>
+          {latestBlog?.data.title}
+        </a>
+      </div>
     </div>
   </section>
 </Layout>
