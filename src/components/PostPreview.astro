@@ -2,7 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  post: CollectionEntry<'blog'> & { formattedDate: string };
+  post: CollectionEntry<'blog'>;
   minutesRead?: string;
   index: number;
 }
@@ -21,7 +21,15 @@ const loading = index > 3 ? 'lazy' : undefined;
       src={post.data.image}
     />
     <div class="flex px-6 py-4 flex-grow flex-col">
-      <date class="text-sm">{post.formattedDate}</date>
+      <date class="text-sm"
+        >{
+          new Date(post.data.date).toLocaleDateString('en-BE', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          })
+        }</date
+      >
       <div
         class="flex lg:items-center w-full flex-col gap-y-2 justify-between flex-grow"
       >

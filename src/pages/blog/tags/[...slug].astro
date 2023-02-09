@@ -29,16 +29,9 @@ const allBlogPostsWithTag = await getCollection('blog', blog =>
 if (allBlogPostsWithTag.length === 0) {
   return Astro.redirect('/404');
 }
-const postsWithTag = allBlogPostsWithTag
-  .map(post => ({
-    ...post,
-    formattedDate: new Date(post.data.date).toLocaleDateString('en-BE', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }),
-  }))
-  .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+const postsWithTag = allBlogPostsWithTag.sort(
+  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
+);
 ---
 
 <Layout

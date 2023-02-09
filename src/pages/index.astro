@@ -1,11 +1,12 @@
 ---
 export const prerender = true;
+import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 import Layout from '../layouts/Layout.astro';
-Astro.response.headers.set(
-  'cache-control',
-  'public, max-age=0, s-max-age=86400'
-);
+const blogs = await getCollection('blog');
+const latestBlog = blogs.sort(
+  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
+)[0];
 ---
 
 <Layout
@@ -15,7 +16,7 @@ Astro.response.headers.set(
   preloadImageSrcSet="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_450/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
   preloadImageSizes="(max-width: 767px) 75vw, 45vw"
 >
-  <section class="relative lg:pt-0 items-center flex h-full my-auto">
+  <section class="relative lg:pt-0 items-center flex flex-wrap h-full my-auto">
     <div
       class="gap-8 w-full flex flex-col lg:flex-row items-center justify-between h-full"
     >
@@ -31,7 +32,7 @@ Astro.response.headers.set(
       </h1>
       <div class="w-3/4 mx-auto lg:ml-auto lg:mr-0">
         <img
-          class="rounded-full mx-auto md:ml-auto md:mr-0"
+          class="rounded-full mx-auto md:ml-auto lg:mr-0"
           alt="Profile"
           src="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
           fetchpriority="high"
@@ -41,6 +42,13 @@ Astro.response.headers.set(
           sizes="(max-width: 767px) 75vw, 45vw"
         />
       </div>
+      <a
+        href={`/blog/${latestBlog?.slug}`}
+        class="cursor-pointer lg:fixed lg:mt-0 lg:left-1/2 lg:-translate-x-1/2 lg:bottom-20 bg-secondary text-white px-8 py-4 border-l-8 border-l-primary"
+      >
+        <h2 class="text-lg font-bold">Latest blog post</h2>
+        {latestBlog?.data.title}
+      </a>
     </div>
   </section>
 </Layout>
