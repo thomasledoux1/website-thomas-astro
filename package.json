@@ -15,7 +15,7 @@
     "@astrojs/tailwind": "^3.0.1",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "astro": "^2.0.9",
+    "astro": "^2.0.10",
     "prettier": "^2.8.4",
     "prettier-plugin-astro": "^0.8.0",
     "prisma": "^4.10.0",
