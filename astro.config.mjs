@@ -2,9 +2,11 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import { remarkReadingTime } from './src/utils/calculate-reading-time.mjs';
-import vercel from '@astrojs/vercel/serverless';
 import react from '@astrojs/react';
 import prefetch from '@astrojs/prefetch';
+
+// https://astro.build/config
+import netlify from '@astrojs/netlify/functions';
 
 // https://astro.build/config
 export default defineConfig({
@@ -27,9 +29,7 @@ export default defineConfig({
   experimental: {
     contentCollections: true,
   },
-  adapter: vercel({
-    analytics: true,
-  }),
+  adapter: netlify(),
   markdown: {
     remarkPlugins: [remarkReadingTime],
     extendDefaultPlugins: true,
