@@ -1,15 +1,4 @@
-import type { PrismaClient } from '@prisma/client/index.js';
+import { PrismaClient } from '@prisma/client';
 
-let prisma: PrismaClient | undefined;
-
-if (import.meta.env.MODE === 'development') {
-  import('@prisma/client/index.js').then(
-    mod => (prisma = new mod.PrismaClient())
-  );
-} else {
-  import('@prisma/client/edge.js').then(
-    mod => (prisma = new mod.PrismaClient())
-  );
-}
-
+const prisma = new PrismaClient();
 export { prisma };

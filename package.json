@@ -6,7 +6,7 @@
     "dev": "astro dev --host",
     "start": "astro dev",
     "prisma-generate": "prisma generate",
-    "build": "prisma generate --data-proxy && astro check && tsc --noEmit && astro build",
+    "build": "prisma generate && astro check && tsc --noEmit && astro build",
     "preview": "vercel dev",
     "astro": "astro",
     "prettier": "prettier --write ."
