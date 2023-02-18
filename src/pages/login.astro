@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title>Login</title>
+    <script>
+      import { signIn } from '@astro-auth/client';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('form')?.addEventListener('submit', e => {
+          e.preventDefault();
+          const form = e.target;
+          if (form) {
+            const formData = new FormData(form as HTMLFormElement);
+            const data = Object.fromEntries(formData);
+            signIn({
+              provider: 'credential',
+              login: data,
+            });
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <form>
+      <label for="username">Name</label>
+      <input type="text" name="username" />
+
+      <label for="password">Password</label>
+      <input type="password" name="password" />
+
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>

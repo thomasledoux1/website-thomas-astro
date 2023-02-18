@@ -24,3 +24,9 @@ model Comment {
   postId    Int
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
+
+model Account {
+  id Int @id @default(autoincrement())
+  username String @unique
+  password String
+}

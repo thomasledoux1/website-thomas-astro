@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import type { Comment } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
+import { getUser } from '@astro-auth/core';
 
 const sendMail = async (
   subject: string,
@@ -45,16 +46,25 @@ export const get: APIRoute = async ({ request }) => {
     ?.replace('src/content', '')
     .replace('.mdx', '');
   if (!blogUrl) {
-    return new Response('No blog url provided', {
-      status: 400,
+    const comments = await prisma?.comment.findMany({
+      include: {
+        post: {
+          select: {
+            url: true,
+          },
+        },
+      },
+    });
+    return new Response(JSON.stringify(comments), {
+      status: 200,
     });
   }
-  const comments = await prisma?.post.findFirst({
+  const commentsForBlogUrl = await prisma?.post.findFirst({
     where: { url: (blogUrl as string) ?? undefined },
     include: { Comment: true },
     orderBy: { createdAt: 'asc' },
   });
-  const allCommentsInDbForPost = comments?.Comment;
+  const allCommentsInDbForPost = commentsForBlogUrl?.Comment;
   return new Response(JSON.stringify(allCommentsInDbForPost), {
     status: 200,
     headers: {
@@ -101,4 +111,23 @@ export const post: APIRoute = async ({ request }) => {
   ]);
 
   return new Response(null, { status: 200 });
+};
+
+export const del: APIRoute = async ({ request }) => {
+  const user = getUser({ server: request });
+  if (user) {
+    const body = await request.json();
+    const deleteComment = await prisma?.comment.delete({
+      where: {
+        id: body.id,
+      },
+    });
+    return new Response(
+      JSON.stringify({
+        message: `Comment with id ${deleteComment?.id} deleted`,
+      }),
+      { status: 200 }
+    );
+  }
+  return new Response(null, { status: 403 });
 };

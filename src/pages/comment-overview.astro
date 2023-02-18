@@ -1,0 +1,26 @@
+---
+import { getUser } from '@astro-auth/core';
+import Layout from '../layouts/Layout.astro';
+import { prisma } from '../lib/prisma';
+import CommentsOverviewWrapper from '../components/CommentOverviewWrapper';
+const user = getUser({ client: Astro });
+if (!user) {
+  return Astro.redirect('/', 307);
+}
+const commentsWithPost = await prisma?.comment.findMany({
+  include: {
+    post: {
+      select: {
+        url: true,
+      },
+    },
+  },
+});
+---
+
+<Layout
+  description="Overview of comments"
+  title="Thomas Ledoux | Comment overview"
+>
+  <CommentsOverviewWrapper commentsWithPost={commentsWithPost} client:load />
+</Layout>
