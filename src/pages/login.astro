@@ -5,16 +5,17 @@
       import { signIn } from '@astro-auth/client';
 
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelector('form')?.addEventListener('submit', e => {
+        document.querySelector('form')?.addEventListener('submit', async e => {
           e.preventDefault();
           const form = e.target;
           if (form) {
             const formData = new FormData(form as HTMLFormElement);
             const data = Object.fromEntries(formData);
-            signIn({
+            await signIn({
               provider: 'credential',
               login: data,
             });
+            window.location.href = '/';
           }
         });
       });
