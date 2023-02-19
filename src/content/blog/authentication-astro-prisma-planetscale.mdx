@@ -22,6 +22,8 @@ model Account {
 }
 ```
 
+Once the model is updated in the code, running `npx prisma db push` propagates the changes to PlanetScale, so the schema is updated in the actual database.
+
 I used an existing package called `@astro-auth` to handle all the authentication on my site.
 For this to work, I needed to add 2 environment variables to my application: `ASTROAUTH_URL` (the URL my site is hosted on) and `ASTROAUTH_SECRET` (a self chosen secret key).
 
