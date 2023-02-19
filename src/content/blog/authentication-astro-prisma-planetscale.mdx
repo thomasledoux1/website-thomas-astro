@@ -1,0 +1,174 @@
+---
+title: 'Setting up authentication with Prisma and Planetscale'
+layout: '../../layouts/BlogLayout.astro'
+tags: ['javascript', 'astro', 'authentication']
+date: '2023-02-18T16:14:39.004Z'
+image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_660/f_auto/v1676739843/photo-1504203700686-f21e703e5f1c_b1vx0u.jpg'
+imageAlt: 'Phone with passcode screen'
+---
+
+I've been wanting to add authentication to my personal website for a while now to see how it works in Astro.
+With Prisma and PlanetScale already running for [comments on my blogs](https://www.thomasledoux.be/blog/adding-comments-prisma-planetscale-astro-vercel-edge), I decided to store my account information in PlanetScale.
+Because it's just used for my own account, and I'm not storing any other sensitive information in my database, I decided to store the credentials in plain text for now.
+I changed my Prisma schema to make this possible:
+
+```prisma
+// schema.prisma
+
+model Account {
+  id Int @id @default(autoincrement())
+  username String @unique
+  password String
+}
+```
+
+I used an existing package called `@astro-auth` to handle all the authentication on my site.
+For this to work, I needed to add 2 environment variables to my application: `ASTROAUTH_URL` (the URL my site is hosted on) and `ASTROAUTH_SECRET` (a self chosen secret key).
+
+Because I stored the credentials in PlanetScale, I needed to use the `CredentialProvider` to enable logging in with username and password.
+There are many other providers available on `@astro-auth`, go check out the package if you're interested.
+The code needed to set this up with `@astro-auth` looks like this:
+
+```typescript
+// /pages/api/auth/[...astroauth].ts
+
+import AstroAuth from '@astro-auth/core';
+import { CredentialProvider } from '@astro-auth/providers';
+import { prisma } from '../../../lib/prisma';
+
+export const all = AstroAuth({
+  authProviders: [
+    CredentialProvider({
+      authorize: async properties => {
+        const account = await prisma?.account.findFirst({
+          where: {
+            username: properties.username,
+            AND: {
+              password: properties.password,
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+        if (account?.id) {
+          return properties.username;
+        }
+        return null;
+      },
+    }),
+  ],
+});
+```
+
+Creating a login page was very easy.
+I just created a form, calling the `signIn()` method from `@astro-auth` on submit, and BOOM: logged in!
+The code for the login page:
+
+```astro
+// /pages/login.astro
+
+<html>
+  <head>
+    <title>Login</title>
+    <script>
+      import { signIn } from '@astro-auth/client';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('form')?.addEventListener('submit', async e => {
+          e.preventDefault();
+          const form = e.target;
+          if (form) {
+            const formData = new FormData(form as HTMLFormElement);
+            const data = Object.fromEntries(formData);
+            await signIn({
+              provider: 'credential',
+              login: data,
+            });
+            window.location.href = '/';
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <form>
+      <label for="username">Name</label>
+      <input type="text" name="username" />
+
+      <label for="password">Password</label>
+      <input type="password" name="password" />
+
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>
+```
+
+After submitting the form, the user's signed in and is redirected to the homepage.
+Protecting a page with authentication is easy, just checking the logged in user with the `getUser()` function from `@astro-auth`.
+Here's an example of a page where I used this check:
+
+```astro
+// /pages/comment-overview.astro
+
+---
+import { getUser } from '@astro-auth/core';
+import Layout from '../layouts/Layout.astro';
+import { prisma } from '../lib/prisma';
+import CommentsOverviewWrapper from '../components/CommentOverviewWrapper';
+const user = getUser({ client: Astro });
+if (!user) {
+  return Astro.redirect('/', 307);
+}
+const commentsWithPost = await prisma?.comment.findMany({
+  include: {
+    post: {
+      select: {
+        url: true,
+      },
+    },
+  },
+});
+---
+
+<Layout
+  description="Overview of comments"
+  title="Thomas Ledoux | Comment overview"
+>
+  <CommentsOverviewWrapper commentsWithPost={commentsWithPost} client:load />
+</Layout>
+```
+
+If the user is not logged in, the user will be redirected to the homepage with a 307 status code.
+I also have an API route to delete comments on my blog posts, which I want to fence off so only authenticated user can use this API.
+It's possible to use the `getUser()` function from `@astro-auth` for this too, but this time we're going to pass the `request` instead of the `Astro` object.
+Example of using this code:
+
+```typescript
+// /pages/api/comments.ts
+
+export const del: APIRoute = async ({ request }) => {
+  const user = getUser({ server: request });
+  if (user) {
+    const body = await request.json();
+    const deleteComment = await prisma?.comment.delete({
+      where: {
+        id: body.id,
+      },
+    });
+    return new Response(
+      JSON.stringify({
+        message: `Comment with id ${deleteComment?.id} deleted`,
+      }),
+      { status: 200 }
+    );
+  }
+  return new Response(null, { status: 403 });
+};
+```
+
+So when the user is not authenticated, a 403 response will be returned.
+
+Hope this was helpful!
+Source code can be found on [my Github](https://github.com/thomasledoux1/website-thomas-astro/tree/feature/auth-netlify) as always.
