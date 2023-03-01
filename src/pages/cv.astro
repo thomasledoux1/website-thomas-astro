@@ -1,8 +1,11 @@
 ---
 export const prerender = true;
+import { Image } from '@unpic/astro';
 import Stars from '../components/Stars.astro';
 import TimelineItem from '../components/TimelineItem.astro';
 import Layout from '../layouts/Layout.astro';
+import { calculateBlurhashGradient } from '../utils/calculate-blurhash-gradient';
+const blurhashGradient = await calculateBlurhashGradient('https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg')
 const age = Math.floor(
   (new Date().getTime() - new Date('1991-07-11').getTime()) / 3.15576e10
 );
@@ -29,22 +32,19 @@ Astro.response.headers.set(
 <Layout
   description="Thomas Ledoux' CV"
   title="Thomas Ledoux - CV"
-  preloadImage="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
-  preloadImageSrcSet="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_450/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
-  preloadImageSizes="(max-width: 767px) 75vw, 45vw"
 >
   <section>
     <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-16">
       <div class="col-span-1">
         <div class="text-center">
-          <img
+          <Image
             class="rounded-full mx-auto w-[80%] max-w-[20rem] sm:max-w-none"
             alt="Profile"
-            src="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
-            fetchpriority="high"
+            src="https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"
             width={320}
             height={320}
-            srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_450/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+            layout="constrained"
+            background={blurhashGradient}
             sizes="(max-width: 767px) 75vw, 45vw"
           />
           <p class="mt-4">Hello, is it me you&apos;re looking for?</p>

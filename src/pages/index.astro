@@ -1,8 +1,11 @@
 ---
 export const prerender = true;
 import { getCollection } from 'astro:content';
+import { Image } from "@unpic/astro"
 import '../../styles/global.css';
 import Layout from '../layouts/Layout.astro';
+import { calculateBlurhashGradient } from "../utils/calculate-blurhash-gradient";
+const blurhashGradient = await calculateBlurhashGradient('https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg')
 const blogs = await getCollection('blog');
 const latestBlog = blogs.sort(
   (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
@@ -10,11 +13,8 @@ const latestBlog = blogs.sort(
 ---
 
 <Layout
-  description="Thomas Ledoux' personal website"
+  description="Thomas Ledoux' personal website. Writes about Javascript/React/Next.js/Remix/Astro. Always looking to learn about the newest frameworks and features."
   title="Thomas Ledoux - Home"
-  preloadImage="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
-  preloadImageSrcSet="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_450/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
-  preloadImageSizes="(max-width: 767px) 75vw, 45vw"
 >
   <section class="relative lg:pt-0 items-center flex flex-wrap h-full my-auto">
     <div
@@ -31,14 +31,15 @@ const latestBlog = blogs.sort(
         <a class="title-part" href="/personal"> travel lover</a>
       </h1>
       <div class="w-3/4 mx-auto lg:ml-auto lg:mr-0">
-        <img
+        <Image
           class="rounded-full mx-auto md:ml-auto lg:mr-0"
           alt="Profile"
-          src="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg"
-          fetchpriority="high"
+          src="https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"
           width={320}
           height={320}
-          srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_250/f_auto/q_80/v1583171588/me_qvrwky.jpg 420w, https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_450/f_auto/q_80/v1583171588/me_qvrwky.jpg 2040w"
+          layout="constrained"
+          background={blurhashGradient}
+          priority
           sizes="(max-width: 767px) 75vw, 45vw"
         />
       </div>
