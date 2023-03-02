@@ -1,4 +1,5 @@
 ---
+import { Image } from '@unpic/astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -15,11 +16,16 @@ const loading = index > 3 ? 'lazy' : undefined;
   href={`/blog/${post.slug}`}
 >
   <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
-    <img
-      loading={loading}
-      class="rounded-t-xl aspect-[1.33] object-cover"
+    <Image
+      priority={loading !== 'lazy'}
+      background="auto"
+      class="rounded-t-xl"
       src={post.data.image}
       alt={post.data.imageAlt}
+      layout="constrained"
+      width={660}
+      height={496}
+      sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
     />
     <div class="flex px-6 py-4 flex-grow flex-col">
       <date class="text-sm"

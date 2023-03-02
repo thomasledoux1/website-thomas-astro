@@ -1,4 +1,6 @@
 ---
+import { Image } from '@unpic/astro';
+
 interface Props {
   img?: string;
   url: string;
@@ -17,12 +19,13 @@ const { img, url, logoWidth, logoAlt, tags } = Astro.props;
 >
   <div class="h-24 max-h-24 text-center mb-6 flex items-center justify-center">
     {
-      img ? (
-        <img
+      img && logoWidth ? (
+        <Image
           width={logoWidth}
           height={100}
           alt={`Logo ${logoAlt}`}
           src={img}
+          layout="constrained"
           class="inline-block max-w-full lg:max-w-xs"
         />
       ) : (
