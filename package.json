@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@astrojs/tailwind": "^3.0.1",
+    "@types/html-escaper": "^3.0.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "astro": "^2.0.16",
@@ -38,9 +39,13 @@
     "@unpic/placeholder": "^0.0.1",
     "blurhash": "^2.0.5",
     "clsx": "^1.2.1",
+    "hast-util-to-string": "^2.0.0",
+    "html-escaper": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reading-time": "^1.5.0",
+    "rehype-autolink-headings": "^6.1.1",
+    "rehype-slug": "^5.1.0",
     "web-vitals": "^3.1.1"
   }
 }
