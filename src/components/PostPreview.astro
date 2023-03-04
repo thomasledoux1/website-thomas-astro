@@ -3,7 +3,7 @@ import { Image } from '@unpic/astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: CollectionEntry<'blog'> & { blurhash: string };
   minutesRead?: string;
   index: number;
 }
@@ -18,7 +18,7 @@ const loading = index > 3 ? 'lazy' : undefined;
   <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
     <Image
       priority={loading !== 'lazy'}
-      background="auto"
+      background={post.blurhash}
       class="rounded-t-xl"
       src={post.data.image}
       alt={post.data.imageAlt}

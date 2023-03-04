@@ -1,9 +1,11 @@
 ---
+export const prerender = true;
 import { getCollection } from 'astro:content';
 import PostPreview from '../../components/PostPreview.astro';
 import Tags from '../../components/Tags.astro';
 const allBlogPosts = await getCollection('blog');
 import Layout from '../../layouts/Layout.astro';
+import { calculateBlurhashGradient } from '../../utils/calculate-blurhash-gradient';
 const tags = allBlogPosts
   .map(blog => blog.data.tags)
   .flat()
@@ -12,8 +14,13 @@ const tags = allBlogPosts
     result[c] = count + 1;
     return result;
   }, {});
-const sortedPosts = allBlogPosts.sort(
-  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
+const sortedPosts = await Promise.all(
+  allBlogPosts
+    .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date))
+    .map(async post => ({
+      ...post,
+      blurhash: await calculateBlurhashGradient(post.data.image),
+    }))
 );
 ---
 

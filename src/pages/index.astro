@@ -1,12 +1,16 @@
 ---
 export const prerender = true;
 import { getCollection } from 'astro:content';
-import { Image } from "@unpic/astro"
+import { Image } from '@unpic/astro';
 import '../../styles/global.css';
 import Layout from '../layouts/Layout.astro';
-import { calculateBlurhashGradient } from "../utils/calculate-blurhash-gradient";
-const blurhashGradient = await calculateBlurhashGradient('https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg')
-const blogs = await getCollection('blog');
+import { calculateBlurhashGradient } from '../utils/calculate-blurhash-gradient';
+const [blurhashGradient, blogs] = await Promise.all([
+  calculateBlurhashGradient(
+    'https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg'
+  ),
+  getCollection('blog'),
+]);
 const latestBlog = blogs.sort(
   (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
 )[0];
