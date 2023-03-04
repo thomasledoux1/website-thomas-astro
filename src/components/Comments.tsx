@@ -77,7 +77,7 @@ const Comments = ({
         </button>
       </form>
 
-      <h2 className="text-xl lg:text-2xl mb-4 font-bold">Comments</h2>
+      <h2 className="text-xl lg:text-2xl mb-4 font-bold mt-4">Comments</h2>
       {upToDateCommentsQuery?.data && upToDateCommentsQuery?.data.length > 0 ? (
         <div className="flex flex-col gap-y-4">
           {upToDateCommentsQuery?.data?.map(comment => (

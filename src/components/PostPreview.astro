@@ -3,7 +3,7 @@ import { Image } from '@unpic/astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  post: CollectionEntry<'blog'> & { blurhash: string };
+  post: CollectionEntry<'blog'> & { blurhash?: string };
   minutesRead?: string;
   index: number;
 }
@@ -14,11 +14,12 @@ const loading = index > 3 ? 'lazy' : undefined;
 <a
   class="transform lg:text-center rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
   href={`/blog/${post.slug}`}
+  rel="prefetch"
 >
   <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
     <Image
       priority={loading !== 'lazy'}
-      background={post.blurhash}
+      background={post.blurhash ?? 'auto'}
       class="rounded-t-xl"
       src={post.data.image}
       alt={post.data.imageAlt}
@@ -44,7 +45,7 @@ const loading = index > 3 ? 'lazy' : undefined;
           <h2 class="text-xl font-medium transition-colors">
             {post.data.title}
           </h2>
-          <p>{minutesRead}ing time</p>
+          {minutesRead ? <p>{minutesRead}ing time</p> : null}
         </div>
         <ul class="flex flex-wrap lg:justify-center w-full">
           {

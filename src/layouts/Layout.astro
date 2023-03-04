@@ -41,14 +41,13 @@ import '../../styles/global.css';
         : 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg'}
       property="og:image"
     />
+    <meta name="theme-color" content="#c6ebbe" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body class="flex flex-col font-body">
     <Navigation />
     <main
-      class={`pt-24 pb-12 flex-grow flex flex-col container mx-auto h-full ${
-        frontmatter ? 'mdx' : ''
-      }`}
+      class={`pt-24 pb-12 flex-grow flex flex-col container mx-auto h-full`}
     >
       <slot />
     </main>
