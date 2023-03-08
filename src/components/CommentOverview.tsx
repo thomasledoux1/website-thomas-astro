@@ -1,5 +1,6 @@
 import type { Comment } from '@prisma/client';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { trpcReact } from '../client';
 
 type CommentOverviewProps = {
   commentsWithPost:
@@ -12,27 +13,19 @@ type CommentOverviewProps = {
 };
 
 const CommentOverview = ({ commentsWithPost }: CommentOverviewProps) => {
-  const upToDateCommentsQuery = useQuery({
-    queryKey: ['comments'],
-    queryFn: async () => {
-      const allCommentsInDb = await fetch(`/api/comments`);
-      const allCommentsInDbJson = (await allCommentsInDb.json()) as
-        | (Comment & {
-            post: {
-              url: string;
-            };
-          })[]
-        | undefined;
-      return allCommentsInDbJson;
-    },
+  const upToDateCommentsQuery = trpcReact.getAllComments.useQuery(undefined, {
     initialData: commentsWithPost,
   });
-  const { mutate: deleteComment } = useMutation({
-    mutationFn: (id: number) => {
-      return fetch('/api/comments', {
-        method: 'DELETE',
-        body: JSON.stringify({ id }),
-      });
+  const { mutate: deleteComment } = trpcReact.deleteCommentForBlog.useMutation({
+    onError: () => {
+      toast.error('Error deleting comment');
+    },
+    onSuccess: res => {
+      if (res.status !== 'error') {
+        toast.success('Succesfully deleted comment');
+      } else {
+        toast.error('Error deleting comment');
+      }
     },
     onSettled: () => {
       upToDateCommentsQuery.refetch();
@@ -61,7 +54,7 @@ const CommentOverview = ({ commentsWithPost }: CommentOverviewProps) => {
                       <button
                         type="button"
                         onClick={() => {
-                          deleteComment(comment.id);
+                          deleteComment({ id: comment.id });
                         }}
                       >
                         <svg

@@ -20,7 +20,7 @@ import Layout from '../../layouts/Layout.astro';
       </div>
       <div class="flex justify-center flex-col">
         <h2 class="mb-6 text-2xl font-bold">Drop me a message</h2>
-        <form method="post" action="/api/contact">
+        <form id="contactForm">
           <label class="flex flex-col gap-2 mb-4" for="email">
             Your e-mail
             <input
@@ -44,13 +44,54 @@ import Layout from '../../layouts/Layout.astro';
           </label>
 
           <button
-            class="px-8 mt-4 py-4 bg-secondary text-white rounded-lg lg:hover:scale-[1.04] transition-transform"
+            class="px-8 mt-4 py-4 bg-secondary text-white rounded-lg lg:hover:scale-[1.04] transition-transform disabled:opacity-50"
             type="submit"
+            id="submitBtn"
           >
             Submit
           </button>
+          <div id="missingData" class="text-red-500 font-bold hidden">
+            Something went from while processing the contact form. Try again
+            later.
+          </div>
+          <div id="error" class="text-red-500 font-bold hidden">
+            Something went from while processing the contact form. Try again
+            later.
+          </div>
         </form>
       </div>
     </div>
   </section>
 </Layout>
+<script>
+  import { trpcAstro } from '../../client';
+  const form = document.getElementById('contactForm') as HTMLFormElement | null;
+  form?.addEventListener('submit', async e => {
+    const submitBtn = document.getElementById(
+      'submitBtn'
+    )! as HTMLButtonElement;
+    submitBtn.disabled = true;
+    e.preventDefault();
+    const formData = new FormData(form);
+    const result = await trpcAstro.sendContactForm.mutate({
+      message: formData.get('message') as string | null,
+      email: formData.get('email') as string | null,
+    });
+    if (result.status === 'success') {
+      window.location.href = '/contact/thanks';
+    } else if (result.status === 'missingdata') {
+      if (!document.getElementById('error')?.classList.contains('hidden')) {
+        document.getElementById('error')?.classList.add('hidden');
+      }
+      document.getElementById('missingData')?.classList.remove('hidden');
+    } else {
+      if (
+        !document.getElementById('missingData')?.classList.contains('hidden')
+      ) {
+        document.getElementById('missingData')?.classList.add('hidden');
+      }
+      document.getElementById('error')?.classList.remove('hidden');
+    }
+    submitBtn.disabled = false;
+  });
+</script>

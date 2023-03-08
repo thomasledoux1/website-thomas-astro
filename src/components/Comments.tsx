@@ -1,6 +1,7 @@
 import type { Comment } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { trpcReact } from '../client';
 const Comments = ({
   blogUrl,
   initialComments,
@@ -10,36 +11,38 @@ const Comments = ({
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [formState, setFormState] = useState<'idle' | 'loading'>('idle');
-  const upToDateCommentsQuery = useQuery({
-    queryKey: [`comments-${blogUrl}`],
-    queryFn: async () => {
-      const allCommentsInDb = await fetch(`/api/comments?blogUrl=${blogUrl}`);
-      const allCommentsInDbJson = (await allCommentsInDb.json()) as Comment[];
-      const sortedComments = allCommentsInDbJson.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      return sortedComments;
-    },
+  const upToDateCommentsQuery = trpcReact.getCommentsForBlog.useQuery(blogUrl, {
     initialData: initialComments,
   });
+  const { mutate: addComment } = trpcReact.createCommentForBlog.useMutation({
+    onMutate: () => {
+      setFormState('loading');
+    },
+    onError: () => {
+      toast.error('Error adding comment');
+    },
+    onSuccess: res => {
+      if (res.status === 'success') {
+        toast.success('Succesfully added comment');
+      } else {
+        toast.error('Error adding comment');
+      }
+    },
+    onSettled: () => {
+      upToDateCommentsQuery.refetch();
+      setFormState('idle');
+    },
+  });
   const onSubmit = async (e: React.FormEvent) => {
-    setFormState('loading');
     e.preventDefault();
     if (e.currentTarget) {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
-      await fetch('/api/comments', {
-        method: 'POST',
-        body: JSON.stringify({
-          author: formData.get('author'),
-          comment: formData.get('comment'),
-          blogUrl,
-        }),
+      addComment({
+        author: formData.get('author') as string,
+        comment: formData.get('comment') as string,
+        blogUrl,
       });
-      formRef.current?.reset();
-      upToDateCommentsQuery.refetch();
     }
-    setFormState('idle');
   };
   return (
     <>
@@ -49,7 +52,7 @@ const Comments = ({
         ref={formRef}
         className="flex flex-col lg:w-[50%] items-start"
       >
-        <label className="flex flex-col mb-2" htmlFor="author">
+        <label className="flex flex-col mb-2 font-semibold" htmlFor="author">
           Author
         </label>
         <input
@@ -58,7 +61,10 @@ const Comments = ({
           name="author"
           required
         />
-        <label className="flex flex-col mb-2 mt-4" htmlFor="comment">
+        <label
+          className="flex flex-col mb-2 mt-4 font-semibold"
+          htmlFor="comment"
+        >
           Comment
         </label>
         <textarea

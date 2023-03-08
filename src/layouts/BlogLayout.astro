@@ -16,14 +16,17 @@ interface Props {
     tags: string[];
   };
 }
-const comments = await prisma?.post.findFirst({
+const postsWithComments = await prisma?.post.findFirst({
   where: { url: frontmatter?.url.split('src/content')[1]?.split('.')[0] ?? '' },
-  include: { Comment: true },
-  orderBy: { createdAt: 'asc' },
+  include: {
+    Comment: {
+      orderBy: {
+        createdAt: 'desc',
+      },
+    },
+  },
 });
-const initialComments = comments?.Comment.sort(
-  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-);
+const comments = postsWithComments?.Comment;
 const convertedDate = new Date(frontmatter.date).toLocaleDateString('en-BE', {
   day: 'numeric',
   month: 'short',
@@ -90,7 +93,7 @@ const latestBlogs = await Promise.all(
     <CommentsWrapper
       client:visible
       blogUrl={frontmatter.url.replace('src/content', '').replace('.mdx', '')}
-      initialComments={initialComments}
+      initialComments={comments}
     />
   </div>
 
