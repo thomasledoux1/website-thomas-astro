@@ -86,14 +86,14 @@ export const appRouter = t.router({
       if (!commentInDb) {
         return { status: 'error', error: 'Error saving comment' };
       }
-      if (import.meta.env.MODE !== 'development') {
-        await sendMail(`New comment on ${blogUrl}`, [
-          {
-            type: 'text/html',
-            value: `<p>New comment on <b>${blogUrl}</b> by <b>${author}</b>: ${comment}</p>`,
-          },
-        ]);
-      }
+
+      await sendMail(`New comment on ${blogUrl}`, [
+        {
+          type: 'text/html',
+          value: `<p>New comment on <b>${blogUrl}</b> by <b>${author}</b>: ${comment}</p>`,
+        },
+      ]);
+
       return { status: 'success' };
     }),
   deleteCommentForBlog: adminProcedure
