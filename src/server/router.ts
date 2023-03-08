@@ -87,7 +87,7 @@ export const appRouter = t.router({
         return { status: 'error', error: 'Error saving comment' };
       }
       if (import.meta.env.MODE !== 'development') {
-        sendMail(`New comment on ${blogUrl}`, [
+        await sendMail(`New comment on ${blogUrl}`, [
           {
             type: 'text/html',
             value: `<p>New comment on <b>${blogUrl}</b> by <b>${author}</b>: ${comment}</p>`,
