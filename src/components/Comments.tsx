@@ -30,6 +30,7 @@ const Comments = ({
     },
     onSettled: () => {
       upToDateCommentsQuery.refetch();
+      formRef.current?.reset();
       setFormState('idle');
     },
   });
