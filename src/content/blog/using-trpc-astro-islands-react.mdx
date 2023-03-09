@@ -7,14 +7,14 @@ image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1678275437/dario-bron
 imageAlt: 'Stars in space'
 ---
 
-I started using [TRPC](https://trpc.io) in some Next.js projects at work, and really liked the full stack type safety this gives you as a developer when working with APIs.
+I started using [TRPC](https://trpc.io) in some Next.js projects at work, and really liked the end-to-end type safety this gives you as a developer when working with APIs.
 So I decided to also implement TRPC on my own website, which is using [Astro](https://astro.build).
 There's a few steps that need to be taken to start using TRPC in Astro.
 
 ## Installing the required packages
 
 ```
-npm install @tanstack/react-query @trpc/client @trpc/server @trpc/react-query
+npm install @tanstack/react-query @trpc/client @trpc/server @trpc/react-query zod
 ```
 
 ## Setting up the TRPC context
