@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import type { Comment } from '@prisma/client';
 import type { Context } from './context';
-import { sendMail } from '../utils/send-email';
+import { sendMail } from '../lib/send-email';
 
 export const t = initTRPC.context<Context>().create();
 
