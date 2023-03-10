@@ -17,6 +17,13 @@
             window.location.href = '/';
           }
         });
+        document
+          .getElementById('githubLogin')
+          ?.addEventListener('click', async () => {
+            await signIn({
+              provider: 'github',
+            });
+          });
       });
     </script>
   </head>
@@ -28,5 +35,6 @@
       <input type="password" name="password" />
       <input type="submit" value="Submit" />
     </form>
+    Or login using <button id="githubLogin">GitHub</button>
   </body>
 </html>

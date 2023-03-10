@@ -4,7 +4,12 @@ import Layout from '../layouts/Layout.astro';
 import { prisma } from '../lib/prisma';
 import CommentsOverviewWrapper from '../components/CommentOverviewWrapper';
 const user = getUser({ client: Astro });
-if (!user) {
+if (
+  !user ||
+  (user.user.email &&
+    user.user.email !== 'thomasledoux1@gmail.com' &&
+    user.user.email !== 'tledoux@reference.be')
+) {
   return Astro.redirect('/', 307);
 }
 const commentsWithPost = await prisma?.comment.findMany({

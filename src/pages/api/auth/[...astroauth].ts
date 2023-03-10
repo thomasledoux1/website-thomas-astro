@@ -1,5 +1,5 @@
 import AstroAuth from '@astro-auth/core';
-import { CredentialProvider } from '@astro-auth/providers';
+import { CredentialProvider, GithubProvider } from '@astro-auth/providers';
 import { prisma } from '../../../lib/prisma';
 
 export const all = AstroAuth({
@@ -22,6 +22,10 @@ export const all = AstroAuth({
         }
         return null;
       },
+    }),
+    GithubProvider({
+      clientId: import.meta.env.GITHUB_CLIENT_ID,
+      clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
     }),
   ],
 });
