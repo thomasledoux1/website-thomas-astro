@@ -6,6 +6,7 @@ export interface Props {
 const { label, href } = Astro.props;
 const url = Astro.request.url;
 const parsedUrl = new URL(url);
+console.log(parsedUrl, href);
 ---
 
 <li
