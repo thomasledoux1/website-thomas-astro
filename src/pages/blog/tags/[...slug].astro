@@ -45,12 +45,12 @@ const postsWithTag = await Promise.all(
   description={`All blogs about ${slug}`}
 >
   <section>
-    <h1 class="text-center text-2xl font-bold mb-6">
+    <h1 class="text-center text-2xl lg:text-5xl font-bold mb-6">
       All blogs about {slug}
     </h1>
     <Tags tags={tags} slug={slug} />
     <div
-      class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center auto-rows-min mt-4"
+      class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-9 items-center auto-rows-min mt-4"
     >
       {
         postsWithTag.map(async (post, i) => {

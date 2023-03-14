@@ -9,7 +9,7 @@ import Layout from '../../layouts/Layout.astro';
 >
   <section class="my-auto">
     <div class="grid md:grid-cols-2 gap-6 content-center align-items">
-      <div class="flex flex-col justify-center">
+      <div class="lg:row-start-2 flex flex-col justify-center">
         <img
           alt="Illustration of man sitting on a block"
           src="/contact.svg"
@@ -18,8 +18,12 @@ import Layout from '../../layouts/Layout.astro';
           class="max-h-[250px] lg:max-h-[500px]"
         />
       </div>
-      <div class="flex justify-center flex-col">
-        <h2 class="mb-6 text-2xl font-bold">Drop me a message</h2>
+      <h1
+        class="text-2xl row-start-1 text-center col-span-2 lg:text-5xl font-bold"
+      >
+        Drop me a message
+      </h1>
+      <div class="flex justify-center flex-col lg:row-start-2">
         <form id="contactForm">
           <label class="flex flex-col gap-2 mb-4" for="email">
             Your e-mail

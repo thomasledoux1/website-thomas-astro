@@ -1,16 +1,23 @@
 ---
-import SocialLink from "./SocialLink.astro";
+import SocialLink from './SocialLink.astro';
 ---
 
-<footer class="bg-primary relative">
-  <div class="p-5 flex justify-center items-center">
-    <ul class="flex gap-6">
+<footer
+  class="bg-primary rounded-2xl fixed bottom-4 left-1/2 -translate-x-1/2 z-30 max-w-[92%] overflow-x-auto p-4"
+>
+  <div class="flex items-center">
+    <ul class="flex gap-[1.1rem]">
+      <SocialLink label="home" href="/" />
+      <SocialLink label="personal" href="/personal" />
+      <SocialLink label="portfolio" href="/portfolio" />
+      <SocialLink label="blog" href="/blog" />
+      <SocialLink label="contact" href="/contact" />
+      <hr class="bg-secondary h-[1.82rem] w-[2px]" />
       <SocialLink
         label="linkedin"
         href="https://www.linkedin.com/in/thomasledoux91"
       />
       <SocialLink label="github" href="https://github.com/thomasledoux1" />
-      <SocialLink label="dev" href="https://dev.to/thomasledoux1" />
     </ul>
   </div>
 </footer>

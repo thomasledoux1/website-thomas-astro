@@ -28,6 +28,7 @@ module.exports = {
       },
       fontFamily: {
         body: ['Inter', ...defaultTheme.fontFamily.sans],
+        heading: ['Cal Sans', ...defaultTheme.fontFamily.sans],
       },
     },
   },

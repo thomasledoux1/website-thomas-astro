@@ -26,10 +26,12 @@ const sortedPosts = await Promise.all(
 
 <Layout title="The Thomas Ledoux blog">
   <section>
-    <h1 class="text-center text-2xl font-bold mb-6">Personal blog</h1>
+    <h1 class="text-center text-2xl lg:text-5xl font-bold mb-6">
+      Personal blog
+    </h1>
     <Tags tags={tags} />
     <div
-      class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center auto-rows-min mt-6"
+      class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-9 items-center auto-rows-min mt-6"
     >
       {
         sortedPosts.map(async (post, i) => {

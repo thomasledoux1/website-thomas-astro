@@ -35,11 +35,6 @@ export default defineConfig({
   }),
   markdown: {
     remarkPlugins: [remarkReadingTime],
-    rehypePlugins: [
-      rehypeSlug,
-      // This adds links to headings
-      [rehypeAutolinkHeadings, autolinkConfig],
-    ],
   },
   site: 'https://www.thomasledoux.be',
 });

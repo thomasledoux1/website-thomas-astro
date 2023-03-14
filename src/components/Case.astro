@@ -14,10 +14,12 @@ const { img, url, logoWidth, logoAlt, tags } = Astro.props;
 <a
   target="_blank"
   rel="noopener noreferrer"
-  class="flex flex-col h-full p-6 border-2 border-secondary rounded-xl lg:hover:scale-[1.04] transition-transform"
+  class="transform flex flex-col lg:text-center rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
   href={url}
 >
-  <div class="h-24 max-h-24 text-center mb-6 flex items-center justify-center">
+  <div
+    class="h-24 max-h-24 max-w-[80%] mx-auto text-center flex items-center justify-center"
+  >
     {
       img && logoWidth ? (
         <Image
@@ -33,18 +35,20 @@ const { img, url, logoWidth, logoAlt, tags } = Astro.props;
       )
     }
   </div>
-  <slot />
-  <div class="flex flex-col mt-4 flex-grow justify-end">
-    <ul class="flex flex-wrap">
-      {
-        tags.map((tag) => {
-          return (
-            <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
-              {tag}
-            </li>
-          );
-        })
-      }
-    </ul>
+  <div class="p-4 flex-grow flex flex-col">
+    <slot />
+    <div class="flex flex-col pt-4 mt-auto flex-grow justify-end">
+      <ul class="flex flex-wrap">
+        {
+          tags.map(tag => {
+            return (
+              <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
+                {tag}
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
   </div>
 </a>

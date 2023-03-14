@@ -22,19 +22,16 @@ const latestBlog = blogs.sort(
 >
   <section class="relative lg:pt-0 items-center flex flex-wrap h-full my-auto">
     <div
-      class="gap-8 w-full flex flex-col lg:flex-row items-center justify-between h-full"
+      class="gap-12 w-full flex flex-col lg:flex-row items-center justify-between h-full"
     >
       <h1
-        class="text-4xl flex-grow font-bold md:text-7xl md:leading-[1.1] flex flex-col items-center md:items-start"
+        class="lg:text-6xl text-border-black xl:text-7xl 2xl:text-[5.25rem] flex-grow font-bold text-4xl sm:text-6xl text-center lg:text-left md:leading-[1.1] flex flex-col items-center lg:items-start"
       >
-        <span>Thomas is a</span>
-        <a class="title-part" href="/portfolio"> developer</a>
-        <a class="title-part whitespace-nowrap" href="/personal">
-          badminton player</a
-        >
-        <a class="title-part" href="/personal"> travel lover</a>
+        <span>Thomas Ledoux.</span><span>Developer.</span><span
+          >Badminton player.</span
+        ><span>Travel lover.</span>
       </h1>
-      <div class="w-3/4 mx-auto lg:ml-auto lg:mr-0">
+      <div class="w-[15rem] lg:w-[20rem]">
         <Image
           class="rounded-full mx-auto md:ml-auto lg:mr-0"
           alt="Profile"
@@ -47,15 +44,47 @@ const latestBlog = blogs.sort(
           sizes="(max-width: 767px) 75vw, 45vw"
         />
       </div>
-      <div class="lg:fixed flex lg:left-1/2 lg:-translate-x-1/2 lg:bottom-20">
-        <a
-          href={`/blog/${latestBlog?.slug}`}
-          class="cursor-pointer bg-secondary text-white px-8 py-4 border-l-8 border-l-primary transition-transform hover:scale-[1.02]"
-        >
-          <h2 class="text-lg font-bold">Latest blog post</h2>
-          {latestBlog?.data.title}
-        </a>
-      </div>
+      <a
+        href={`/blog/${latestBlog?.slug}`}
+        class="fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-transform lg:translate-x-[22rem] hover:translate-x-0"
+      >
+        <div class="relative flex items-center justify-center gap-x-8">
+          <!-- <h2 class="text-lg font-bold">Latest blog post</h2>
+        {latestBlog?.data.title} -->
+          <span class="relative flex h-6 w-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 animate-bounce"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
+              ></path>
+            </svg>
+            <span
+              class="animate-ping group-hover:hidden absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+            >
+              <span
+                class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"
+              >
+              </span>
+            </span>
+          </span>
+          <div class="lg:w-[60cw] hidden lg:block">
+            <h2 class="font-bold">Latest blog post</h2>
+            {latestBlog?.data.title.substring(0, 60)}{
+              latestBlog?.data.title && latestBlog?.data.title.length > 60
+                ? '...'
+                : null
+            }
+          </div>
+        </div>
+      </a>
     </div>
   </section>
 </Layout>

@@ -41,6 +41,7 @@
     "@unpic/pixels": "^1.1.0",
     "@unpic/placeholder": "^0.1.0",
     "blurhash": "^2.0.5",
+    "cal-sans": "^1.0.1",
     "clsx": "^1.2.1",
     "hast-util-to-string": "^2.0.0",
     "html-escaper": "^3.0.3",

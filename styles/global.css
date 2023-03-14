@@ -83,6 +83,10 @@ html {
   }
 }
 
+:is(h1, h2, h3, h4) {
+  @apply font-heading;
+}
+
 .astro-code {
   @apply rounded-lg p-4 my-4;
 }
@@ -216,4 +220,26 @@ html {
 
 body {
   min-height: -webkit-fill-available;
+}
+
+.text-border-black > span:first-child {
+  text-shadow: 0 2px 0 var(--primary);
+}
+
+.text-border-black > span:not(:first-child) {
+  --text-border-width: 2px;
+  letter-spacing: 0.11rem;
+  -webkit-text-fill-color: #fff;
+  -webkit-text-stroke-width: var(--text-border-width);
+  -webkit-text-stroke-color: black;
+  text-shadow: 0 1px 0 var(--secondary);
+}
+
+@media screen and (min-width: 768px) {
+  .text-border-black > span:first-child {
+    text-shadow: 0 3px 0 var(--primary);
+  }
+  .text-border-black > span:not(:first-child) {
+    text-shadow: 0 3px 0 var(--secondary);
+  }
 }
