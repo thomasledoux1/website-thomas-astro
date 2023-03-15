@@ -4,9 +4,6 @@ import mdx from '@astrojs/mdx';
 import { remarkReadingTime } from './src/utils/calculate-reading-time.mjs';
 import vercel from '@astrojs/vercel/serverless';
 import react from '@astrojs/react';
-import { autolinkConfig } from './plugins/rehype-autolink-config';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeSlug from 'rehype-slug';
 import prefetch from '@astrojs/prefetch';
 
 // https://astro.build/config
