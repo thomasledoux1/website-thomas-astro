@@ -8,24 +8,15 @@ import Layout from '../../layouts/Layout.astro';
   title="Thomas Ledoux | Contact"
 >
   <section class="my-auto">
-    <div class="grid md:grid-cols-2 gap-6 content-center align-items">
-      <div class="lg:row-start-2 flex flex-col justify-center">
-        <img
-          alt="Illustration of man sitting on a block"
-          src="/contact.svg"
-          width={645}
-          height={750}
-          class="max-h-[250px] lg:max-h-[500px]"
-        />
-      </div>
-      <h1
-        class="text-2xl row-start-1 text-center col-span-2 lg:text-5xl font-bold"
-      >
+    <div class="grid gap-6 lg:gap-12 content-center align-items">
+      <h1 class="text-2xl row-start-1 text-center lg:text-5xl font-bold">
         Drop me a message
       </h1>
-      <div class="flex justify-center flex-col lg:row-start-2">
-        <form id="contactForm">
-          <label class="flex flex-col gap-2 mb-4" for="email">
+      <div
+        class="flex justify-center flex-col lg:row-start-2 w-full lg:w-1/2 lg:mx-auto"
+      >
+        <form id="contactForm" class="flex flex-col items-center">
+          <label class="flex flex-col gap-2 mb-4 w-full" for="email">
             Your e-mail
             <input
               class="py-2 px-4 bg-white border-secondary border-2 rounded-lg"
@@ -36,7 +27,7 @@ import Layout from '../../layouts/Layout.astro';
               required
             />
           </label>
-          <label class="flex flex-col gap-2" for="message">
+          <label class="flex flex-col gap-2 w-full" for="message">
             Your message
             <textarea
               class="py-2 px-4 bg-white border-secondary border-2 rounded-lg"

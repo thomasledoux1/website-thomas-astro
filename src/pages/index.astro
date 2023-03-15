@@ -46,11 +46,10 @@ const latestBlog = blogs.sort(
       </div>
       <a
         href={`/blog/${latestBlog?.slug}`}
+        aria-label="Latest blog post"
         class="fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-transform lg:translate-x-[22rem] hover:translate-x-0"
       >
         <div class="relative flex items-center justify-center gap-x-8">
-          <!-- <h2 class="text-lg font-bold">Latest blog post</h2>
-        {latestBlog?.data.title} -->
           <span class="relative flex h-6 w-6">
             <svg
               xmlns="http://www.w3.org/2000/svg"
