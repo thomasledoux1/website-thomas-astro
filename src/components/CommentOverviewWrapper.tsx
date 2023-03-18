@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { CommentOverview } from './CommentOverview';
 import type { Comment } from '@prisma/client';
-import { trpcReact } from '../client';
+import { getTrpcUrl, trpcReact } from '../client';
 import { httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
 
@@ -22,7 +22,7 @@ const CommentsOverviewWrapper = ({
     trpcReact.createClient({
       links: [
         httpBatchLink({
-          url: 'http://localhost:3000/api/trpc',
+          url: getTrpcUrl(),
         }),
       ],
     })
