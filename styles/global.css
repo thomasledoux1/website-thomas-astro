@@ -247,6 +247,9 @@ body {
   + .footer-item
   + .footer-item,
 .footer-item:has(
+    + hr + .footer-item + :is(.footer-item:hover, .footer-item:focus-visible)
+  ),
+.footer-item:has(
     + .footer-item + hr + :is(.footer-item:hover, .footer-item:focus-visible)
   ),
 :is(.footer-item:hover, .footer-item:focus-visible)
