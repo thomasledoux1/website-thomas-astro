@@ -20,6 +20,14 @@
   unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
+:root {
+  --lerp-0: 0.5;
+  --lerp-1: 0.25;
+  --lerp-2: 0.125;
+  --lerp-3: 0.0625;
+  --lerp-4: 0;
+}
+
 html {
   --primary: #c6ebbe;
   --secondary: #2c6e49;
@@ -186,43 +194,6 @@ html {
   @apply bg-primary mx-1 px-1 py-[0.125rem] rounded-[0.25rem];
 }
 
-@keyframes title-animation {
-  to {
-    background-position: 400% 0;
-  }
-}
-
-.title-part {
-  color: transparent;
-  animation: 8s infinite linear title-animation;
-  background: linear-gradient(
-      90deg,
-      var(--heroTitleColor1),
-      var(--heroTitleColor2),
-      var(--heroTitleColor1)
-    )
-    0 0 / 400% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-.title-part:first-of-type {
-  --heroTitleColor1: #40c9ff;
-  --heroTitleColor2: #e81cff;
-}
-
-.title-part:nth-of-type(2) {
-  animation-delay: 1s;
-  --heroTitleColor1: #0061ff;
-  --heroTitleColor2: #60efff;
-}
-
-.title-part:nth-of-type(3) {
-  animation-delay: 2s;
-  --heroTitleColor1: #00ff87;
-  --heroTitleColor2: #60efff;
-}
-
 .link {
   @apply decoration-[3px] decoration-solid underline-offset-[3px] decoration-secondary underline;
 }
@@ -251,4 +222,86 @@ body {
   .text-border-black > span:not(:first-child) {
     text-shadow: 0 3px 0 var(--secondary);
   }
+}
+
+.footer-item {
+  transform: scale(calc(1 + var(--lerp)));
+}
+
+:is(.footer-item:hover, .footer-item:focus-visible) {
+  --lerp: var(--lerp-0);
+  z-index: 5;
+}
+.footer-item:has(+ :is(.footer-item:hover, .footer-item:focus-visible)),
+:is(.footer-item:hover, .footer-item:focus-visible) + .footer-item,
+.footer-item:has(+ hr + :is(.footer-item:hover, .footer-item:focus-visible)),
+:is(.footer-item:hover, .footer-item:focus-visible) + hr + .footer-item {
+  --lerp: var(--lerp-1);
+  z-index: 4;
+}
+
+.footer-item:has(
+    + .footer-item + :is(.footer-item:hover, .footer-item:focus-visible)
+  ),
+:is(.footer-item:hover, .footer-item:focus-visible)
+  + .footer-item
+  + .footer-item,
+.footer-item:has(
+    + .footer-item + hr + :is(.footer-item:hover, .footer-item:focus-visible)
+  ),
+:is(.footer-item:hover, .footer-item:focus-visible)
+  + hr
+  + .footer-item
+  + .footer-item {
+  --lerp: var(--lerp-2);
+  z-index: 3;
+}
+
+.footer-item:has(
+    + .footer-item
+      + .footer-item
+      + :is(.footer-item:hover, .footer-item:focus-visible)
+  ),
+:is(.footer-item:hover, .footer-item:focus-visible)
+  + .footer-item
+  + hr
+  + .footer-item,
+.footer-item:has(
+    + .footer-item
+      + .footer-item
+      + :is(.footer-item:hover, .footer-item:focus-visible)
+  ),
+:is(.footer-item:hover, .footer-item:focus-visible)
+  + .footer-item
+  + hr
+  + .footer-item {
+  --lerp: var(--lerp-3);
+  z-index: 2;
+}
+.footer-item:has(
+    + .footer-item
+      + .footer-item
+      + .footer-item
+      + :is(.footer-item:hover, .footer-item:focus-visible)
+  ),
+:is(.footer-item:hover, .footer-item:focus-visible)
+  + .footer-item
+  + .footer-item
+  + .footer-item
+  + .footer-item,
+.footer-item:has(
+    + .footer-item
+      + .footer-item
+      + .footer-item
+      + hr
+      + :is(.footer-item:hover, .footer-item:focus-visible)
+  ),
+:is(.footer-item:hover, .footer-item:focus-visible)
+  + hr
+  + .footer-item
+  + .footer-item
+  + .footer-item
+  + .footer-item {
+  --lerp: var(--lerp-4);
+  z-index: 1;
 }
