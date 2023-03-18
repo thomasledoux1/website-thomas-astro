@@ -7,7 +7,6 @@ export function createContext({
   resHeaders,
 }: FetchCreateContextFnOptions) {
   const user = getUser({ server: req });
-  console.log('user in context');
   return { req, resHeaders, user };
 }
 

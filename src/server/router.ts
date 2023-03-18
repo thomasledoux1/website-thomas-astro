@@ -11,7 +11,6 @@ export const middleware = t.middleware;
 export const publicProcedure = t.procedure;
 
 const isAdmin = middleware(async ({ ctx, next }) => {
-  console.log(ctx);
   if (!ctx.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
