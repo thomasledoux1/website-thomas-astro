@@ -16,7 +16,7 @@ const parsedUrl = new URL(url);
   href={href}
   title={label}
   class={clsx(
-    'px-2 footer-item transition-[margin,transform] origin-[50%_100%] z-40 flex relative outline-none',
+    'px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 flex relative outline-none',
     {
       'hover:mr-2': label === 'home',
       'hover:ml-2': label === 'github',
@@ -24,6 +24,11 @@ const parsedUrl = new URL(url);
     }
   )}
 >
+  <div
+    class="absolute -top-10 left-1/2 rounded-md text-[10px] -translate-x-1/2 hidden group-focus:inline-block group-hover:inline-block px-3 py-1 bg-gray-100 after:border-l-transparent after:border-l-[10px] after:border-r-transparent after:border-r-[10px] backdrop-blur after:border-t-gray-100 after:border-t-[10px] after:-bottom-2 after:left-1/2 after:-translate-x-1/2 after:absolute"
+  >
+    {label}
+  </div>
   <div class="w-[1.77rem] h-[1.77rem]">
     {
       label === 'linkedin' ? (
