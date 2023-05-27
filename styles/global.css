@@ -3,21 +3,20 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Inter';
+  font-family: Inter;
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: local(''), url('/fonts/Inter.var.woff2') format('woff2');
+  src: url('/fonts/Inter.var.woff2') format('woff2');
   unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 @font-face {
-  font-family: 'Cal Sans';
+  font-family: Cal Sans;
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: local(''), url('/fonts/CalSans-SemiBold.woff2') format('woff2');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  src: url('/fonts/CalSans-SemiBold.woff2') format('woff2');
 }
 
 :root {
@@ -101,7 +100,7 @@ html {
 }
 
 :is(h1, h2, h3, h4) {
-  @apply font-heading;
+  @apply font-heading font-semibold;
 }
 
 .astro-code {
