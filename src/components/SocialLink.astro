@@ -18,9 +18,10 @@ const parsedUrl = new URL(url);
   class={clsx(
     'px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 flex relative outline-none',
     {
-      'hover:mr-2': label === 'home',
-      'hover:ml-2': label === 'github',
-      'hover:mx-2': label !== 'home' && label !== 'github',
+      'hover:mr-2': label.toLowerCase() === 'home',
+      'hover:ml-2': label.toLowerCase() === 'github',
+      'hover:mx-2':
+        label.toLowerCase() !== 'home' && label.toLowerCase() !== 'github',
     }
   )}
 >
@@ -31,7 +32,7 @@ const parsedUrl = new URL(url);
   </div>
   <div class="w-[1.77rem] h-[1.77rem]">
     {
-      label === 'linkedin' ? (
+      label.toLowerCase() === 'linkedin' ? (
         <svg
           class="transition-[fill] hover:fill-[#0077B7]"
           fill="currentColor"
@@ -46,7 +47,7 @@ const parsedUrl = new URL(url);
       ) : null
     }
     {
-      label === 'github' ? (
+      label.toLowerCase() === 'github' ? (
         <svg
           class="transition-[background] rounded-full hover:bg-white"
           fill="currentColor"
@@ -61,7 +62,7 @@ const parsedUrl = new URL(url);
       ) : null
     }
     {
-      label === 'dev' ? (
+      label.toLowerCase() === 'dev' ? (
         <svg
           class="transition-[background] rounded-sm hover:bg-white"
           fill="currentColor"
@@ -76,7 +77,7 @@ const parsedUrl = new URL(url);
       ) : null
     }
     {
-      label === 'personal' ? (
+      label.toLowerCase() === 'personal' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -93,7 +94,7 @@ const parsedUrl = new URL(url);
       ) : null
     }
     {
-      label === 'portfolio' ? (
+      label.toLowerCase() === 'portfolio' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -110,7 +111,7 @@ const parsedUrl = new URL(url);
       ) : null
     }
     {
-      label === 'blog' ? (
+      label.toLowerCase() === 'blog' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -127,7 +128,7 @@ const parsedUrl = new URL(url);
       ) : null
     }
     {
-      label === 'contact' ? (
+      label.toLowerCase() === 'contact' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -144,7 +145,7 @@ const parsedUrl = new URL(url);
       ) : null
     }
     {
-      label === 'cv' ? (
+      label.toLowerCase() === 'cv' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -161,7 +162,7 @@ const parsedUrl = new URL(url);
       ) : null
     }
     {
-      label === 'home' ? (
+      label.toLowerCase() === 'home' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

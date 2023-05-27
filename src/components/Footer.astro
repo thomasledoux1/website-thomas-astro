@@ -3,21 +3,23 @@ import SocialLink from './SocialLink.astro';
 ---
 
 <footer
-  class="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 max-w-[92%] overflow-x-auto pt-14 px-4"
+  class="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 max-w-[92%] pt-14 px-4"
 >
-  <div class="bg-primary rounded-2xl flex items-center px-4 py-6">
+  <div
+    class="bg-primary rounded-2xl overflow-x-auto flex items-center px-3 lg:px-4 py-4 lg:py-6"
+  >
     <nav class="flex">
-      <SocialLink label="home" href="/" />
-      <SocialLink label="personal" href="/personal" />
-      <SocialLink label="portfolio" href="/portfolio" />
-      <SocialLink label="blog" href="/blog" />
-      <SocialLink label="contact" href="/contact" />
+      <SocialLink label="Home" href="/" />
+      <SocialLink label="Personal" href="/personal" />
+      <SocialLink label="Portfolio" href="/portfolio" />
+      <SocialLink label="Blog" href="/blog" />
+      <SocialLink label="Contact" href="/contact" />
       <hr class="bg-secondary h-[1.82rem] w-[2px] mx-2" />
       <SocialLink
-        label="linkedin"
+        label="LinkedIn"
         href="https://www.linkedin.com/in/thomasledoux91"
       />
-      <SocialLink label="github" href="https://github.com/thomasledoux1" />
+      <SocialLink label="GitHub" href="https://github.com/thomasledoux1" />
     </nav>
   </div>
 </footer>

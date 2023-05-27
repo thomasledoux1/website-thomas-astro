@@ -6,6 +6,8 @@ import vercel from '@astrojs/vercel/serverless';
 import react from '@astrojs/react';
 import prefetch from '@astrojs/prefetch';
 
+import partytown from '@astrojs/partytown';
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -17,6 +19,11 @@ export default defineConfig({
     react(),
     mdx(),
     prefetch(),
+    partytown({
+      config: {
+        forward: ['dataLayer.push'],
+      },
+    }),
   ],
   vite: {
     define: {
@@ -24,9 +31,6 @@ export default defineConfig({
     },
   },
   output: 'server',
-  experimental: {
-    contentCollections: true,
-  },
   adapter: vercel(),
   markdown: {
     remarkPlugins: [remarkReadingTime],
