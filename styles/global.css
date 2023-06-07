@@ -5,10 +5,17 @@
 @font-face {
   font-family: Inter;
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/Inter.var.woff2') format('woff2');
-  unicode-range: U+000-5FF;
+  src: url('/fonts/inter-v12-latin-regular.var.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter-v12-latin-700.var.woff2') format('woff2');
 }
 
 @font-face {
