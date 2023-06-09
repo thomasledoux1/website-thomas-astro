@@ -22,6 +22,10 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        xs: '420px',
+        ...defaultTheme.screens,
+      },
       colors: {
         primary: 'var(--primary)',
         secondary: 'var(--secondary)',

@@ -16,7 +16,7 @@ const parsedUrl = new URL(url);
   href={href}
   title={label}
   class={clsx(
-    'px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 flex relative outline-none',
+    'px-[6px] xs:px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 flex relative outline-none',
     {
       'hover:mr-2': label.toLowerCase() === 'home',
       'hover:ml-2': label.toLowerCase() === 'github',
@@ -30,7 +30,7 @@ const parsedUrl = new URL(url);
   >
     {label}
   </div>
-  <div class="w-[1.77rem] h-[1.77rem]">
+  <div class="w-[1.5rem] h-[1.5rem] xs:w-[1.77rem] xs:h-[1.77rem]">
     {
       label.toLowerCase() === 'linkedin' ? (
         <svg
