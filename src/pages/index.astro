@@ -1,7 +1,6 @@
 ---
 export const prerender = true;
 import { getCollection } from 'astro:content';
-import { Image } from '@unpic/astro';
 import '../../styles/global.css';
 import Layout from '../layouts/Layout.astro';
 import { calculateBlurhashGradient } from '../utils/calculate-blurhash-gradient';
@@ -32,17 +31,16 @@ const latestBlog = blogs.sort(
         ><span>Travel lover.</span>
       </h1>
       <div class="w-[15rem] lg:w-[20rem]">
-        <Image
-          class="rounded-full mx-auto md:ml-auto lg:mr-0"
+        <img
+          class="rounded-full mx-auto md:ml-auto lg:mr-0 aspect-square max-w-[15rem] lg:max-w-[20rem] max-h-[15rem] lg:max-h-[20rem] w-full"
           alt="Profile"
           src="https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"
           width={320}
           height={320}
-          layout="constrained"
-          background={blurhashGradient}
-          srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/w_320,h_320,c_lfill,f_auto/v1583171588/me_qvrwky 400w, https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"
-          priority
-          sizes="(max-width: 767px) 75vw, 45vw"
+          sizes="(max-width: 1023px) 240px, 320px"
+          srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/w_240,h_240,c_lfill,f_auto/v1583171588/me_qvrwky 240w, https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"
+          loading="eager"
+          style={{ background: blurhashGradient }}
         />
       </div>
       <a
