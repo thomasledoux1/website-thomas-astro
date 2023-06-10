@@ -1,6 +1,5 @@
 ---
 title: 'Setting up authentication in Astro with Prisma and Planetscale'
-layout: '../../layouts/BlogLayout.astro'
 tags: ['javascript', 'astro', 'authentication']
 date: '2023-02-18T16:14:39.004Z'
 image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1676739843/photo-1504203700686-f21e703e5f1c_b1vx0u.jpg'
@@ -114,25 +113,12 @@ Here's an example of a page where I used this check:
 ```astro
 // /pages/comment-overview.astro
 
----
-import { getUser } from '@astro-auth/core';
-import Layout from '../layouts/Layout.astro';
-import { prisma } from '../lib/prisma';
-import CommentsOverviewWrapper from '../components/CommentOverviewWrapper';
-const user = getUser({ client: Astro });
-if (!user) {
-  return Astro.redirect('/', 307);
-}
-const commentsWithPost = await prisma?.comment.findMany({
-  include: {
-    post: {
-      select: {
-        url: true,
-      },
-    },
-  },
-});
----
+import { getUser } from '@astro-auth/core'; import Layout from
+'../layouts/Layout.astro'; import { prisma } from '../lib/prisma'; import
+CommentsOverviewWrapper from '../components/CommentOverviewWrapper'; const user
+= getUser({ client: Astro }); if (!user) { return Astro.redirect('/', 307); }
+const commentsWithPost = await prisma?.comment.findMany({ include: { post: {
+select: { url: true, }, }, }, });
 
 <Layout
   description="Overview of comments"

@@ -17,7 +17,7 @@ interface Props {
   };
 }
 const postsWithComments = await prisma?.post.findFirst({
-  where: { url: frontmatter?.url.split('src/content')[1]?.split('.')[0] ?? '' },
+  where: { url: frontmatter?.url },
   include: {
     Comment: {
       orderBy: {
@@ -92,12 +92,12 @@ const latestBlogs = await Promise.all(
   <div>
     <CommentsWrapper
       client:visible
-      blogUrl={frontmatter.url.replace('src/content', '').replace('.mdx', '')}
+      blogUrl={frontmatter.url}
       initialComments={comments}
     />
   </div>
 
-  <h2 class="font-bold my-4 text-2xl">
+  <h2 class="font-bold mt-8 mb-4 text-2xl">
     Did you like this post? Check out my latest blog posts:
   </h2>
   <div
