@@ -1,3 +1,4 @@
+export const prerender = false;
 import AstroAuth from '@astro-auth/core';
 import { CredentialProvider, GithubProvider } from '@astro-auth/providers';
 import { prisma } from '../../../lib/prisma';
