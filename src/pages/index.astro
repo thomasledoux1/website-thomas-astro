@@ -8,7 +8,7 @@ const [blurhashGradient, blogs] = await Promise.all([
   calculateBlurhashGradient(
     'https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg'
   ),
-  getCollection('blog'),
+  getCollection('blog', blog => blog.data.draft !== true),
 ]);
 const latestBlog = blogs.sort(
   (a, b) => +new Date(b.data.date) - +new Date(a.data.date)

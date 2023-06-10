@@ -3,7 +3,10 @@ export const prerender = true;
 import { getCollection } from 'astro:content';
 import PostPreview from '../../components/PostPreview.astro';
 import Tags from '../../components/Tags.astro';
-const allBlogPosts = await getCollection('blog');
+const allBlogPosts = await getCollection(
+  'blog',
+  blog => blog.data.draft !== true
+);
 import Layout from '../../layouts/Layout.astro';
 import { calculateBlurhashGradient } from '../../utils/calculate-blurhash-gradient';
 const tags = allBlogPosts

@@ -16,7 +16,7 @@ const tags = blogs
   }, {});
 import Layout from '../../../layouts/Layout.astro';
 export async function getStaticPaths() {
-  const blogs = await getCollection('blog');
+  const blogs = await getCollection('blog', blog => blog.data.draft !== true);
   return [...new Set(blogs.map(blog => blog.data.tags).flat())].map(tag => ({
     params: { slug: tag },
   }));

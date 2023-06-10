@@ -3,7 +3,7 @@ export const prerender = true;
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 export async function getStaticPaths() {
-  const blogs = await getCollection('blog');
+  const blogs = await getCollection('blog', blog => blog.data.draft !== true);
   return blogs.map(blog => ({
     params: { slug: blog.slug },
     props: { entry: blog },
@@ -11,9 +11,16 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content, remarkPluginFrontmatter } = await entry.render();
+console.log(entry);
 ---
 
-<BlogLayout frontmatter={{ ...entry.data, url: `/blog/${entry.slug}` }}>
+<BlogLayout
+  frontmatter={{
+    ...entry.data,
+    url: `/blog/${entry.slug}`,
+    minutesRead: remarkPluginFrontmatter?.minutesRead,
+  }}
+>
   <Content />
 </BlogLayout>

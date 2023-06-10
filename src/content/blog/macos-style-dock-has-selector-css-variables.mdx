@@ -1,0 +1,43 @@
+---
+title: 'Creating a macOS style dock with CSS variables and :has selector'
+tags: ['astro', 'css']
+date: '2023-06-10T15:14:39.004Z'
+image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1686384120/szabo-viktor-2yQTxjC01JY-unsplash_flhhpa.jpg'
+imageAlt: 'macOS dock showing the hover effect'
+draft: true
+---
+
+Ever since the :has selector was introduced to CSS and got [decent support](https://caniuse.com/css-has), I wanted to use it in a project. I finally found a use case for it, and I'm going to show you how I used it to create a macOS style dock.
+
+## Setting up the dock
+
+The dock is a simple unordered list with a few list items. Each list item has an icon and a label. The icon is an SVG, and the label is a text. The unordered list is wrapped in a `<footer>` tag, which has `position: fixed` applied to it to keep it at the bottom of the screen.
+To align the footer horizontally, I used `left: 50%` and `transform: translateX(-50%)`.
+
+```astro
+---
+import FooterLink from './FooterLink.astro';
+---
+
+<footer
+  class="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 max-w-[92%] pt-14 px-4"
+>
+  <nav
+    class="bg-primary rounded-2xl flex items-center px-3 lg:px-4 py-4 lg:py-6"
+  >
+    <ul class="flex">
+      <FooterLink label="Home" href="/" />
+      <FooterLink label="Personal" href="/personal" />
+      <FooterLink label="Portfolio" href="/portfolio" />
+      <FooterLink label="Blog" href="/blog" />
+      <FooterLink label="Contact" href="/contact" />
+      <hr class="bg-secondary h-[1.82rem] w-[2px] mx-2" />
+      <FooterLink
+        label="LinkedIn"
+        href="https://www.linkedin.com/in/thomasledoux91"
+      />
+      <FooterLink label="GitHub" href="https://github.com/thomasledoux1" />
+    </ul>
+  </nav>
+</footer>
+```
