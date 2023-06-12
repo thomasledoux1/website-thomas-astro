@@ -42,7 +42,7 @@ import {
     >
       {label}
     </div>
-    <a class="w-[1.5rem] h-[1.5rem] xs:w-[1.77rem] xs:h-[1.77rem]">
+    <div class="w-[1.5rem] h-[1.5rem] xs:w-[1.77rem] xs:h-[1.77rem]">
       {label.toLowerCase() === 'linkedin' ? <LinkedInLogo /> : null}
       {label.toLowerCase() === 'github' ? <GithubLogo /> : null}
       {label.toLowerCase() === 'dev' ? <DevLogo /> : null}
@@ -51,7 +51,7 @@ import {
       {label.toLowerCase() === 'blog' ? <BlogLogo /> : null}
       {label.toLowerCase() === 'contact' ? <ContactLogo /> : null}
       {label.toLowerCase() === 'home' ? <HomeLogo /> : null}
-    </a>
+    </div>
     {
       parsedUrl.pathname === href || parsedUrl.pathname === `${href}/` ? (
         <span class="w-1 h-1 bg-secondary absolute rounded-full left-1/2 -translate-x-1/2 -bottom-2" />
