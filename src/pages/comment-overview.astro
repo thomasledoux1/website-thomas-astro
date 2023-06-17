@@ -1,9 +1,11 @@
 ---
+export const prerender = false;
 import { getUser } from '@astro-auth/core';
 import Layout from '../layouts/Layout.astro';
 import { prisma } from '../lib/prisma';
 import CommentsOverviewWrapper from '../components/CommentOverviewWrapper';
 const user = getUser({ client: Astro });
+console.log(user);
 if (
   !user ||
   (user.user.email &&
