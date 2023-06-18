@@ -1,8 +1,5 @@
-import { createTRPCReact } from '@trpc/react-query';
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import type { AppRouter } from '../server/router';
-
-const trpcReact = createTRPCReact<AppRouter>();
 
 export function getTrpcUrl() {
   if (typeof window !== 'undefined')
@@ -23,4 +20,4 @@ const trpcAstro = createTRPCProxyClient<AppRouter>({
   ],
 });
 
-export { trpcReact, trpcAstro };
+export { trpcAstro };
