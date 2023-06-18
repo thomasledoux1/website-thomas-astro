@@ -2,7 +2,7 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 
 export const get = async () => {
-  const blogs = await getCollection('blog');
+  const blogs = await getCollection('blog', blog => blog.data.draft !== true);
 
   return rss({
     title: 'Blog by Thomas Ledoux',

@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import PostPreview from '../../../components/PostPreview.astro';
 import { calculateBlurhashGradient } from '../../../utils/calculate-blurhash-gradient';
 import Tags from '../../../components/Tags.astro';
-const blogs = await getCollection('blog');
+const blogs = await getCollection('blog', blog => blog.data.draft !== true);
 const tags = blogs
   .map(blog => blog.data.tags)
   .flat()
@@ -23,7 +23,7 @@ export async function getStaticPaths() {
 if (!slug) {
   return Astro.redirect('/404');
 }
-const allBlogPostsWithTag = await getCollection('blog', blog =>
+const allBlogPostsWithTag = blogs.filter(blog =>
   blog.data.tags.some(tag => tag === slug)
 );
 if (allBlogPostsWithTag.length === 0) {
