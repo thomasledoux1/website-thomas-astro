@@ -30,6 +30,7 @@
     "@astrojs/react": "^2.2.1",
     "@astrojs/rss": "^2.4.3",
     "@astrojs/vercel": "^3.4.0",
+    "@giscus/react": "^2.2.8",
     "@trpc/client": "^10.29.1",
     "@trpc/server": "^10.29.1",
     "@unpic/astro": "^0.0.18",
