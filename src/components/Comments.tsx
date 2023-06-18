@@ -7,10 +7,8 @@ const Comments = () => {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    console.log('in useffect');
     setMounted(true);
   }, []);
-  console.log(mounted);
 
   return (
     <div id={id}>
