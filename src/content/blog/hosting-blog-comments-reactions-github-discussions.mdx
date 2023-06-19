@@ -1,0 +1,91 @@
+---
+title: 'Using GitHub Discussions to host blog comments and reactions'
+tags: ['javascript', 'astro', 'react']
+date: '2023-06-18T15:14:39.004Z'
+image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1687202047/giscus.jpg'
+imageAlt: 'Github discussion style comment section'
+---
+
+Until the day of writing, I was using a custom made comment section for my blog posts.
+This included [setting up a database with PlanetScale and Prisma as ORM, and a TRPC server to handle the requests](/blog/adding-comments-prisma-planetscale-astro-vercel-edge), which was a lot of work for a simple comment section.
+And even then, it was not perfect, because I had to manually clean up spam comments (since I was too lazy to add authentication :-D), I didn't have support for replies to comments, and I didn't have reactions.
+
+When I was reading one of the blogs on [TkDodo](https://tkdodo.eu)'s website, I noticed he was using [GisCus](https://giscus.app) for his comment section.
+GisCus is based on GitHub Discussions, so I already had this feature available to me as part of the repository I host my website on.
+The setup was very easy, on the GisCus website you can select the repository you want to use, and it will generate a script for you to include in your website.
+This will look something like this:
+
+```html
+<script
+  src="https://giscus.app/client.js"
+  data-repo="[ENTER REPO HERE]"
+  data-repo-id="[ENTER REPO ID HERE]"
+  data-category="[ENTER CATEGORY NAME HERE]"
+  data-category-id="[ENTER CATEGORY ID HERE]"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="en"
+  crossorigin="anonymous"
+  async
+></script>
+```
+
+The blanks are filled in with the repository name, repository ID, category name and category ID automatically.
+The only thing I noticed was that using the default `<script>` tag, clicking on the "Sign in with GitHub" button would refresh the whole page, and it doesn't scroll down to the comment section.
+For me that's quite annoying, so I decided to use the [GisCus React component](https://github.com/giscus/giscus-component) instead.
+This component is very easy to use, you just have to install it with `npm install @giscus/react` and then import it in your React component.
+The props you need to pass to the component are the same as the data attributes in the script tag, but camelCased instead of kebab-cased.
+
+```jsx
+import * as React from 'react';
+import Giscus from '@giscus/react';
+
+const id = 'inject-comments';
+
+const Comments = () => {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <div id={id}>
+      {mounted ? (
+        <Giscus
+          id={id}
+          repo="[ENTER REPO HERE]"
+          repoId="[ENTER REPO ID HERE]"
+          category="[ENTER CATEGORY HERE]"
+          categoryId="[ENTER CATEGORY ID HERE]"
+          mapping="pathname"
+          reactionsEnabled="1"
+          emitMetadata="0"
+          inputPosition="top"
+          lang="en"
+          loading="lazy"
+        />
+      ) : null}
+    </div>
+  );
+};
+
+export default Comments;
+```
+
+To have this comment section on every blog I create, I updated my `BlogLayout.astro` (which I used to wrap all my blogs ) file to include this component. The relevant part in this file:
+
+```astro
+<Comments client:idle />
+```
+
+You can see I only load the component when the browser is idle by using the built in [client directives](https://docs.astro.build/en/reference/directives-reference/) from Astro.
+
+And that's it!
+A fully functional comment section for my blog posts, without having to manage a database or authentication.
+Hope it's useful for you too!
+Full code can be found [on my GitHub](https://www.github.com/thomasledoux1/website-thomas-astro).
