@@ -317,3 +317,15 @@ body {
     z-index: 1;
   }
 }
+
+figcaption + pre {
+  border-top-left-radius: 0 !important;
+}
+
+figcaption ~ .copy-button-wrapper .copy-button {
+  top: 4.5rem;
+}
+
+figcaption ~ .copy-button-wrapper .copy-button-tooltip {
+  top: 4.75rem;
+}

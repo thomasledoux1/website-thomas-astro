@@ -12,9 +12,7 @@ This is now no longer needed, I figured out how to run this in my Astro blog pro
 A few changes were needed for this.
 The original code in my Next.js project looked like this:
 
-```jsx
-// /pages/api/og.jsx
-
+```jsx title="src/pages/api/og.jsx"
 import { ImageResponse } from '@vercel/og';
 
 export const config = {
@@ -99,9 +97,7 @@ So I had to find a way around using JSX inside the API function.
 Luckily, the `ImageResponse` function also allows for ["React-elements-like" objects](https://github.com/vercel/satori#use-without-jsx) to be used.
 Using the example provided on the link above, I created the following Edge API Route inside my Astro project:
 
-```javascript
-// /api/og.js
-
+```javascript title="src/api/og.js"
 import { ImageResponse } from '@vercel/og';
 
 export const config = {
@@ -201,7 +197,7 @@ After installing the cli globally with `npm i -g vercel`, I can run `vercel buil
 I also opted to disable the automatic deployments on pushes to my git repository, since I'm doing the deployments through the CLI now.
 Disabling the automatic deployments was done by adding a `vercel.json` file in the root directory, containing the following:
 
-```json
+```json title="vercel.json"
 {
   "git": {
     "deploymentEnabled": false
@@ -210,4 +206,4 @@ Disabling the automatic deployments was done by adding a `vercel.json` file in t
 ```
 
 Hopefully this helps other people wanting to use serverless/edge API functions in their Astro projects.
-Source code can be found [here](https://github.com/thomasledoux1/website-thomas-astro).
+Source code can be found on [GitHub](https://github.com/thomasledoux1/website-thomas-astro/tree/6d7b5e263db981865860b0d7780af9a271caf27c).

@@ -14,7 +14,7 @@ In the `/content/config.ts` file you define the schema(s) for the collections yo
 At the moment I just have 1 collections, namely my blog.
 So I created my schema as follows:
 
-```typescript
+```typescript title="src/content/config.ts"
 import { z, defineCollection } from 'astro:content';
 
 const blog = defineCollection({
@@ -47,7 +47,7 @@ To make this possible, I simply added a file `/pages/blog/tags/[...slug].astro` 
 In this file, I want to fetch all the blogs from my collection, find the unique tags, and generate a URL for each one of them.
 The `getStaticPaths()` function will return the URLs I want to have prerendered during build time (hence the `export const prerender = true;` line).
 
-```astro
+```astro title="src/pages/blog/tags/[...slug].astro"
 ---
 export const prerender = true;
 const { slug } = Astro.params;
@@ -84,7 +84,7 @@ The API provided by Content Collections is the `getCollection()` function, this 
 The actual rendering is simple, I can now use the `allBlogPostsWithTag` variable and render the blog posts.
 Since the `slug` matches the tag this page is generated for, I can just use this slug in my title/description/..
 
-```astro
+```astro title="src/pages/blog/tags/[...slug].astro"
 <Layout
   title={`The Thomas Ledoux blog | ${slug}`}
   description={`All blogs about ${slug}`}

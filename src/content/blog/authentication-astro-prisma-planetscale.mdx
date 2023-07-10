@@ -11,8 +11,7 @@ With Prisma and PlanetScale already running for [comments on my blogs](https://w
 Because it's just used for my own account, and I'm not storing any other sensitive information in my database, I decided to store the credentials in plain text for now.
 I changed my Prisma schema to make this possible:
 
-```prisma
-// schema.prisma
+```prisma title="src/schema.prisma"
 
 model Account {
   id Int @id @default(autoincrement())
@@ -30,9 +29,7 @@ Because I stored the credentials in PlanetScale, I needed to use the `Credential
 There are many other providers available on `@astro-auth`, go check out the package if you're interested.
 The code needed to set this up with `@astro-auth` looks like this:
 
-```typescript
-// /pages/api/auth/[...astroauth].ts
-
+```typescript title="src/pages/api/auth/[...astroauth].ts"
 import AstroAuth from '@astro-auth/core';
 import { CredentialProvider } from '@astro-auth/providers';
 import { prisma } from '../../../lib/prisma';
@@ -66,9 +63,7 @@ Creating a login page was very easy.
 I just created a form, calling the `signIn()` method from `@astro-auth` on submit, and BOOM: logged in!
 The code for the login page:
 
-```astro
-// /pages/login.astro
-
+```astro title="src/pages/login.astro"
 <html>
   <head>
     <title>Login</title>
@@ -110,15 +105,24 @@ After submitting the form, the user's signed in and is redirected to the homepag
 Protecting a page with authentication is easy, just checking the logged in user with the `getUser()` function from `@astro-auth`.
 Here's an example of a page where I used this check:
 
-```astro
-// /pages/comment-overview.astro
-
-import { getUser } from '@astro-auth/core'; import Layout from
-'../layouts/Layout.astro'; import { prisma } from '../lib/prisma'; import
-CommentsOverviewWrapper from '../components/CommentOverviewWrapper'; const user
-= getUser({ client: Astro }); if (!user) { return Astro.redirect('/', 307); }
-const commentsWithPost = await prisma?.comment.findMany({ include: { post: {
-select: { url: true, }, }, }, });
+```astro title="src/pages/comment-overview.astro"
+---
+import { getUser } from '@astro-auth/core';
+import Layout from '../layouts/Layout.astro';
+import { prisma } from '../lib/prisma';
+import CommentsOverviewWrapper from '../components/CommentOverviewWrapper';
+const user = getUser({ client: Astro });
+if (!user) {
+  return Astro.redirect('/', 307);
+}
+const commentsWithPost = await prisma?.comment.findMany({
+  include: {
+    post: {
+      select: { url: true },
+    },
+  },
+});
+---
 
 <Layout
   description="Overview of comments"
@@ -133,9 +137,7 @@ I also have an API route to delete comments on my blog posts, which I want to fe
 It's possible to use the `getUser()` function from `@astro-auth` for this too, but this time we're going to pass the `request` instead of the `Astro` object.
 Example of using this code:
 
-```typescript
-// /pages/api/comments.ts
-
+```typescript title="src/pages/api/comments.ts"
 export const del: APIRoute = async ({ request }) => {
   const user = getUser({ server: request });
   if (user) {

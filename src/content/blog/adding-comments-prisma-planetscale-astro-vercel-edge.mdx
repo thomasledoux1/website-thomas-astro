@@ -21,8 +21,7 @@ To communicate with my PlanetScale database, I chose to use [Prisma](https://www
 I started by adding the Prisma client: `npm install prisma @prisma/client`.
 After this install, I added my Prisma schema to my codebase:
 
-```prisma
-// schema.prisma
+```prisma title="src/schema.prisma"
 
 generator client {
   provider        = "prisma-client-js"
@@ -69,11 +68,11 @@ Syncing the schema from Prisma to PlanetScale is as easy as running `npx prisma 
 To communicate from my frontend to my API routes, I opted to use [TanStack Query](https://tanstack.com/query/v4), my favourite tool to handle client-side API calls in React.
 The frontend code to add and list comments for a blog post looks like this (this part I wrote in React):
 
-```tsx
+```tsx title="src/components/Comments.tsx"
 import type { Comment } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState, Fragment } from 'react';
-const CommentsUpvotes = ({
+const Comments = ({
   initialComments,
   blogUrl,
 }: {
@@ -161,12 +160,12 @@ const CommentsUpvotes = ({
   );
 };
 
-export default CommentsUpvotes;
+export default Comments;
 ```
 
 The code for the API route to create blogs looks like this:
 
-```typescript
+```typescript title="src/pages/api/comments/create.ts"
 import type { APIRoute } from 'astro';
 import { prisma } from '../../../lib/prisma-client';
 
@@ -204,7 +203,7 @@ export const post: APIRoute = async ({ request }) => {
 
 And the code to list the comments for a post looks like this:
 
-```typescript
+```typescript title="src/pages/api/comments/list.ts"
 import type { APIRoute } from 'astro';
 import { getCommentsForBlog } from '../../../lib/get-comments-for-blog';
 
@@ -224,7 +223,7 @@ export const get: APIRoute = async ({ request }) => {
 Deploying Astro to Vercel Edge is as easy as adding the [Astro with Vercel integration](https://docs.astro.build/en/guides/integrations-guide/vercel/) and setting up the edge `target`.
 My astro config (note the `edge` in the import path):
 
-```js
+```js title="astro.config.mjs"
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel/edge';
 
@@ -236,8 +235,7 @@ export default defineConfig({
 
 I also had to configure an [alias in Vite]() for the Prisma client to get it working on Vercel combined with Astro.
 
-```js
-// vite.config.js
+```js title="vite.config.js"
 export default {
   resolve: {
     alias: {
@@ -252,7 +250,7 @@ In the `package.json` I use `"build": "prisma generate --data-proxy && astro bui
 Instantiating the Prisma client in the code is done in `lib/prisma-client.ts`.
 I used lazy imports from Node.js here to make it work correctly locally and on Vercel.
 
-```typescript
+```typescript title="src/lib/prisma-client.ts"
 import type { PrismaClient } from '@prisma/client';
 
 let prisma: PrismaClient;
