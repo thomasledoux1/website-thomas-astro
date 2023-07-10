@@ -19,7 +19,7 @@ export class CopyButton {
   renderToHtml() {
     return `<div class="copy-button-wrapper" aria-live="polite">
 	<button
-		class="copy-button text-white absolute top-2 right-4 hover:outline outline-white p-2 rounded-md"
+		class="copy-button text-white absolute top-2 right-4 outline outline-white hover:outline-primary hover:text-primary p-2 rounded-md"
 		title="${this.title}"
 		value="${encodeURIComponent(this.code)}"
 	><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24" aria-hidden="true">

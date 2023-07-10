@@ -329,3 +329,7 @@ figcaption ~ .copy-button-wrapper .copy-button {
 figcaption ~ .copy-button-wrapper .copy-button-tooltip {
   top: 4.75rem;
 }
+
+.line {
+  padding-right: 48px;
+}
