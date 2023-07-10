@@ -108,10 +108,10 @@ export function remarkCodeSnippets(): Plugin<[], Root> {
       const prev = parent.children[index - 1];
       const strongContent =
         // The previous node must be a paragraph...
-        prev.type === 'paragraph' &&
+        prev?.type === 'paragraph' &&
         // ...it must contain exactly one child with strong formatting...
         prev.children.length === 1 &&
-        prev.children[0].type === 'strong' &&
+        prev?.children?.[0]?.type === 'strong' &&
         // ...this child must also contain exactly one child
         prev.children[0].children.length === 1 &&
         // ...which is the result of this expression
@@ -252,10 +252,10 @@ function preprocessCode(code: string, lang: string, extractFileName: boolean) {
 
   // Split the code into lines and remove any empty lines at the beginning & end
   const lines = code.split(/\r?\n/);
-  while (lines.length > 0 && lines[0].trim().length === 0) {
+  while (lines.length > 0 && lines?.[0]?.trim().length === 0) {
     lines.shift();
   }
-  while (lines.length > 0 && lines[lines.length - 1].trim().length === 0) {
+  while (lines.length > 0 && lines?.[lines.length - 1]?.trim().length === 0) {
     lines.pop();
   }
 
@@ -299,7 +299,7 @@ function preprocessCode(code: string, lang: string, extractFileName: boolean) {
   }
 
   // If only one line is left, trim any leading indentation
-  if (lines.length === 1) lines[0] = lines?.[0]?.trimStart();
+  if (lines.length === 1) lines[0] = lines?.[0]?.trimStart() ?? '';
 
   // Rebuild code with normalized line endings
   let preprocessedCode = lines.join('\n');
