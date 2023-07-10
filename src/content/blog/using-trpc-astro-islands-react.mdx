@@ -18,9 +18,7 @@ npm install @tanstack/react-query @trpc/client @trpc/server @trpc/react-query zo
 
 ## Setting up the TRPC context
 
-```ts
-// /src/server/context.ts
-
+```ts title="src/server/context.ts"
 import { getUser } from '@astro-auth/core';
 import type { inferAsyncReturnType } from '@trpc/server';
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
@@ -40,9 +38,7 @@ Because I want to check the currently logged in user when a TRPC route is called
 
 ## Setting up the TRPC server
 
-```ts
-// src/server/router.ts
-
+```ts title="src/server/index.ts"
 import { initTRPC, TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
@@ -168,9 +164,7 @@ After creating the procedures, I declare the different routes. Check the `delete
 
 ## Setting up the API Route in Astro
 
-```ts
-// /src/pages/api/trpc/[trpc].ts
-
+```ts title="src/pages/api/trpc/[trpc].ts"
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import type { APIRoute } from 'astro';
 import { createContext } from '../../../server/context';
@@ -195,9 +189,7 @@ We link the router and the context, and we're ready to set up the TRPC client.
 Because I want to use TRPC both in client side scripts on Astro pages, as well as on [islands](https://docs.astro.build/en/concepts/islands/).
 My islands are created using React, to I'll set up the TRPC React client too.
 
-```ts
-// /src/client/index.ts
-
+```ts title="src/client/index.ts"
 import { createTRPCReact } from '@trpc/react-query';
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import type { AppRouter } from '../server/router';
@@ -219,9 +211,11 @@ export { trpcReact, trpcAstro };
 
 I'll be using the Astro TRPC client to communicate from my `<script>` tag on the client to the TRPC routes.
 
-```astro
-// /src/pages/context/index.astro export const prerender = true; import Layout
-from '../../layouts/Layout.astro';
+```astro title="src/pages/context/index.astro"
+---
+export const prerender = true;
+import Layout from '../../layouts/Layout.astro';
+---
 
 <form id="contactForm">
   <label class="flex flex-col gap-2 mb-4" for="email">
@@ -285,9 +279,7 @@ I decided to work with `@tanstack/react-query` to facilitate easier fetching/mut
 Because of this, I needed to instantiate the TRPC client **and** a `QueryClient` for `react-query`.
 This I did in a wrapper component, which wraps the actual component which will be doing the calls to the TRPC routes.
 
-```tsx
-// /src/components/CommentOverviewWrapper.tsx
-
+```tsx title="src/components/CommentOverviewWrapper.tsx"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CommentOverview } from './CommentOverview';
 import { trpcReact } from '../client';
@@ -318,9 +310,7 @@ export default CommentsOverviewWrapper;
 
 The actual component ended up looking like this:
 
-```tsx
-// /src/components/CommentOverview.tsx
-
+```tsx title="src/components/CommentOverview.tsx"
 import type { Comment } from '@prisma/client';
 import { trpcReact } from '../client';
 
