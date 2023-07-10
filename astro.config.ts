@@ -16,9 +16,7 @@ import partytown from '@astrojs/partytown';
 export default defineConfig({
   integrations: [
     tailwind({
-      config: {
-        applyBaseStyles: false,
-      },
+      applyBaseStyles: false,
     }),
     react(),
     AutoImport({

@@ -333,3 +333,7 @@ figcaption ~ .copy-button-wrapper .copy-button-tooltip {
 .line {
   padding-right: 48px;
 }
+
+.mdx ul {
+  @apply list-disc list-inside mb-3 marker:text-secondary;
+}
