@@ -8,6 +8,7 @@ const blog = defineCollection({
     image: z.string(),
     imageAlt: z.string(),
     draft: z.boolean().optional(),
+    containImage: z.boolean().optional(),
   }),
 });
 

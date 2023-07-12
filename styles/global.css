@@ -33,11 +33,15 @@
   --lerp-2: 0.125;
   --lerp-3: 0.0625;
   --lerp-4: 0;
+  --primary: #c6ebbe;
+  --secondary: #2c6e49;
+  --cta-bg: var(--primary);
+  --cta-text: black;
+  --cta-link-text: black;
+  --cta-bullet-color: black;
 }
 
 html {
-  --primary: #c6ebbe;
-  --secondary: #2c6e49;
   height: -webkit-fill-available;
 }
 
