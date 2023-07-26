@@ -1,9 +1,9 @@
 ---
-title: 'Shipping minimal CSS with Next.js + purgeCSS'
-tags: ['nextjs', 'css', 'performance']
-date: '2022-02-03T15:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1675362072/photo-1531265726475-52ad60219627_motqun.jpg'
-imageAlt: 'Minimalistic photo of a gate'
+title: "Shipping minimal CSS with Next.js + purgeCSS"
+tags: ["nextjs", "css", "performance"]
+date: "2022-02-03T15:14:39.004Z"
+image: "./../../assets/photo-1531265726475-52ad60219627_motqun.jpg"
+imageAlt: "Minimalistic photo of a gate"
 ---
 
 For a new project I'll be working on, the company asked to work with Bootstrap to
@@ -14,9 +14,9 @@ With the latest versions of Bootstrap, we have the possibility to only import th
 For example:
 
 ```scss
-@import '~bootstrap/scss/grid';
-@import '~bootstrap/scss/tables';
-@import '~bootstrap/scss/forms';
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
 ```
 
 The problem with this approach is that these separate files still include a lot of CSS we will not be using in our application.
@@ -24,7 +24,7 @@ The problem with this approach is that these separate files still include a lot 
 So what I'd like to do instead, is import the whole bootstrap SCSS, and then delete the unused CSS when building the production output:
 
 ```scss
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
 ```
 
 With this setup, the generated CSS has this size: ![cssbeforepurge](https://dev-to-uploads.s3.amazonaws.com/i/4rumyogkc0nop6c47tmc.PNG)
@@ -51,28 +51,28 @@ Our postcss.config.js will look like this:
 ```javascript
 module.exports = {
   plugins: [
-    'postcss-flexbugs-fixes',
+    "postcss-flexbugs-fixes",
     [
-      'postcss-preset-env',
+      "postcss-preset-env",
       {
         autoprefixer: {
-          flexbox: 'no-2009',
+          flexbox: "no-2009",
         },
         stage: 3,
         features: {
-          'custom-properties': false,
+          "custom-properties": false,
         },
       },
     ],
     [
-      '@fullhuman/postcss-purgecss',
+      "@fullhuman/postcss-purgecss",
       {
         content: [
-          './pages/**/*.{js,jsx,ts,tsx}',
-          './components/**/*.{js,jsx,ts,tsx}',
+          "./pages/**/*.{js,jsx,ts,tsx}",
+          "./components/**/*.{js,jsx,ts,tsx}",
         ],
-        defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
-        safelist: ['html', 'body'],
+        defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+        safelist: ["html", "body"],
       },
     ],
   ],

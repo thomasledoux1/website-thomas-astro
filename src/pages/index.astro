@@ -1,16 +1,24 @@
 ---
-import { getCollection } from 'astro:content';
-import '../../styles/global.css';
-import Layout from '../layouts/Layout.astro';
-import { calculateBlurhashGradient } from '../utils/calculate-blurhash-gradient';
+import { Image, getImage } from "astro:assets";
+import profilePicture from "./../assets/1685639156921_x0ltzi.jpg";
+const mobileProfilePicture = await getImage({
+  src: profilePicture,
+  width: 240,
+});
+const desktopProfilePicture = await getImage({
+  src: profilePicture,
+  width: 320,
+});
+import { getCollection } from "astro:content";
+import "../../styles/global.css";
+import Layout from "../layouts/Layout.astro";
+import { calculateBlurhashGradient } from "../utils/calculate-blurhash-gradient";
 const [blurhashGradient, blogs] = await Promise.all([
-  calculateBlurhashGradient(
-    'https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg'
-  ),
-  getCollection('blog', blog => blog.data.draft !== true),
+  calculateBlurhashGradient(profilePicture.src),
+  getCollection("blog", (blog) => blog.data.draft !== true),
 ]);
 const latestBlog = blogs.sort(
-  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
+  (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
 )[0];
 ---
 
@@ -30,14 +38,15 @@ const latestBlog = blogs.sort(
         ><span>Travel lover.</span>
       </h1>
       <div class="w-[15rem] lg:w-[20rem]">
-        <img
+        <Image
+          src={profilePicture}
           class="rounded-full mx-auto md:ml-auto lg:mr-0 aspect-square max-w-[15rem] lg:max-w-[20rem] max-h-[15rem] lg:max-h-[20rem] w-full"
-          alt="Profile"
-          src="https://res.cloudinary.com/dzrea5zhv/image/upload/v1686332621/1685639156921_x0ltzi.jpg"
-          sizes="(max-width: 1023px) 240px, 320px"
-          srcset="https://res.cloudinary.com/dzrea5zhv/image/upload/w_360,h_360,c_lfill,f_auto/v1686332621/1685639156921_x0ltzi.jpg 240w, https://res.cloudinary.com/dzrea5zhv/image/upload/v1686332621/1685639156921_x0ltzi.jpg"
+          alt="Profile picture"
           loading="eager"
+          decoding="sync"
           style={{ background: blurhashGradient }}
+          sizes="(max-width: 1023px) 240px, 320px"
+          srcset={`${mobileProfilePicture.src} 240w, ${desktopProfilePicture.src}`}
         />
       </div>
       <a
@@ -74,7 +83,7 @@ const latestBlog = blogs.sort(
             <h2 class="font-bold">Latest blog post</h2>
             {latestBlog?.data.title.substring(0, 60)}{
               latestBlog?.data.title && latestBlog?.data.title.length > 60
-                ? '...'
+                ? "..."
                 : null
             }
           </div>

@@ -1,9 +1,9 @@
 ---
-title: 'Creating a Markdown blog with Notion, Tailwind & Next.js'
-tags: ['nextjs', 'javascript', 'css', 'tailwind']
-date: '2021-05-25T15:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1675362049/photo-1432888498266-38ffec3eaf0a_vqprgd.jpg'
-imageAlt: 'PC with person drawing on paper behind it'
+title: "Creating a Markdown blog with Notion, Tailwind & Next.js"
+tags: ["nextjs", "javascript", "css", "tailwind"]
+date: "2021-05-25T15:14:39.004Z"
+image: "./../../assets/photo-1432888498266-38ffec3eaf0a_vqprgd.jpg"
+imageAlt: "PC with person drawing on paper behind it"
 ---
 
 Last week Notion announced that they are opening up their [API](https://developers.notion.com) to the public, after being in closed beta for a while.
@@ -25,7 +25,7 @@ In my `pages/index.jsx` I query the database to get back the pages in my databas
 
 ```javascript
 // fetcher function
-async function fetcher(url, method = 'GET') {
+async function fetcher(url, method = "GET") {
   return fetch(url, {
     method,
     headers: {
@@ -38,7 +38,7 @@ async function fetcher(url, method = 'GET') {
 export async function getBlogs() {
   const res = await fetcher(
     `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE}/query`,
-    'POST'
+    "POST",
   );
   const database = await res.json();
   return database.results;
@@ -60,7 +60,7 @@ In the functional component I render the blogs, wrapped in a [Link](https://next
 
 ```javascript
 {
-  blogs.map(blog => (
+  blogs.map((blog) => (
     <Link passHref key={blog.id} href={`/blog/${blog.id}`}>
       <a>
         <article className="shadow-md hover:shadow-xl p-4">
@@ -83,7 +83,7 @@ On the blog page, we need to fetch the pages again to generate our URL's, fetch 
 export async function getStaticPaths() {
   const blogs = await getBlogs();
   return {
-    paths: blogs.map(el => ({
+    paths: blogs.map((el) => ({
       params: {
         id: el.id,
       },
@@ -112,40 +112,40 @@ All the content comes from the blocks:
 
 ```jsx
 // components/block.jsx
-import Text from './text';
+import Text from "./text";
 
 const Block = ({ block }) => {
   const { type } = block;
   const value = block[type];
-  if (type === 'paragraph') {
+  if (type === "paragraph") {
     return (
       <p className="mb-4">
         <Text text={value.text} />
       </p>
     );
   }
-  if (type === 'heading_1') {
+  if (type === "heading_1") {
     return (
       <h1 className="text-2xl font-bold md:text-4xl mb-4">
         <Text text={value.text} />
       </h1>
     );
   }
-  if (type === 'heading_2') {
+  if (type === "heading_2") {
     return (
       <h2 className="text-xl font-bold md:text-2xl mb-4">
         <Text text={value.text} />
       </h2>
     );
   }
-  if (type === 'heading_3') {
+  if (type === "heading_3") {
     return (
       <h3 className="text-lg font-bold md:text-xl mb-4">
         <Text text={value.text} />
       </h3>
     );
   }
-  if (type === 'bulleted_list_item' || type === 'numbered_list_item') {
+  if (type === "bulleted_list_item" || type === "numbered_list_item") {
     return (
       <li className="mb-4">
         <Text text={value.text} />
@@ -162,24 +162,24 @@ export default Block;
 
 ```jsx
 // components/text.jsx
-import classNames from 'classnames';
-import { v4 as uuid } from 'uuid';
+import classNames from "classnames";
+import { v4 as uuid } from "uuid";
 const Text = ({ text }) => {
   const colorMapper = {
-    default: 'text-current',
-    yellow: 'text-yellow-500',
-    gray: 'text-gray-500',
-    brown: 'text-brown-500',
-    orange: 'text-orange-500',
-    green: 'text-green-500',
-    blue: 'text-blue-500',
-    purple: 'text-purple-500',
-    red: 'text-red-500',
+    default: "text-current",
+    yellow: "text-yellow-500",
+    gray: "text-gray-500",
+    brown: "text-brown-500",
+    orange: "text-orange-500",
+    green: "text-green-500",
+    blue: "text-blue-500",
+    purple: "text-purple-500",
+    red: "text-red-500",
   };
   if (!text) {
     return null;
   }
-  return text.map(value => {
+  return text.map((value) => {
     const {
       annotations: { bold, code, color, italic, strikethrough, underline },
       text,
@@ -187,12 +187,12 @@ const Text = ({ text }) => {
     const id = uuid();
     return (
       <span
-        className={classNames(colorMapper[color], 'break-words', {
-          'font-bold': bold,
+        className={classNames(colorMapper[color], "break-words", {
+          "font-bold": bold,
           italic: italic,
-          'line-through': strikethrough,
+          "line-through": strikethrough,
           underline: underline,
-          'bg-gray-300 px-2 py-1': code,
+          "bg-gray-300 px-2 py-1": code,
         })}
         key={id}
       >
@@ -212,7 +212,7 @@ export default Text;
 
 // pages/blog/[id]
 {
-  blocks.map(block => <Block key={block.id} block={block} />);
+  blocks.map((block) => <Block key={block.id} block={block} />);
 }
 ```
 

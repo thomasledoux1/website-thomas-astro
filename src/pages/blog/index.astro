@@ -1,15 +1,15 @@
 ---
-import { getCollection } from 'astro:content';
-import PostPreview from '../../components/PostPreview.astro';
-import Tags from '../../components/Tags.astro';
+import { getCollection } from "astro:content";
+import PostPreview from "../../components/PostPreview.astro";
+import Tags from "../../components/Tags.astro";
 const allBlogPosts = await getCollection(
-  'blog',
-  blog => blog.data.draft !== true
+  "blog",
+  (blog) => blog.data.draft !== true,
 );
-import Layout from '../../layouts/Layout.astro';
-import { calculateBlurhashGradient } from '../../utils/calculate-blurhash-gradient';
+import Layout from "../../layouts/Layout.astro";
+import { calculateBlurhashGradient } from "../../utils/calculate-blurhash-gradient";
 const tags = allBlogPosts
-  .map(blog => blog.data.tags)
+  .map((blog) => blog.data.tags)
   .flat()
   .reduce<{ [key: string]: number }>(function (result, c) {
     var count = result[c] || 0;
@@ -19,10 +19,10 @@ const tags = allBlogPosts
 const sortedPosts = await Promise.all(
   allBlogPosts
     .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date))
-    .map(async post => ({
+    .map(async (post) => ({
       ...post,
-      blurhash: await calculateBlurhashGradient(post.data.image),
-    }))
+      blurhash: await calculateBlurhashGradient(post.data.image.src),
+    })),
 );
 ---
 

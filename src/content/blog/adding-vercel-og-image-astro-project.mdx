@@ -1,9 +1,9 @@
 ---
-title: 'Adding Vercel og:image generation to Astro project with Edge function'
-tags: ['javascript', 'edge', 'vercel', 'astro']
-date: '2022-12-10T16:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1675362059/photo-1597733336794-12d05021d510_phgqpv.jpg'
-imageAlt: 'Neural network displayed with blue lines'
+title: "Adding Vercel og:image generation to Astro project with Edge function"
+tags: ["javascript", "edge", "vercel", "astro"]
+date: "2022-12-10T16:14:39.004Z"
+image: "./../../assets/photo-1597733336794-12d05021d510_phgqpv.jpg"
+imageAlt: "Neural network displayed with blue lines"
 ---
 
 In a [previous blog post](https://www.thomasledoux.be/blog/create-blog-astro-mdx), I mentioned that I was using a Next.js project to run the `@vercel/og` logic to generate my og:images for my blog posts.
@@ -13,14 +13,14 @@ A few changes were needed for this.
 The original code in my Next.js project looked like this:
 
 ```jsx title="src/pages/api/og.jsx"
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from "@vercel/og";
 
 export const config = {
-  runtime: 'experimental-edge',
+  runtime: "experimental-edge",
 };
 
-const font = fetch(new URL('../../assets/Inter.ttf', import.meta.url)).then(
-  res => res.arrayBuffer()
+const font = fetch(new URL("../../assets/Inter.ttf", import.meta.url)).then(
+  (res) => res.arrayBuffer(),
 );
 
 export default async function handler(req) {
@@ -30,36 +30,36 @@ export default async function handler(req) {
     const { searchParams } = new URL(req.url);
 
     // ?title=<title>
-    const hasTitle = searchParams.has('title');
+    const hasTitle = searchParams.has("title");
     const title = hasTitle
-      ? searchParams.get('title')?.slice(0, 200)
-      : 'My default title';
+      ? searchParams.get("title")?.slice(0, 200)
+      : "My default title";
 
     return new ImageResponse(
       (
         <div
           style={{
-            background: 'white',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            textAlign: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            fontFamily: 'Inter',
+            background: "white",
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            textAlign: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            fontFamily: "Inter",
             backgroundImage:
-              'radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)',
-            backgroundSize: '100px 100px',
+              "radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)",
+            backgroundSize: "100px 100px",
           }}
         >
           <div
             style={{
-              width: '80%',
-              display: 'flex',
-              flexDirection: 'column',
-              textAlign: 'center',
-              alignItems: 'center',
+              width: "80%",
+              display: "flex",
+              flexDirection: "column",
+              textAlign: "center",
+              alignItems: "center",
             }}
           >
             <p style={{ fontSize: 32 }}>Thomas Ledoux&apos;s blog</p>
@@ -72,12 +72,12 @@ export default async function handler(req) {
         height: 600,
         fonts: [
           {
-            name: 'Inter',
+            name: "Inter",
             data: fontData,
-            style: 'normal',
+            style: "normal",
           },
         ],
-      }
+      },
     );
   } catch (e) {
     console.log(`${e.message}`);
@@ -98,14 +98,14 @@ Luckily, the `ImageResponse` function also allows for ["React-elements-like" obj
 Using the example provided on the link above, I created the following Edge API Route inside my Astro project:
 
 ```javascript title="src/api/og.js"
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from "@vercel/og";
 
 export const config = {
-  runtime: 'experimental-edge',
+  runtime: "experimental-edge",
 };
 
-const font = fetch(new URL('../assets/Inter.ttf', import.meta.url)).then(res =>
-  res.arrayBuffer()
+const font = fetch(new URL("../assets/Inter.ttf", import.meta.url)).then(
+  (res) => res.arrayBuffer(),
 );
 
 export default async function handler(req) {
@@ -115,35 +115,35 @@ export default async function handler(req) {
     const { searchParams } = new URL(req.url);
 
     // ?title=<title>
-    const hasTitle = searchParams.has('title');
+    const hasTitle = searchParams.has("title");
     const title = hasTitle
-      ? searchParams.get('title')?.slice(0, 200)
-      : 'My default title';
+      ? searchParams.get("title")?.slice(0, 200)
+      : "My default title";
 
     const html = {
-      type: 'div',
+      type: "div",
       props: {
         children: [
           {
-            type: 'div',
+            type: "div",
             props: {
               style: {
-                width: '80%',
-                display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'center',
-                alignItems: 'center',
+                width: "80%",
+                display: "flex",
+                flexDirection: "column",
+                textAlign: "center",
+                alignItems: "center",
               },
               children: [
                 {
-                  type: 'p',
+                  type: "p",
                   props: {
                     style: { fontSize: 32 },
-                    children: 'Blog by Thomas Ledoux',
+                    children: "Blog by Thomas Ledoux",
                   },
                 },
                 {
-                  type: 'p',
+                  type: "p",
                   props: {
                     style: { fontSize: 64 },
                     children: title,
@@ -154,18 +154,18 @@ export default async function handler(req) {
           },
         ],
         style: {
-          background: 'white',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          textAlign: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          fontFamily: 'Inter',
+          background: "white",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          textAlign: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          fontFamily: "Inter",
           backgroundImage:
-            'radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)',
-          backgroundSize: '100px 100px',
+            "radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)",
+          backgroundSize: "100px 100px",
         },
       },
     };
@@ -175,9 +175,9 @@ export default async function handler(req) {
       height: 600,
       fonts: [
         {
-          name: 'Inter',
+          name: "Inter",
           data: fontData,
-          style: 'normal',
+          style: "normal",
         },
       ],
     });

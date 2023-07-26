@@ -1,9 +1,9 @@
 ---
-title: 'Adding comments to my Astro blog with PlanetScale and Prisma on Vercel Edge'
-tags: ['react', 'javascript', 'databases', 'html', 'astro']
-date: '2022-11-28T16:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1675362059/photo-1486312338219-ce68d2c6f44d_jztwdo.jpg'
-imageAlt: 'Person typing on a laptop'
+title: "Adding comments to my Astro blog with PlanetScale and Prisma on Vercel Edge"
+tags: ["react", "javascript", "databases", "html", "astro"]
+date: "2022-11-28T16:14:39.004Z"
+image: "./../../assets/photo-1486312338219-ce68d2c6f44d_jztwdo.jpg"
+imageAlt: "Person typing on a laptop"
 ---
 
 ## UPDATE (19 jun 2023): In the meantime I've started using GisCus for comments, read more about why and how [here](https://www.thomasledoux.be/blog/hosting-blog-comments-reactions-github-discussions).
@@ -69,9 +69,9 @@ To communicate from my frontend to my API routes, I opted to use [TanStack Query
 The frontend code to add and list comments for a blog post looks like this (this part I wrote in React):
 
 ```tsx title="src/components/Comments.tsx"
-import type { Comment } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
-import { useRef, useState, Fragment } from 'react';
+import type { Comment } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import { useRef, useState, Fragment } from "react";
 const Comments = ({
   initialComments,
   blogUrl,
@@ -80,12 +80,12 @@ const Comments = ({
   blogUrl: string;
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [formState, setFormState] = useState<'idle' | 'loading'>('idle');
+  const [formState, setFormState] = useState<"idle" | "loading">("idle");
   const upToDateCommentsQuery = useQuery({
     queryKey: [`comments-${blogUrl}`],
     queryFn: async () => {
       const allCommentsInDb = await fetch(
-        `/api/comments/list?blogUrl=${blogUrl}`
+        `/api/comments/list?blogUrl=${blogUrl}`,
       );
       const allCommentsInDbJson = await allCommentsInDb.json();
       return allCommentsInDbJson as Comment[];
@@ -93,19 +93,19 @@ const Comments = ({
     initialData: initialComments,
   });
   const onSubmit = async (e: React.FormEvent) => {
-    setFormState('loading');
+    setFormState("loading");
     e.preventDefault();
     if (e.currentTarget) {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
-      formData.set('blogUrl', blogUrl);
-      await fetch('/api/comments/create', {
-        method: 'POST',
+      formData.set("blogUrl", blogUrl);
+      await fetch("/api/comments/create", {
+        method: "POST",
         body: formData,
       });
       formRef.current?.reset();
       upToDateCommentsQuery.refetch();
     }
-    setFormState('idle');
+    setFormState("idle");
   };
   return (
     <Fragment>
@@ -135,18 +135,18 @@ const Comments = ({
           name="comment"
         ></textarea>
         <button
-          disabled={formState === 'loading'}
+          disabled={formState === "loading"}
           className="px-8 mt-4 py-4 bg-secondary text-white rounded-lg lg:hover:scale-[1.04] transition-transform disabled:opacity-50 "
           type="submit"
         >
-          {formState === 'loading' ? 'Submitting' : 'Submit comment'}
+          {formState === "loading" ? "Submitting" : "Submit comment"}
         </button>
       </form>
 
       <h2 className="text-xl lg:text-2xl mb-4 font-bold">Comments</h2>
       {upToDateCommentsQuery?.data && upToDateCommentsQuery?.data.length > 0 ? (
         <div className="flex flex-col gap-y-4">
-          {upToDateCommentsQuery?.data?.map(comment => (
+          {upToDateCommentsQuery?.data?.map((comment) => (
             <div key={comment.id} className="flex flex-col">
               <h3 className="font-bold">{comment.author}</h3>
               <div>{comment.text}</div>
@@ -166,14 +166,14 @@ export default Comments;
 The code for the API route to create blogs looks like this:
 
 ```typescript title="src/pages/api/comments/create.ts"
-import type { APIRoute } from 'astro';
-import { prisma } from '../../../lib/prisma-client';
+import type { APIRoute } from "astro";
+import { prisma } from "../../../lib/prisma-client";
 
 export const post: APIRoute = async ({ request }) => {
   const formData = await request.formData();
-  const comment = formData.get('comment') ?? '';
-  const author = formData.get('author') ?? '';
-  const blogUrl = formData.get('blogUrl') ?? '';
+  const comment = formData.get("comment") ?? "";
+  const author = formData.get("author") ?? "";
+  const blogUrl = formData.get("blogUrl") ?? "";
   const blog = await prisma.post.findFirst({
     where: { url: blogUrl as string },
   });
@@ -204,13 +204,13 @@ export const post: APIRoute = async ({ request }) => {
 And the code to list the comments for a post looks like this:
 
 ```typescript title="src/pages/api/comments/list.ts"
-import type { APIRoute } from 'astro';
-import { getCommentsForBlog } from '../../../lib/get-comments-for-blog';
+import type { APIRoute } from "astro";
+import { getCommentsForBlog } from "../../../lib/get-comments-for-blog";
 
 export const get: APIRoute = async ({ request }) => {
-  const params = new URLSearchParams(request.url.split('?')[1]);
+  const params = new URLSearchParams(request.url.split("?")[1]);
   const allCommentsInDbForPost = await getCommentsForBlog(
-    params.get('blogUrl')
+    params.get("blogUrl"),
   );
   return new Response(JSON.stringify(allCommentsInDbForPost), {
     status: 200,
@@ -224,11 +224,11 @@ Deploying Astro to Vercel Edge is as easy as adding the [Astro with Vercel integ
 My astro config (note the `edge` in the import path):
 
 ```js title="astro.config.mjs"
-import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/edge';
+import { defineConfig } from "astro/config";
+import vercel from "@astrojs/vercel/edge";
 
 export default defineConfig({
-  output: 'server',
+  output: "server",
   adapter: vercel(),
 });
 ```
@@ -239,7 +239,7 @@ I also had to configure an [alias in Vite]() for the Prisma client to get it wor
 export default {
   resolve: {
     alias: {
-      '.prisma/client/edge': './node_modules/.prisma/client/edge.js',
+      ".prisma/client/edge": "./node_modules/.prisma/client/edge.js",
     },
   },
 };
@@ -251,14 +251,16 @@ Instantiating the Prisma client in the code is done in `lib/prisma-client.ts`.
 I used lazy imports from Node.js here to make it work correctly locally and on Vercel.
 
 ```typescript title="src/lib/prisma-client.ts"
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from "@prisma/client";
 
 let prisma: PrismaClient;
 
-if (process.env.NODE_ENV === 'development') {
-  import('@prisma/client').then(mod => (prisma = new mod.PrismaClient()));
+if (process.env.NODE_ENV === "development") {
+  import("@prisma/client").then((mod) => (prisma = new mod.PrismaClient()));
 } else {
-  import('@prisma/client/edge').then(mod => (prisma = new mod.PrismaClient()));
+  import("@prisma/client/edge").then(
+    (mod) => (prisma = new mod.PrismaClient()),
+  );
 }
 export { prisma };
 ```

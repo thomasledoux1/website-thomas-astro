@@ -1,9 +1,9 @@
 ---
-title: 'Creating a blog platform with Astro and MDX'
-tags: ['astro', 'html', 'css', 'javascript']
-date: '2022-11-20T16:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1675362062/photo-1432821596592-e2c18b78144f_lhiwqw.jpg'
-imageAlt: 'Typewriter with reading glasses on wooden desk'
+title: "Creating a blog platform with Astro and MDX"
+tags: ["astro", "html", "css", "javascript"]
+date: "2022-11-20T16:14:39.004Z"
+image: "./../../assets/photo-1432821596592-e2c18b78144f_lhiwqw.jpg"
+imageAlt: "Typewriter with reading glasses on wooden desk"
 ---
 
 ## TLDR: source code can be found [here](https://github.com/thomasledoux1/website-thomas-astro)
@@ -37,10 +37,10 @@ This will look like:
 
 ```astro
 ---
-title: 'The 3 best features announced at Next.js Conf 2021';
-layout: '../../layouts/BlogLayout.astro';
-tags: ['nextjs', 'javascript'];
-date: '2021-06-15T15:14:39.004Z';
+title: "The 3 best features announced at Next.js Conf 2021";
+layout: "../../layouts/BlogLayout.astro";
+tags: ["nextjs", "javascript"];
+date: "2021-06-15T15:14:39.004Z";
 ---
 ```
 
@@ -49,7 +49,7 @@ Your can use this a blog overview page to display the title, creation date and t
 
 ```astro
 ---
-let posts = await Astro.glob('./*.mdx');
+let posts = await Astro.glob("./*.mdx");
 /* output: 
 [
   {
@@ -64,11 +64,11 @@ let posts = await Astro.glob('./*.mdx');
 
 <section>
   {
-    posts.map(post => (
+    posts.map((post) => (
       <article>
         {post.frontmatter.title} - {post.frontmatter.title}
         <div class="flex gap-x-4">
-          {post.frontmatter.tags.map(tag => (
+          {post.frontmatter.tags.map((tag) => (
             <span>{tag}</span>
           ))}
         </div>
@@ -84,7 +84,7 @@ Astro makes it easy to add [Remark](https://github.com/remarkjs) or [Rehype](htt
 You can extend add a `markdown` property to the Astro config file, an add a function/plugin to the `remarkPlugins` property (the `extendDefaultPlugins` property is added to make sure the default plugins aren't overwritten by this config change):
 
 ```js
-import { remarkReadingTime } from './src/utils/calculate-reading-time.mjs';
+import { remarkReadingTime } from "./src/utils/calculate-reading-time.mjs";
 export default defineConfig({
   integrations: [mdx()],
   markdown: {
@@ -97,8 +97,8 @@ export default defineConfig({
 The `./src/utils/calculate-reading-time.mjs` file will look like this:
 
 ```js
-import getReadingTime from 'reading-time';
-import { toString } from 'mdast-util-to-string';
+import getReadingTime from "reading-time";
+import { toString } from "mdast-util-to-string";
 
 export function remarkReadingTime() {
   return function (tree, { data }) {
@@ -118,13 +118,13 @@ You can now start using this in our blog overview from earlier:
 ```astro
 <section>
   {
-    posts.map(post => (
+    posts.map((post) => (
       <article>
         <h2>
           {post.frontmatter.title} - {post.frontmatter.date}
         </h2>
         <div class="flex gap-x-4">
-          {post.frontmatter.tags.map(tag => (
+          {post.frontmatter.tags.map((tag) => (
             <span>{tag}</span>
           ))}
         </div>

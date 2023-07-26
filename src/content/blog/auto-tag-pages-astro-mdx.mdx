@@ -1,9 +1,9 @@
 ---
-title: 'Automatically generating pages for each tag used in Astro with MDX'
-tags: ['javascript', 'astro', 'html']
-date: '2023-02-05T16:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1675610908/photo-1513407135356-a5276958b57e_zinlgl.jpg'
-imageAlt: 'Bunch of tags hanging up on a cardboard wall'
+title: "Automatically generating pages for each tag used in Astro with MDX"
+tags: ["javascript", "astro", "html"]
+date: "2023-02-05T16:14:39.004Z"
+image: "./../../assets/photo-1513407135356-a5276958b57e_zinlgl.jpg"
+imageAlt: "Bunch of tags hanging up on a cardboard wall"
 ---
 
 With the launch of [Astro 2.0](https://astro.build/blog/astro-2/), the [Content Collections API](https://astro.build/blog/introducing-content-collections/) became available.
@@ -15,7 +15,7 @@ At the moment I just have 1 collections, namely my blog.
 So I created my schema as follows:
 
 ```typescript title="src/content/config.ts"
-import { z, defineCollection } from 'astro:content';
+import { z, defineCollection } from "astro:content";
 
 const blog = defineCollection({
   schema: z.object({
@@ -37,7 +37,7 @@ In my MDX the tags are defined like this at the top of the file:
 
 ```astro
 ---
-tags: ['javascript', 'edge', 'vercel'];
+tags: ["javascript", "edge", "vercel"];
 ---
 ```
 
@@ -51,10 +51,10 @@ The `getStaticPaths()` function will return the URLs I want to have prerendered 
 ---
 export const prerender = true;
 const { slug } = Astro.params;
-import { getCollection } from 'astro:content';
-const blogs = await getCollection('blog');
+import { getCollection } from "astro:content";
+const blogs = await getCollection("blog");
 const tags = blogs
-  .map(blog => blog.data.tags)
+  .map((blog) => blog.data.tags)
   .flat()
   .reduce<{ [key: string]: number }>(function (result, c) {
     var count = result[c] || 0;
@@ -62,19 +62,21 @@ const tags = blogs
     return result;
   }, {});
 export async function getStaticPaths() {
-  const blogs = await getCollection('blog');
-  return [...new Set(blogs.map(blog => blog.data.tags).flat())].map(tag => ({
-    params: { slug: tag },
-  }));
+  const blogs = await getCollection("blog");
+  return [...new Set(blogs.map((blog) => blog.data.tags).flat())].map(
+    (tag) => ({
+      params: { slug: tag },
+    }),
+  );
 }
 if (!slug) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
-const allBlogPostsWithTag = await getCollection('blog', blog =>
-  blog.data.tags.some(tag => tag === slug)
+const allBlogPostsWithTag = await getCollection("blog", (blog) =>
+  blog.data.tags.some((tag) => tag === slug),
 );
 if (allBlogPostsWithTag.length === 0) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 ---
 ```
@@ -117,11 +119,7 @@ Since the `slug` matches the tag this page is generated for, I can just use this
 
 The result of this tag page will look like this:
 
-<img
-  src="https://res.cloudinary.com/dzrea5zhv/image/upload/c_scale,w_1280/f_auto/v1675613291/screenshot-rocks_cguysw.png"
-  loading="lazy"
-  alt="Screenshot of tag page"
-/>
+![Screenshot of tag page](../../../src/assets/screenshot-rocks_cguysw.png)
 
 I must say I really enjoy working with Astro for writing Markdown/MDX, especially when they make it this easy!  
 Source code can be found on [Github](https://github.com/thomasledoux1/website-thomas-astro).  

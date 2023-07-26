@@ -1,9 +1,9 @@
 ---
-title: 'Setting up authentication in Astro with Prisma and Planetscale'
-tags: ['javascript', 'astro', 'authentication']
-date: '2023-02-18T16:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1676739843/photo-1504203700686-f21e703e5f1c_b1vx0u.jpg'
-imageAlt: 'Phone with passcode screen'
+title: "Setting up authentication in Astro with Prisma and Planetscale"
+tags: ["javascript", "astro", "authentication"]
+date: "2023-02-18T16:14:39.004Z"
+image: "./../../assets/photo-1504203700686-f21e703e5f1c_b1vx0u.jpg"
+imageAlt: "Phone with passcode screen"
 ---
 
 I've been wanting to add authentication to my personal website for a while now to see how it works in Astro.
@@ -30,14 +30,14 @@ There are many other providers available on `@astro-auth`, go check out the pack
 The code needed to set this up with `@astro-auth` looks like this:
 
 ```typescript title="src/pages/api/auth/[...astroauth].ts"
-import AstroAuth from '@astro-auth/core';
-import { CredentialProvider } from '@astro-auth/providers';
-import { prisma } from '../../../lib/prisma';
+import AstroAuth from "@astro-auth/core";
+import { CredentialProvider } from "@astro-auth/providers";
+import { prisma } from "../../../lib/prisma";
 
 export const all = AstroAuth({
   authProviders: [
     CredentialProvider({
-      authorize: async properties => {
+      authorize: async (properties) => {
         const account = await prisma?.account.findFirst({
           where: {
             username: properties.username,
@@ -68,22 +68,24 @@ The code for the login page:
   <head>
     <title>Login</title>
     <script>
-      import { signIn } from '@astro-auth/client';
+      import { signIn } from "@astro-auth/client";
 
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelector('form')?.addEventListener('submit', async e => {
-          e.preventDefault();
-          const form = e.target;
-          if (form) {
-            const formData = new FormData(form as HTMLFormElement);
-            const data = Object.fromEntries(formData);
-            await signIn({
-              provider: 'credential',
-              login: data,
-            });
-            window.location.href = '/';
-          }
-        });
+      document.addEventListener("DOMContentLoaded", () => {
+        document
+          .querySelector("form")
+          ?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            if (form) {
+              const formData = new FormData(form as HTMLFormElement);
+              const data = Object.fromEntries(formData);
+              await signIn({
+                provider: "credential",
+                login: data,
+              });
+              window.location.href = "/";
+            }
+          });
       });
     </script>
   </head>
@@ -107,13 +109,13 @@ Here's an example of a page where I used this check:
 
 ```astro title="src/pages/comment-overview.astro"
 ---
-import { getUser } from '@astro-auth/core';
-import Layout from '../layouts/Layout.astro';
-import { prisma } from '../lib/prisma';
-import CommentsOverviewWrapper from '../components/CommentOverviewWrapper';
+import { getUser } from "@astro-auth/core";
+import Layout from "../layouts/Layout.astro";
+import { prisma } from "../lib/prisma";
+import CommentsOverviewWrapper from "../components/CommentOverviewWrapper";
 const user = getUser({ client: Astro });
 if (!user) {
-  return Astro.redirect('/', 307);
+  return Astro.redirect("/", 307);
 }
 const commentsWithPost = await prisma?.comment.findMany({
   include: {
@@ -151,7 +153,7 @@ export const del: APIRoute = async ({ request }) => {
       JSON.stringify({
         message: `Comment with id ${deleteComment?.id} deleted`,
       }),
-      { status: 200 }
+      { status: 200 },
     );
   }
   return new Response(null, { status: 403 });

@@ -1,8 +1,9 @@
 ---
-import '../../styles/global.css';
-import Layout from '../layouts/Layout.astro';
+import "../../styles/global.css";
+import personalSvg from "./../assets/personal.svg";
+import Layout from "../layouts/Layout.astro";
 const age = Math.floor(
-  (new Date().getTime() - new Date('1991-07-11').getTime()) / 3.15576e10
+  (new Date().getTime() - new Date("1991-07-11").getTime()) / 3.15576e10,
 );
 ---
 
@@ -15,11 +16,11 @@ const age = Math.floor(
       class="flex flex-col gap-y-8 md:grid md:grid-cols-2 md:gap-8 items-center content-center"
     >
       <img
-        width={194}
-        height={150}
-        class="min-h-[66.66%] min-w-[66.66%] mx-auto"
+        width={personalSvg.width}
+        height={personalSvg.height}
+        class="w-[66.66%] mx-auto"
         alt="Illustration of me working on laptop"
-        src="/personal.svg"
+        src={personalSvg.src}
       />
       <div class="bg-secondary text-white rounded-lg p-6">
         <div class="flex flex-col gap-y-4">
@@ -27,8 +28,8 @@ const age = Math.floor(
           <p>
             Hi, I&apos;m Thomas. I&apos;m {age} years old, living in Ghent.
             <br />
-            I&apos;m a professional <b>Frontend Developer</b>, currently working
-            at The Reference.
+             I&apos;m a professional <b>Frontend Developer</b>, currently
+            working at The Reference.
           </p>
 
           <div>
@@ -37,23 +38,24 @@ const age = Math.floor(
               is a roadtrip with a campervan, doing lots of hikes in nature and
               going for a swim in the sea at the end of the day!
               <br />
-              When I&apos;m not traveling I like to sport a lot. I play badminton,
-              cycle a lot, and I go for the occasional run.
+               When I&apos;m not traveling I like to sport a lot. I play
+              badminton, cycle a lot, and I go for the occasional run.
             </p>
             <p>
               I studied Applied Computer Sciences at Hogeschool Gent. I chose
               the Mobile Development track, and went on Erasmus to Barcelona to
               learn more about Swift and Java. <br />
-              After graduating I worked for the startup Happs as a full-stack developer,
-              where I created and maintained the website. <br />I also created
-              an app for a client in React Native during this period.
+               After graduating I worked for the startup Happs as a full-stack
+              developer, where I created and maintained the website. <br />I
+              also created an app for a client in React Native during this
+              period.
             </p>
             <p>
-              You can read more about my work in the{' '}
+              You can read more about my work in the{" "}
               <a rel="prefetch" class="link" href="/portfolio">portfolio</a>{
-                ' '
+                " "
               }
-              section .
+               section .
             </p>
           </div>
         </div>

@@ -1,9 +1,9 @@
 ---
-title: 'Using TRPC in Astro and its (React) islands'
-tags: ['astro', 'react', 'javascript']
-date: '2023-03-08T15:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1678275437/dario-bronnimann-CpIEyqdwygY-unsplash_agsrhx.jpg'
-imageAlt: 'Stars in space'
+title: "Using TRPC in Astro and its (React) islands"
+tags: ["astro", "react", "javascript"]
+date: "2023-03-08T15:14:39.004Z"
+image: "./../../assets/dario-bronnimann-CpIEyqdwygY-unsplash_agsrhx.jpg"
+imageAlt: "Stars in space"
 ---
 
 I started using [TRPC](https://trpc.io) in some Next.js projects at work, and really liked the end-to-end type safety this gives you as a developer when working with APIs.
@@ -19,9 +19,9 @@ npm install @tanstack/react-query @trpc/client @trpc/server @trpc/react-query zo
 ## Setting up the TRPC context
 
 ```ts title="src/server/context.ts"
-import { getUser } from '@astro-auth/core';
-import type { inferAsyncReturnType } from '@trpc/server';
-import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
+import { getUser } from "@astro-auth/core";
+import type { inferAsyncReturnType } from "@trpc/server";
+import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 
 export function createContext({
   req,
@@ -39,11 +39,11 @@ Because I want to check the currently logged in user when a TRPC route is called
 ## Setting up the TRPC server
 
 ```ts title="src/server/index.ts"
-import { initTRPC, TRPCError } from '@trpc/server';
-import { z } from 'zod';
-import { prisma } from '../lib/prisma';
-import type { Comment } from '@prisma/client';
-import type { Context } from './context';
+import { initTRPC, TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { prisma } from "../lib/prisma";
+import type { Comment } from "@prisma/client";
+import type { Context } from "./context";
 
 export const t = initTRPC.context<Context>().create();
 
@@ -52,7 +52,7 @@ export const publicProcedure = t.procedure;
 
 const isAdmin = middleware(async ({ ctx, next }) => {
   if (!ctx.user) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
+    throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
@@ -67,10 +67,10 @@ export const appRouter = t.router({
   getCommentsForBlog: publicProcedure
     .input(z.string())
     .query(async ({ input }) => {
-      const blogUrl = input.replace('src/content', '').replace('.mdx', '');
+      const blogUrl = input.replace("src/content", "").replace(".mdx", "");
       const commentsForBlogUrl = await prisma?.post.findFirst({
         where: { url: (blogUrl as string) ?? undefined },
-        include: { Comment: { orderBy: { createdAt: 'desc' } } },
+        include: { Comment: { orderBy: { createdAt: "desc" } } },
       });
       const allCommentsInDbForPost = commentsForBlogUrl?.Comment;
       return allCommentsInDbForPost ?? null;
@@ -81,7 +81,7 @@ export const appRouter = t.router({
         comment: z.string(),
         author: z.string(),
         blogUrl: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { comment, blogUrl, author } = input;
@@ -92,12 +92,12 @@ export const appRouter = t.router({
       try {
         commentInDb = await prisma?.comment.create({
           data: {
-            author: author ?? '',
-            text: comment ?? '',
+            author: author ?? "",
+            text: comment ?? "",
             post: {
               connectOrCreate: {
                 create: {
-                  url: blogUrl ?? '',
+                  url: blogUrl ?? "",
                 },
                 where: {
                   id: blog?.id ?? 0,
@@ -107,13 +107,13 @@ export const appRouter = t.router({
           },
         });
       } catch (err) {
-        console.error('Error saving comment', err);
-        return { status: 'error', error: 'Error saving comment' };
+        console.error("Error saving comment", err);
+        return { status: "error", error: "Error saving comment" };
       }
       if (!commentInDb) {
-        return { status: 'error', error: 'Error saving comment' };
+        return { status: "error", error: "Error saving comment" };
       }
-      return { status: 'success' };
+      return { status: "success" };
     }),
   deleteCommentForBlog: adminProcedure
     .input(z.object({ id: z.number() }))
@@ -126,33 +126,36 @@ export const appRouter = t.router({
           },
         });
       } catch (e) {
-        return { status: 'error', error: 'Error deleting comment' };
+        return { status: "error", error: "Error deleting comment" };
       }
       if (!deleteComment) {
-        return { status: 'error', error: 'Error deleting comment' };
+        return { status: "error", error: "Error deleting comment" };
       }
 
-      return { status: 'success' };
+      return { status: "success" };
     }),
   sendContactForm: publicProcedure
     .input(
-      z.object({ email: z.string().nullable(), message: z.string().nullable() })
+      z.object({
+        email: z.string().nullable(),
+        message: z.string().nullable(),
+      }),
     )
     .mutation(async ({ input }) => {
       if (input.email && input.message) {
         await fetch(import.meta.env.FORMSPREE_URL!, {
-          method: 'post',
+          method: "post",
           headers: {
-            Accept: 'application/json',
+            Accept: "application/json",
           },
           body: JSON.stringify(input),
-        }).catch(e => {
+        }).catch((e) => {
           console.error(e);
-          return { status: 'error' };
+          return { status: "error" };
         });
-        return { status: 'success' };
+        return { status: "success" };
       }
-      return { status: 'missingdata' };
+      return { status: "missingdata" };
     }),
 });
 
@@ -165,14 +168,14 @@ After creating the procedures, I declare the different routes. Check the `delete
 ## Setting up the API Route in Astro
 
 ```ts title="src/pages/api/trpc/[trpc].ts"
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import type { APIRoute } from 'astro';
-import { createContext } from '../../../server/context';
-import { appRouter } from '../../../server/router';
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import type { APIRoute } from "astro";
+import { createContext } from "../../../server/context";
+import { appRouter } from "../../../server/router";
 
 export const all: APIRoute = ({ request }) => {
   return fetchRequestHandler({
-    endpoint: '/api/trpc',
+    endpoint: "/api/trpc",
     req: request,
     router: appRouter,
     createContext,
@@ -190,16 +193,16 @@ Because I want to use TRPC both in client side scripts on Astro pages, as well a
 My islands are created using React, to I'll set up the TRPC React client too.
 
 ```ts title="src/client/index.ts"
-import { createTRPCReact } from '@trpc/react-query';
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '../server/router';
+import { createTRPCReact } from "@trpc/react-query";
+import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import type { AppRouter } from "../server/router";
 
 const trpcReact = createTRPCReact<AppRouter>();
 
 const trpcAstro = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: 'http://localhost:3000/api/trpc',
+      url: "http://localhost:3000/api/trpc",
     }),
   ],
 });
@@ -214,7 +217,7 @@ I'll be using the Astro TRPC client to communicate from my `<script>` tag on the
 ```astro title="src/pages/context/index.astro"
 ---
 export const prerender = true;
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
 ---
 
 <form id="contactForm">
@@ -255,17 +258,17 @@ import Layout from '../../layouts/Layout.astro';
   </div>
 </form>
 <script>
-  import { trpcAstro } from '../../client';
-  const form = document.getElementById('contactForm') as HTMLFormElement | null;
-  form?.addEventListener('submit', async e => {
+  import { trpcAstro } from "../../client";
+  const form = document.getElementById("contactForm") as HTMLFormElement | null;
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     const result = await trpcAstro.sendContactForm.mutate({
-      message: formData.get('message') as string | null,
-      email: formData.get('email') as string | null,
+      message: formData.get("message") as string | null,
+      email: formData.get("email") as string | null,
     });
-    if (result.status === 'success') {
-      window.location.href = '/contact/thanks';
+    if (result.status === "success") {
+      window.location.href = "/contact/thanks";
     }
   });
 </script>
@@ -280,11 +283,11 @@ Because of this, I needed to instantiate the TRPC client **and** a `QueryClient`
 This I did in a wrapper component, which wraps the actual component which will be doing the calls to the TRPC routes.
 
 ```tsx title="src/components/CommentOverviewWrapper.tsx"
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { CommentOverview } from './CommentOverview';
-import { trpcReact } from '../client';
-import { httpBatchLink } from '@trpc/client';
-import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { CommentOverview } from "./CommentOverview";
+import { trpcReact } from "../client";
+import { httpBatchLink } from "@trpc/client";
+import { useState } from "react";
 
 const CommentsOverviewWrapper = () => {
   const [queryClient] = useState(() => new QueryClient());
@@ -292,10 +295,10 @@ const CommentsOverviewWrapper = () => {
     trpcReact.createClient({
       links: [
         httpBatchLink({
-          url: 'http://localhost:3000/api/trpc',
+          url: "http://localhost:3000/api/trpc",
         }),
       ],
-    })
+    }),
   );
   return (
     <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
@@ -311,18 +314,18 @@ export default CommentsOverviewWrapper;
 The actual component ended up looking like this:
 
 ```tsx title="src/components/CommentOverview.tsx"
-import type { Comment } from '@prisma/client';
-import { trpcReact } from '../client';
+import type { Comment } from "@prisma/client";
+import { trpcReact } from "../client";
 
 const CommentOverview = () => {
   const upToDateCommentsQuery = trpcReact.getAllComments.useQuery();
   const { mutate: deleteComment } = trpcReact.deleteCommentForBlog.useMutation({
     onError: () => {
-      console.error('Error deleting comment');
+      console.error("Error deleting comment");
     },
-    onSuccess: res => {
-      if (res.status === 'error') {
-        console.log('Succesfully deleted comment');
+    onSuccess: (res) => {
+      if (res.status === "error") {
+        console.log("Succesfully deleted comment");
       }
     },
     onSettled: () => {
@@ -337,7 +340,7 @@ const CommentOverview = () => {
       ...acc,
       [cur.post.url]: [...(acc[cur.post.url] || []), cur],
     }),
-    {}
+    {},
   );
   return (
     <div className="grid lg:grid-cols-2 gap-6">
@@ -347,7 +350,7 @@ const CommentOverview = () => {
               <div key={key}>
                 <h2 className="font-bold mb-4 text-xl">{key}</h2>
                 <ul className="flex flex-col gap-y-2">
-                  {val.map(comment => (
+                  {val.map((comment) => (
                     <div className="flex gap-x-2" key={comment.id}>
                       <button
                         type="button"
@@ -371,7 +374,7 @@ const CommentOverview = () => {
                         </svg>
                       </button>
                       <li>
-                        <span className="font-bold">{comment.author}</span> :{' '}
+                        <span className="font-bold">{comment.author}</span> :{" "}
                         {comment.text}
                       </li>
                     </div>

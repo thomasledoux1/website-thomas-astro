@@ -1,9 +1,9 @@
 ---
-title: 'Highlighting navigation items on scroll in React with IntersectionObserver'
-tags: ['javascript', 'css', 'react']
-date: '2021-01-17T15:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1675362382/photo-1524146128017-b9dd0bfd2778_1_re7irh.jpg'
-imageAlt: 'Compass lying on a physical map'
+title: "Highlighting navigation items on scroll in React with IntersectionObserver"
+tags: ["javascript", "css", "react"]
+date: "2021-01-17T15:14:39.004Z"
+image: "./../../assets/photo-1524146128017-b9dd0bfd2778_1_re7irh.jpg"
+imageAlt: "Compass lying on a physical map"
 ---
 
 This week I was working on my personal website (https://www.thomasledoux.be), and I needed my navigation items to be highlighted when scrolling to the linked section.
@@ -13,7 +13,7 @@ So I decided to write the logic myself.
 What has to be done first, is referencing the `<section>`'s using `React.useRef`.
 
 ```javascript
-import * as React from 'react';
+import * as React from "react";
 const personalRef = React.useRef(null);
 const portfolioRef = React.useRef(null);
 const contactRef = React.useRef(null);
@@ -29,16 +29,16 @@ React.useEffect(() => {
       threshold: 0.5,
     };
     observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         const navElement = document.querySelector(
-          `a[href="/#${entry.target.id}"]`
+          `a[href="/#${entry.target.id}"]`,
         );
         if (entry.isIntersecting) {
-          if (!navElement.classList.contains('active')) {
-            navElement.classList.add('active');
+          if (!navElement.classList.contains("active")) {
+            navElement.classList.add("active");
           }
-        } else if (navElement.classList.contains('active')) {
-          navElement.classList.remove('active');
+        } else if (navElement.classList.contains("active")) {
+          navElement.classList.remove("active");
         }
       });
     }, options);
