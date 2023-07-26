@@ -1,7 +1,7 @@
-export type MarkerType = 'mark' | 'ins' | 'del' | undefined;
+export type MarkerType = "mark" | "ins" | "del" | undefined;
 
 /** When markers overlap, those with higher indices override lower ones. */
-export const MarkerTypeOrder: MarkerType[] = ['mark', 'del', 'ins'];
+export const MarkerTypeOrder: MarkerType[] = ["mark", "del", "ins"];
 
 export type LineMarkingDefinition = {
   markerType: MarkerType;
@@ -21,7 +21,7 @@ export type MarkedRange = {
 };
 
 export type SyntaxToken = {
-  tokenType: 'syntax';
+  tokenType: "syntax";
   color: string;
   otherStyles: string;
   innerHtml: string;
@@ -31,7 +31,7 @@ export type SyntaxToken = {
 };
 
 export type MarkerToken = {
-  tokenType: 'marker';
+  tokenType: "marker";
   markerType: MarkerType;
   closing?: boolean;
 };

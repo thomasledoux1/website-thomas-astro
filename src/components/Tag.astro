@@ -1,5 +1,5 @@
 ---
-import clsx from 'clsx';
+import clsx from "clsx";
 interface Props {
   tag: string;
   number: number;
@@ -12,13 +12,14 @@ const { tag, number, isActive, extraClass } = Astro.props;
 <a
   class={clsx(
     extraClass,
-    'rounded-md text-sm py-1 px-4 inline-flex items-center',
+    "rounded-md text-sm py-1 px-4 inline-flex items-center",
     {
-      'border-secondary border-2 text-secondary': !isActive,
-      'bg-secondary text-white': isActive,
-    }
+      "border-secondary border-2 text-secondary": !isActive,
+      "bg-secondary text-white": isActive,
+    },
   )}
-  href={isActive ? '/blog' : `/blog/tags/${tag}`}
+  rel="prefetch-intent"
+  href={isActive ? "/blog" : `/blog/tags/${tag}`}
 >
   {
     isActive ? (
@@ -37,6 +38,6 @@ const { tag, number, isActive, extraClass } = Astro.props;
         />
       </svg>
     ) : null
-  }{' '}
+  }{" "}
   {tag} ({number})
 </a>

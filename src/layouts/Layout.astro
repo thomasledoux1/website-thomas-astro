@@ -1,6 +1,6 @@
 ---
 import Footer from '../components/Footer.astro';
-
+import { ViewTransitions } from 'astro:transitions';
 interface Props {
   title?: string
   description?: string
@@ -17,6 +17,7 @@ import '../../styles/global.css';
 
 <html lang="en" class="scroll-smooth">
   <head>
+    <ViewTransitions />
     <link rel="preconnect" href="https://res.cloudinary.com" />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
     <meta charset="utf-8" />

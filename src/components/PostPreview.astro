@@ -1,25 +1,25 @@
 ---
-import { Image } from '@unpic/astro';
-import type { CollectionEntry } from 'astro:content';
+import { Image } from "@unpic/astro";
+import type { CollectionEntry } from "astro:content";
 
 interface Props {
-  post: CollectionEntry<'blog'> & { blurhash?: string };
+  post: CollectionEntry<"blog"> & { blurhash?: string };
   minutesRead?: string;
   index: number;
 }
 const { post, minutesRead, index } = Astro.props;
-const loading = index > 3 ? 'lazy' : undefined;
+const loading = index > 3 ? "lazy" : undefined;
 ---
 
 <a
   class="transform lg:text-center rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
   href={`/blog/${post.slug}`}
-  rel="prefetch"
+  rel="prefetch-intent"
 >
   <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
     <Image
-      priority={loading !== 'lazy'}
-      background={post.data.containImage ? 'white' : post.blurhash ?? 'auto'}
+      priority={loading !== "lazy"}
+      background={post.data.containImage ? "white" : post.blurhash ?? "auto"}
       class="rounded-t-xl"
       src={post.data.image}
       alt={post.data.imageAlt}
@@ -27,15 +27,15 @@ const loading = index > 3 ? 'lazy' : undefined;
       width={660}
       height={496}
       sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
-      objectFit={post.data.containImage ? 'contain' : 'cover'}
+      objectFit={post.data.containImage ? "contain" : "cover"}
     />
     <div class="flex px-6 py-4 flex-grow flex-col">
       <date class="text-sm"
         >{
-          new Date(post.data.date).toLocaleDateString('en-BE', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
+          new Date(post.data.date).toLocaleDateString("en-BE", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
           })
         }</date
       >
@@ -43,7 +43,10 @@ const loading = index > 3 ? 'lazy' : undefined;
         class="flex lg:items-center w-full flex-col gap-y-2 justify-between flex-grow"
       >
         <div>
-          <h2 class="text-xl font-bold transition-colors">
+          <h2
+            class="text-xl font-bold transition-colors"
+            transition:name={post.data.title.replace(/\s/g, "-").toLowerCase()}
+          >
             {post.data.title}
           </h2>
           {minutesRead ? <p>{minutesRead}ing time</p> : null}

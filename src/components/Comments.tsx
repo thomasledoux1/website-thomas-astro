@@ -1,7 +1,7 @@
-import * as React from 'react';
-import Giscus from '@giscus/react';
+import * as React from "react";
+import Giscus from "@giscus/react";
 
-const id = 'inject-comments';
+const id = "inject-comments";
 
 const Comments = () => {
   const [mounted, setMounted] = React.useState(false);

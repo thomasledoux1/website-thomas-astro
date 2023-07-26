@@ -1,9 +1,9 @@
 ---
-import Layout from './Layout.astro';
-import { getCollection } from 'astro:content';
-import PostPreview from '../components/PostPreview.astro';
-import { calculateBlurhashGradient } from '../utils/calculate-blurhash-gradient';
-import Comments from '../components/Comments';
+import Layout from "./Layout.astro";
+import { getCollection } from "astro:content";
+import PostPreview from "../components/PostPreview.astro";
+import { calculateBlurhashGradient } from "../utils/calculate-blurhash-gradient";
+import Comments from "../components/Comments";
 const { frontmatter } = Astro.props;
 interface Props {
   frontmatter: {
@@ -15,23 +15,23 @@ interface Props {
     tags: string[];
   };
 }
-const convertedDate = new Date(frontmatter.date).toLocaleDateString('en-BE', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
+const convertedDate = new Date(frontmatter.date).toLocaleDateString("en-BE", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
 });
 const blogs = await getCollection(
-  'blog',
-  blog => blog.data.title !== frontmatter.title && blog.data.draft !== true
+  "blog",
+  (blog) => blog.data.title !== frontmatter.title && blog.data.draft !== true,
 );
 const latestBlogs = await Promise.all(
   blogs
     .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date))
     .slice(0, 3)
-    .map(async blog => ({
+    .map(async (blog) => ({
       ...blog,
       blurhash: await calculateBlurhashGradient(blog.data.image),
-    }))
+    })),
 );
 ---
 
@@ -39,7 +39,11 @@ const latestBlogs = await Promise.all(
   description="Blog by Thomas Ledoux. Writes about Javascript/React/Next.js/Remix/Astro. Always looking to learn about the newest frameworks and features."
   frontmatter={frontmatter}
 >
-  <a rel="prefetch" href="/blog" class="flex items-center gap-x-2 lg:mb-4">
+  <a
+    rel="prefetch-intent"
+    href="/blog"
+    class="flex items-center gap-x-2 lg:mb-4"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -53,10 +57,12 @@ const latestBlogs = await Promise.all(
         stroke-linejoin="round"
         d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
     </svg>
-    Back to overview
+     Back to overview
   </a>
   <article class="mdx">
-    <h1>{frontmatter.title}</h1>
+    <h1 transition:name={frontmatter.title.replace(/\s/g, "-").toLowerCase()}>
+      {frontmatter.title}
+    </h1>
     <div class="flex flex-col lg:flex-row gap-4 lg:items-center mb-4">
       <div class="flex gap-x-4">
         <time class="text-gray-500">{convertedDate}</time>
@@ -66,10 +72,11 @@ const latestBlogs = await Promise.all(
       <span class="text-gray-500 hidden lg:inline-block">|</span>
       <div class="flex gap-x-2 flex-wrap gap-y-2">
         {
-          frontmatter.tags.map(tag => (
+          frontmatter.tags.map((tag) => (
             <a
               class="border-secondary border-2 text-secondary text-sm py-1 px-4 rounded-md tag font-semibold"
               href={`/blog/tags/${tag}`}
+              rel="prefetch-intent"
             >
               {tag}
             </a>

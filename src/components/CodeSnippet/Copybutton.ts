@@ -1,4 +1,4 @@
-import type { ShikiLine } from './ShikiLine';
+import type { ShikiLine } from "./ShikiLine";
 
 export type CopyButtonArgs = {
   copyButtonTitle?: string;
@@ -11,9 +11,9 @@ export class CopyButton {
   private tooltip: string;
 
   constructor(lines: ShikiLine[], CopyButtonArgs: CopyButtonArgs) {
-    this.title = CopyButtonArgs.copyButtonTitle || '';
-    this.tooltip = CopyButtonArgs.copyButtonTooltip || '';
-    this.code = lines.map(line => line.textLine).join('\n');
+    this.title = CopyButtonArgs.copyButtonTitle || "";
+    this.tooltip = CopyButtonArgs.copyButtonTooltip || "";
+    this.code = lines.map((line) => line.textLine).join("\n");
   }
 
   renderToHtml() {

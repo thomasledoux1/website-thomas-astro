@@ -1,16 +1,16 @@
 ---
-import { getCollection } from 'astro:content';
-import '../../styles/global.css';
-import Layout from '../layouts/Layout.astro';
-import { calculateBlurhashGradient } from '../utils/calculate-blurhash-gradient';
+import { getCollection } from "astro:content";
+import "../../styles/global.css";
+import Layout from "../layouts/Layout.astro";
+import { calculateBlurhashGradient } from "../utils/calculate-blurhash-gradient";
 const [blurhashGradient, blogs] = await Promise.all([
   calculateBlurhashGradient(
-    'https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg'
+    "https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg",
   ),
-  getCollection('blog', blog => blog.data.draft !== true),
+  getCollection("blog", (blog) => blog.data.draft !== true),
 ]);
 const latestBlog = blogs.sort(
-  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
+  (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
 )[0];
 ---
 
@@ -41,6 +41,7 @@ const latestBlog = blogs.sort(
         />
       </div>
       <a
+        rel="prefetch-intent"
         href={`/blog/${latestBlog?.slug}`}
         aria-label="Latest blog post"
         class="fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-transform lg:translate-x-[calc(100%-5rem)] lg:hover:translate-x-0"
@@ -74,7 +75,7 @@ const latestBlog = blogs.sort(
             <h2 class="font-bold">Latest blog post</h2>
             {latestBlog?.data.title.substring(0, 60)}{
               latestBlog?.data.title && latestBlog?.data.title.length > 60
-                ? '...'
+                ? "..."
                 : null
             }
           </div>

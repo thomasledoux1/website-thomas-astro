@@ -1,6 +1,6 @@
-import { initTRPC } from '@trpc/server';
-import { z } from 'zod';
-import type { Context } from './context';
+import { initTRPC } from "@trpc/server";
+import { z } from "zod";
+import type { Context } from "./context";
 
 export const t = initTRPC.context<Context>().create();
 
@@ -10,23 +10,26 @@ export const publicProcedure = t.procedure;
 export const appRouter = t.router({
   sendContactForm: publicProcedure
     .input(
-      z.object({ email: z.string().nullable(), message: z.string().nullable() })
+      z.object({
+        email: z.string().nullable(),
+        message: z.string().nullable(),
+      }),
     )
     .mutation(async ({ input }) => {
       if (input.email && input.message) {
         await fetch(import.meta.env.FORMSPREE_URL!, {
-          method: 'post',
+          method: "post",
           headers: {
-            Accept: 'application/json',
+            Accept: "application/json",
           },
           body: JSON.stringify(input),
-        }).catch(e => {
+        }).catch((e) => {
           console.error(e);
-          return { status: 'error' };
+          return { status: "error" };
         });
-        return { status: 'success' };
+        return { status: "success" };
       }
-      return { status: 'missingdata' };
+      return { status: "missingdata" };
     }),
 });
 

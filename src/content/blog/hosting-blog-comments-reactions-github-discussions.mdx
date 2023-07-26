@@ -1,9 +1,9 @@
 ---
-title: 'Using GitHub Discussions to host my Astro blog comments and reactions'
-tags: ['javascript', 'astro', 'react']
-date: '2023-06-18T15:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1687202047/giscus.jpg'
-imageAlt: 'Github discussion style comment section'
+title: "Using GitHub Discussions to host my Astro blog comments and reactions"
+tags: ["javascript", "astro", "react"]
+date: "2023-06-18T15:14:39.004Z"
+image: "https://res.cloudinary.com/dzrea5zhv/image/upload/v1687202047/giscus.jpg"
+imageAlt: "Github discussion style comment section"
 ---
 
 Until the day of writing, I was using a custom made comment section for my blog posts.
@@ -41,10 +41,10 @@ This component is very easy to use, you just have to install it with `npm instal
 The props you need to pass to the component are the same as the data attributes in the script tag, but camelCased instead of kebab-cased.
 
 ```tsx title="src/components/Comments.tsx"
-import * as React from 'react';
-import Giscus from '@giscus/react';
+import * as React from "react";
+import Giscus from "@giscus/react";
 
-const id = 'inject-comments';
+const id = "inject-comments";
 
 const Comments = () => {
   const [mounted, setMounted] = React.useState(false);

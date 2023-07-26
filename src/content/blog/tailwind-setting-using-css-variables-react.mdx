@@ -1,13 +1,13 @@
 ---
-title: 'Setting and using CSS variables in Tailwind with React'
-tags: ['css', 'tailwind', 'react']
-date: '2023-07-12T15:14:39.004Z'
-image: 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1689162299/tailwind-css-logo-vector_i2froe.png'
-imageAlt: 'TailwindCSS logo'
+title: "Setting and using CSS variables in Tailwind with React"
+tags: ["css", "tailwind", "react"]
+date: "2023-07-12T15:14:39.004Z"
+image: "https://res.cloudinary.com/dzrea5zhv/image/upload/v1689162299/tailwind-css-logo-vector_i2froe.png"
+imageAlt: "TailwindCSS logo"
 containImage: true
 ---
 
-import Cta from '../../components/Demo/Cta';
+import Cta from "../../components/Demo/Cta";
 
 ## Why?
 
@@ -51,21 +51,21 @@ If the variant prop has the value "highlighted", the component will change the v
 Setting the CSS variable this way will only affect the component and not the whole page due to the [scoping](https://blog.logrocket.com/css-variables-scoping/).
 
 ```tsx title="src/components/Demo/Cta.tsx"
-import clsx from 'clsx';
+import clsx from "clsx";
 
 const Cta = ({
-  variant = 'standard',
+  variant = "standard",
 }: {
-  variant: 'standard' | 'highlighted';
+  variant: "standard" | "highlighted";
 }) => {
   return (
     <div
       className={clsx(
         {
-          '[--cta-bg:var(--secondary)] [--cta-text:white]':
-            variant === 'highlighted',
+          "[--cta-bg:var(--secondary)] [--cta-text:white]":
+            variant === "highlighted",
         },
-        'bg-[var(--cta-bg)] text-[var(--cta-text)] h-40 p-8 flex justify-center items-center'
+        "bg-[var(--cta-bg)] text-[var(--cta-text)] h-40 p-8 flex justify-center items-center",
       )}
     >
       Click me
@@ -85,26 +85,26 @@ This approach can easily be extended to support that.
 In Tailwind you can use the `[&_ELEMENTNAME]` syntax to target an element inside a component.
 
 ```tsx title="src/components/Demo/Cta.tsx"
-import clsx from 'clsx';
+import clsx from "clsx";
 
 const Cta = ({
-  variant = 'standard',
+  variant = "standard",
   content,
 }: {
-  variant: 'standard' | 'highlighted';
-  content: 'string';
+  variant: "standard" | "highlighted";
+  content: "string";
 }) => {
   return (
     <div
       className={clsx(
         {
-          '[--cta-bg:var(--secondary)] [--cta-text:white] [--cta-link-text:yellow] [--cta-bullet-color:yellow] [&_a]:!decoration-yellow-200 [&_a]:text-[var(--cta-link-text)] [&_li]:marker:text-[var(--cta-bullet-color)]':
-            variant === 'highlighted',
+          "[--cta-bg:var(--secondary)] [--cta-text:white] [--cta-link-text:yellow] [--cta-bullet-color:yellow] [&_a]:!decoration-yellow-200 [&_a]:text-[var(--cta-link-text)] [&_li]:marker:text-[var(--cta-bullet-color)]":
+            variant === "highlighted",
         },
-        'bg-[var(--cta-bg)] text-[var(--cta-text)] h-40 p-8 flex justify-center items-center'
+        "bg-[var(--cta-bg)] text-[var(--cta-text)] h-40 p-8 flex justify-center items-center",
       )}
     >
-      {content ? <div dangerouslySetInnerHTML={{ __html: content }} /> : 'test'}
+      {content ? <div dangerouslySetInnerHTML={{ __html: content }} /> : "test"}
     </div>
   );
 };

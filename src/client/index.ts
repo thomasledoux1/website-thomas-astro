@@ -1,10 +1,10 @@
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '../server/router';
+import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import type { AppRouter } from "../server/router";
 
 export function getTrpcUrl() {
-  if (typeof window !== 'undefined')
+  if (typeof window !== "undefined")
     // browser should use relative path
-    return '/api/trpc';
+    return "/api/trpc";
   if (import.meta.env.VERCEL_URL)
     // reference for vercel.com
     return `https://${import.meta.env.VERCEL_URL}/api/trpc`;

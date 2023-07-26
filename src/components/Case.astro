@@ -1,5 +1,5 @@
 ---
-import { Image } from '@unpic/astro';
+import { Image } from "@unpic/astro";
 
 interface Props {
   img?: string;
@@ -40,7 +40,7 @@ const { img, url, logoWidth, logoAlt, tags } = Astro.props;
     <div class="flex flex-col pt-4 mt-auto flex-grow justify-end">
       <ul class="flex flex-wrap">
         {
-          tags.map(tag => {
+          tags.map((tag) => {
             return (
               <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
                 {tag}
