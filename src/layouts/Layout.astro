@@ -1,9 +1,9 @@
 ---
-import Footer from '../components/Footer.astro';
+import Footer from "../components/Footer.astro";
 
 interface Props {
-  title?: string
-  description?: string
+  title?: string;
+  description?: string;
   frontmatter?: {
     minutesRead: string;
     title: string;
@@ -12,13 +12,11 @@ interface Props {
   };
 }
 const { frontmatter, title, description } = Astro.props;
-import '../../styles/global.css';
+import "../../styles/global.css";
 ---
 
 <html lang="en" class="scroll-smooth">
   <head>
-    <link rel="preconnect" href="https://res.cloudinary.com" />
-    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
     <meta content={title ?? frontmatter?.title} property="og:title" />
@@ -26,38 +24,73 @@ import '../../styles/global.css';
     <meta name="twitter:card" content="summary_large_image" />
     {
       description ? (
-        <meta content={description} name="description" />
-        <meta content={description} property="twitter:description" />
-        <meta content={description} property="og:description" />
-        <meta name="author" content="Thomas Ledoux" />
-      ) : (<meta content="Thomas is a frontend developer from Ghent, Belgium. Specialised in React." name="description" />
-        <meta content="Thomas is a frontend developer from Ghent, Belgium. Specialised in React." property="twitter:description" />
-        <meta content="Thomas is a frontend developer from Ghent, Belgium. Specialised in React." property="og:description" />)
+        <>
+          <meta content={description} name="description" />
+          <meta content={description} property="twitter:description" />
+          <meta content={description} property="og:description" />
+          <meta name="author" content="Thomas Ledoux" />
+        </>
+      ) : (
+        <>
+          <meta
+            content="Thomas is a frontend developer from Ghent, Belgium. Specialised in React."
+            name="description"
+          />
+          <meta
+            content="Thomas is a frontend developer from Ghent, Belgium. Specialised in React."
+            property="twitter:description"
+          />
+          <meta
+            content="Thomas is a frontend developer from Ghent, Belgium. Specialised in React."
+            property="og:description"
+          />
+        </>
+      )
     }
-    <link as="font" crossorigin="anonymous" href="/fonts/inter-v12-latin-700.woff2" rel="preload" type="font/woff2" />
-    <link as="font" crossorigin="anonymous" href="/fonts/inter-v12-latin-regular.woff2" rel="preload" type="font/woff2" />
-    <link as="font" crossorigin="anonymous" href="/fonts/CalSans-SemiBold.woff2" rel="preload" type="font/woff2" />
+    <link
+      as="font"
+      crossorigin="anonymous"
+      href="/fonts/inter-v12-latin-700.woff2"
+      rel="preload"
+      type="font/woff2"
+    />
+    <link
+      as="font"
+      crossorigin="anonymous"
+      href="/fonts/inter-v12-latin-regular.woff2"
+      rel="preload"
+      type="font/woff2"
+    />
+    <link
+      as="font"
+      crossorigin="anonymous"
+      href="/fonts/CalSans-SemiBold.woff2"
+      rel="preload"
+      type="font/woff2"
+    />
     <meta
       content={frontmatter?.title
         ? `https://website-thomas.vercel.app/api/og?title=${frontmatter.title}`
-        : 'https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg'}
+        : "https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"}
       property="og:image"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-RPJ4MJ5W43"></script>
+    <script
+      type="text/partytown"
+      src="https://www.googletagmanager.com/gtag/js?id=G-RPJ4MJ5W43"></script>
     <script type="text/partytown">
       window.dataLayer = window.dataLayer || [];
-      function gtag(){window.dataLayer.push(arguments);}
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
       // @ts-ignore
-      gtag('js', new Date());
+      gtag("js", new Date());
       // @ts-ignore
-      gtag('config', 'G-RPJ4MJ5W43');
+      gtag("config", "G-RPJ4MJ5W43");
     </script>
   </head>
   <body class="flex flex-col font-body">
-    <main
-      class={`flex-grow flex flex-col container mx-auto h-full pt-8 pb-24`}
-    >
+    <main class={`flex-grow flex flex-col container mx-auto h-full pt-8 pb-24`}>
       <slot />
     </main>
     <Footer />

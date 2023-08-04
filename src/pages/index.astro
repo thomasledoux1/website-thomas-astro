@@ -12,11 +12,7 @@ const desktopProfilePicture = await getImage({
 import { getCollection } from "astro:content";
 import "../../styles/global.css";
 import Layout from "../layouts/Layout.astro";
-import { calculateBlurhashGradient } from "../utils/calculate-blurhash-gradient";
-const [blurhashGradient, blogs] = await Promise.all([
-  calculateBlurhashGradient(profilePicture.src),
-  getCollection("blog", (blog) => blog.data.draft !== true),
-]);
+const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
 const latestBlog = blogs.sort(
   (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
 )[0];
@@ -44,7 +40,6 @@ const latestBlog = blogs.sort(
           alt="Profile picture"
           loading="eager"
           decoding="sync"
-          style={{ background: blurhashGradient }}
           sizes="(max-width: 1023px) 240px, 320px"
           srcset={`${mobileProfilePicture.src} 240w, ${desktopProfilePicture.src}`}
         />

@@ -2,7 +2,6 @@
 import Layout from "./Layout.astro";
 import { getCollection } from "astro:content";
 import PostPreview from "../components/PostPreview.astro";
-import { calculateBlurhashGradient } from "../utils/calculate-blurhash-gradient";
 import Comments from "../components/Comments";
 const { frontmatter } = Astro.props;
 interface Props {
@@ -24,15 +23,10 @@ const blogs = await getCollection(
   "blog",
   (blog) => blog.data.title !== frontmatter.title && blog.data.draft !== true,
 );
-console.log(blogs.map((el) => el.data.image.src.split("/")));
 const latestBlogs = await Promise.all(
   blogs
     .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date))
-    .slice(0, 3)
-    .map(async (blog) => ({
-      ...blog,
-      blurhash: await calculateBlurhashGradient(blog.data.image.src),
-    })),
+    .slice(0, 3),
 );
 ---
 

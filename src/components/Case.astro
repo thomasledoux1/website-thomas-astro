@@ -1,8 +1,9 @@
 ---
-import { Image } from '@unpic/astro';
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
 
 interface Props {
-  img?: string;
+  img?: ImageMetadata;
   url: string;
   logoAlt?: string;
   logoWidth?: number;
@@ -27,7 +28,6 @@ const { img, url, logoWidth, logoAlt, tags } = Astro.props;
           height={100}
           alt={`Logo ${logoAlt}`}
           src={img}
-          layout="constrained"
           class="inline-block max-w-full lg:max-w-xs"
         />
       ) : (
@@ -40,7 +40,7 @@ const { img, url, logoWidth, logoAlt, tags } = Astro.props;
     <div class="flex flex-col pt-4 mt-auto flex-grow justify-end">
       <ul class="flex flex-wrap">
         {
-          tags.map(tag => {
+          tags.map((tag) => {
             return (
               <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
                 {tag}

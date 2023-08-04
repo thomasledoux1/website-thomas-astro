@@ -1,6 +1,18 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Case from '../components/Case.astro';
+import Layout from "../layouts/Layout.astro";
+import Case from "../components/Case.astro";
+import logoNalo from "../assets/logonalo.png";
+import logoCarglass from "../assets/logocarglass.png";
+import logoKaraton from "../assets/logokaraton.png";
+import logoRialto from "../assets/logorialto.png";
+import logoCarlier from "../assets/logocarlier.png";
+import logoAchterderegenboog from "../assets/logoachterderegenboog.png";
+import logoDuckduckgo from "../assets/logoduckduckgo.png";
+import logoAccent from "../assets/logoaccent.png";
+import logoPoa from "../assets/logopoa.webp";
+import logoSd from "../assets/logosd.webp";
+import logoSibelco from "../assets/logosibelco.webp";
+import logoBrachot from "../assets/logobrachot.svg";
 ---
 
 <Layout
@@ -18,17 +30,17 @@ import Case from '../components/Case.astro';
         <Case
           url="https://www.karaton.be"
           logoAlt="Karaton"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171504/logokaraton.png"
+          img={logoKaraton}
           logoWidth={218}
-          tags={['mongodb', 'expressjs', 'angular', 'nodejs']}
+          tags={["mongodb", "expressjs", "angular", "nodejs"]}
         >
           <p class="mb-4">
             For Happs Development I created and maintained the <b>Angular</b>{
-              ' '
+              " "
             }
-            website for Karaton where speech therapists and parents of dyslexic could
-            follow up on the progress their children/patients are making in the Karaton
-            game.
+             website for Karaton where speech therapists and parents of dyslexic
+            could follow up on the progress their children/patients are making
+            in the Karaton game.
           </p>
           <p class="mb-4">
             There were a lot of graphs to be shown with Highcharts, a payment
@@ -43,15 +55,16 @@ import Case from '../components/Case.astro';
         <Case
           url="https://www.getrialto.com"
           logoAlt="Rialto"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171504/logorialto.png"
+          img={logoRialto}
           logoWidth={321}
-          tags={['swift', 'ios']}
+          tags={["swift", "ios"]}
         >
           <p class="mb-4">
             At my internship for Rialto I created an iOS app from scratch in{
-              ' '
+              " "
             }
-            <b>Swift</b> where real estate companies could easily manage their listings.
+            <b>Swift</b> where real estate companies could easily manage their
+            listings.
           </p>
           <p class="mb-4">
             I created the screens in storyboards based on the designs provided
@@ -66,9 +79,9 @@ import Case from '../components/Case.astro';
         <Case
           url="https://play.google.com/store/apps/details?id=com.carlierkathleen.rekenen&hl=nl"
           logoAlt="Carlier Rekenen"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1606296227/logocarlier.png"
+          img={logoCarlier}
           logoWidth={100}
-          tags={['react-native', 'react']}
+          tags={["react-native", "react"]}
         >
           <p class="mb-4">
             While working at Happs Development I also created a mobile
@@ -77,8 +90,9 @@ import Case from '../components/Case.astro';
             form.
           </p>
           <p class="mb-4">
-            The app was created from scratch using <b>React Native</b> for fast development,
-            and Expo to get fast previews of the app on real devices.
+            The app was created from scratch using <b>React Native</b> for fast
+            development, and Expo to get fast previews of the app on real
+            devices.
           </p>
           <p>
             This project taught me a lot about <b>animations</b>, how to handle
@@ -89,9 +103,9 @@ import Case from '../components/Case.astro';
         <Case
           url="https://www.carglass.be"
           logoAlt="Carglass"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171504/logocarglass.png"
+          img={logoCarglass}
           logoWidth={374}
-          tags={['sitecore', 'react', 'less']}
+          tags={["sitecore", "react", "less"]}
         >
           <p class="mb-4">
             At my current job at The Reference I help maintain the website for
@@ -111,9 +125,9 @@ import Case from '../components/Case.astro';
         <Case
           url="https://www.nationale-loterij.be"
           logoAlt="Nationale Loterij"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1606296227/logonalo.png"
+          img={logoNalo}
           logoWidth={240}
-          tags={['sitecore', 'react', 'sass']}
+          tags={["sitecore", "react", "sass"]}
         >
           <p class="mb-4">
             One of the other clients I work for at The Reference is Nationale
@@ -134,14 +148,15 @@ import Case from '../components/Case.astro';
         <Case
           url="https://www.achterderegenboog.be"
           logoAlt="Achter De Regenboog"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1583870456/logoachterderegenboog.png"
+          img={logoAchterderegenboog}
           logoWidth={150}
-          tags={['wordpress', 'html', 'css']}
+          tags={["wordpress", "html", "css"]}
         >
           <p class="mb-4">
             In my free time I like to experiment with other frameworks and
-            technologies too, this is why I made a website using{' '}
-            <b>Wordpress</b> for a friend of mine who started a psychologists practice.
+            technologies too, this is why I made a website using{" "}
+            <b>Wordpress</b> for a friend of mine who started a psychologists
+            practice.
           </p>
           <p class="mb-4">
             My friend gave me some high level designs, and I got to work! I
@@ -155,49 +170,51 @@ import Case from '../components/Case.astro';
         <Case
           url="https://www.deckdeckgo.com"
           logoAlt="DeckDeckGo"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1603387322/logoduckduckgo.png"
+          img={logoDuckduckgo}
           logoWidth={100}
-          tags={['open source', 'hacktoberfest', 'stencil', 'typescript']}
+          tags={["open source", "hacktoberfest", "stencil", "typescript"]}
         >
           <p class="mb-4">
-            In 2020 I participated in <b>Hacktoberfest</b> for the first time ever.
-            I did some research on which open source project I would like to contribute
-            to, and landed on DeckDeckGo.
+            In 2020 I participated in <b>Hacktoberfest</b> for the first time
+            ever. I did some research on which open source project I would like
+            to contribute to, and landed on DeckDeckGo.
           </p>
           <p>
-            It was a lot of fun to coloborate with other <b>open source</b>{' '}
-            contributors, and to work in a new technological stack. I&apos;m definitely
-            going to continue contributing to open source in the future!
+            It was a lot of fun to coloborate with other <b>open source</b>{" "}
+             contributors, and to work in a new technological stack. I&apos;m
+            definitely going to continue contributing to open source in the
+            future!
           </p>
         </Case>
         <Case
           url="https://www.accentjobs.be"
           logoAlt="Accent Jobs"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1606296580/logoaccent.png"
+          img={logoAccent}
           logoWidth={532}
-          tags={['gatsby', 'drupal', 'typescript', 'emotion']}
+          tags={["gatsby", "drupal", "typescript", "emotion"]}
         >
           <p class="mb-4">
             At the end of 2020, I got the opportunity to work on a project
             within The Reference using our new MACH stack.
           </p>
           <p class="mb-4">
-            This was the first time I was using <b>Gatsby</b> for a production website,
-            and I must say it makes developing a breeze. Connecting everything through
-            API&apos;s, no hard dependecies on a CMS.. I love it.
+            This was the first time I was using <b>Gatsby</b> for a production
+            website, and I must say it makes developing a breeze. Connecting
+            everything through API&apos;s, no hard dependecies on a CMS.. I love
+            it.
           </p>
         </Case>
         <Case
           url="https://www.portofantwerp.be"
           logoAlt="Port Of Antwerp"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1677750339/logopoa_kaimve.webp"
+          img={logoPoa}
           logoWidth={199}
-          tags={['nextjs', 'drupal', 'typescript', 'tailwind', 'algolia']}
+          tags={["nextjs", "drupal", "typescript", "tailwind", "algolia"]}
         >
           <p class="mb-4">
             Starting february 2021, we started working on a new website for the
             Port of Antwerp. This website uses the MACH stack as mentioned
-            above, but with <b>Next.js</b> instead of Gatsby, and{' '}
+            above, but with <b>Next.js</b> instead of Gatsby, and{" "}
             <b>Tailwind</b> for styling!
           </p>
           <p>
@@ -211,15 +228,15 @@ import Case from '../components/Case.astro';
         <Case
           url="https://www.sdworx.com"
           logoAlt="SD Worx"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1677750352/logosd_ypp8k6.webp"
+          img={logoSd}
           logoWidth={377}
           tags={[
-            'nextjs',
-            'drupal',
-            'typescript',
-            'bootstrap',
-            'algolia',
-            'kubernetes',
+            "nextjs",
+            "drupal",
+            "typescript",
+            "bootstrap",
+            "algolia",
+            "kubernetes",
           ]}
         >
           <p class="mb-4">
@@ -236,32 +253,32 @@ import Case from '../components/Case.astro';
         <Case
           url="https://www.sibelco.com"
           logoAlt="Sibelco"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1677750342/logosibelco_qycmxh.webp"
+          img={logoSibelco}
           logoWidth={305}
-          tags={['nextjs', 'kontent.ai', 'typescript', 'tailwind', 'algolia']}
+          tags={["nextjs", "kontent.ai", "typescript", "tailwind", "algolia"]}
         >
           <p class="mb-4">
-            Sibelco was the first client for who we worked with{' '}
+            Sibelco was the first client for who we worked with{" "}
             <b>Kontent.ai</b>, which was a really great experience to work with.
-            We also started using <b>Storybook</b> for the first time at The Reference
-            in this project, which helped us a lot to prototype fast, and create
-            consistency.
+            We also started using <b>Storybook</b> for the first time at The
+            Reference in this project, which helped us a lot to prototype fast,
+            and create consistency.
           </p>
           <p>
             In this project I coached 4 people, while also actively developing
             new features. The greatest part was setting up the <b>Algolia</b>{
-              ' '
+              " "
             }
-            integrations to index the materials and products, which was a breeze
-            with Algolia.
+             integrations to index the materials and products, which was a
+            breeze with Algolia.
           </p>
         </Case>
         <Case
           url="https://www.brachot.com"
           logoAlt="Brachot"
-          img="https://res.cloudinary.com/dzrea5zhv/image/upload/v1677750358/logobrachot_rlwsso.svg"
+          img={logoBrachot}
           logoWidth={300}
-          tags={['nextjs', 'typescript', 'tailwind', 'commercetools']}
+          tags={["nextjs", "typescript", "tailwind", "commercetools"]}
         >
           <p class="mb-4">
             This was the first e-commerce project I worked on. For this project
@@ -280,7 +297,7 @@ import Case from '../components/Case.astro';
         <Case
           url="/"
           logoAlt="thomas ledoux"
-          tags={['astro', 'typescript', 'tailwind']}
+          tags={["astro", "typescript", "tailwind"]}
         >
           <p class="mb-4">
             I like to use my personal website as a playground for new ideas and

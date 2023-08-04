@@ -1,14 +1,14 @@
 ---
-import { Image } from '@unpic/astro';
-import type { CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
 
 interface Props {
-  post: CollectionEntry<'blog'> & { blurhash?: string };
+  post: CollectionEntry<"blog">;
   minutesRead?: string;
   index: number;
 }
 const { post, minutesRead, index } = Astro.props;
-const loading = index > 3 ? 'lazy' : undefined;
+const loading = index > 3 ? "lazy" : "eager";
 ---
 
 <a
@@ -18,24 +18,23 @@ const loading = index > 3 ? 'lazy' : undefined;
 >
   <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
     <Image
-      priority={loading !== 'lazy'}
-      background={post.data.containImage ? 'white' : post.blurhash ?? 'auto'}
-      class="rounded-t-xl"
+      loading={loading}
+      decoding={loading === "lazy" ? "async" : "sync"}
+      class={`rounded-t-xl aspect-[1.33] ${
+        post.data.containImage ? "object-contain" : "object-cover"
+      }`}
       src={post.data.image}
       alt={post.data.imageAlt}
-      layout="constrained"
-      width={660}
-      height={496}
       sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
-      objectFit={post.data.containImage ? 'contain' : 'cover'}
     />
+
     <div class="flex px-6 py-4 flex-grow flex-col">
       <date class="text-sm"
         >{
-          new Date(post.data.date).toLocaleDateString('en-BE', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
+          new Date(post.data.date).toLocaleDateString("en-BE", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
           })
         }</date
       >

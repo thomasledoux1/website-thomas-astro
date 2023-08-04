@@ -1,41 +1,39 @@
 ---
 const { slug } = Astro.params;
-import { getCollection } from 'astro:content';
-import PostPreview from '../../../components/PostPreview.astro';
-import { calculateBlurhashGradient } from '../../../utils/calculate-blurhash-gradient';
-import Tags from '../../../components/Tags.astro';
-const blogs = await getCollection('blog', blog => blog.data.draft !== true);
+import { getCollection } from "astro:content";
+import PostPreview from "../../../components/PostPreview.astro";
+import Tags from "../../../components/Tags.astro";
+const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
 const tags = blogs
-  .map(blog => blog.data.tags)
+  .map((blog) => blog.data.tags)
   .flat()
   .reduce<{ [key: string]: number }>(function (result, c) {
     var count = result[c] || 0;
     result[c] = count + 1;
     return result;
   }, {});
-import Layout from '../../../layouts/Layout.astro';
+import Layout from "../../../layouts/Layout.astro";
 export async function getStaticPaths() {
-  const blogs = await getCollection('blog', blog => blog.data.draft !== true);
-  return [...new Set(blogs.map(blog => blog.data.tags).flat())].map(tag => ({
-    params: { slug: tag },
-  }));
+  const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
+  return [...new Set(blogs.map((blog) => blog.data.tags).flat())].map(
+    (tag) => ({
+      params: { slug: tag },
+    }),
+  );
 }
 if (!slug) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
-const allBlogPostsWithTag = blogs.filter(blog =>
-  blog.data.tags.some(tag => tag === slug)
+const allBlogPostsWithTag = blogs.filter((blog) =>
+  blog.data.tags.some((tag) => tag === slug),
 );
 if (allBlogPostsWithTag.length === 0) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 const postsWithTag = await Promise.all(
-  allBlogPostsWithTag
-    .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date))
-    .map(async post => ({
-      ...post,
-      blurhash: await calculateBlurhashGradient(post.data.image),
-    }))
+  allBlogPostsWithTag.sort(
+    (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
+  ),
 );
 ---
 
