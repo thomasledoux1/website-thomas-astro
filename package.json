@@ -12,7 +12,6 @@
     "prettier": "prettier --write ."
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^4.0.0",
     "@types/chroma-js": "^2.4.0",
     "@types/html-escaper": "^3.0.0",
     "@types/react": "^18.2.18",
@@ -24,10 +23,12 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^0.19.7",
+    "@astrojs/netlify": "^2.5.2",
     "@astrojs/partytown": "^1.2.3",
     "@astrojs/prefetch": "^0.3.0",
     "@astrojs/react": "^2.2.1",
     "@astrojs/rss": "^2.4.3",
+    "@astrojs/tailwind": "^4.0.0",
     "@astrojs/vercel": "^3.8.0",
     "@giscus/react": "^2.3.0",
     "@trpc/client": "^10.37.1",
