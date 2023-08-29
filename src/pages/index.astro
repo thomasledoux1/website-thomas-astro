@@ -3,11 +3,11 @@ import { Image, getImage } from "astro:assets";
 import profilePicture from "./../assets/1685639156921_x0ltzi.jpg";
 const mobileProfilePicture = await getImage({
   src: profilePicture,
-  width: 240,
+  width: 320,
 });
 const desktopProfilePicture = await getImage({
   src: profilePicture,
-  width: 320,
+  width: 480,
 });
 import { getCollection } from "astro:content";
 import "../../styles/global.css";
