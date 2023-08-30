@@ -1,21 +1,21 @@
-import chroma from 'chroma-js';
-import { ensureTextContrast } from './ColorContrast';
+import chroma from "chroma-js";
+import { ensureTextContrast } from "./ColorContrast";
 import {
-  InlineMarkingDefinition,
-  InlineToken,
-  InsertionPoint,
-  MarkedRange,
-  MarkerToken,
-  MarkerType,
+  type InlineMarkingDefinition,
+  type InlineToken,
+  type InsertionPoint,
+  type MarkedRange,
+  type MarkerToken,
+  type MarkerType,
   MarkerTypeOrder,
-} from './types';
+} from "./types";
 
-import { unescape as unEsc } from 'html-escaper';
-export { escape } from 'html-escaper';
+import { unescape as unEsc } from "html-escaper";
+export { escape } from "html-escaper";
 
 /** Unescape HTML while catering for `&#x3C;` (`<`) and `'&#x26;'` (`&`), which the Astro compiler outputs. */
 export function unescape(str: string) {
-  return unEsc(str).replaceAll('&#x3C;', '<').replaceAll('&#x26;', '&');
+  return unEsc(str).replaceAll("&#x3C;", "<").replaceAll("&#x26;", "&");
 }
 
 export class ShikiLine {
@@ -32,11 +32,11 @@ export class ShikiLine {
     const lineMatches = highlightedCodeLine.match(lineRegExp);
     if (!lineMatches)
       throw new Error(
-        `Shiki-highlighted code line HTML did not match expected format. HTML code:\n${highlightedCodeLine}`
+        `Shiki-highlighted code line HTML did not match expected format. HTML code:\n${highlightedCodeLine}`,
       );
 
     this.beforeClassValue = lineMatches[1];
-    this.classes = new Set(lineMatches[2]?.split(' '));
+    this.classes = new Set(lineMatches[2]?.split(" "));
     this.afterClassValue = lineMatches[3];
     const tokensHtml = lineMatches[4];
     this.afterTokens = lineMatches[5];
@@ -46,16 +46,16 @@ export class ShikiLine {
       /<span style="color: ?(#[0-9A-Fa-f]+)([^"]*)">(.*?)<\/span>/g;
     const tokenMatches = tokensHtml?.matchAll(tokenRegExp);
     this.tokens = [];
-    this.textLine = '';
+    this.textLine = "";
     if (tokenMatches) {
       for (const tokenMatch of tokenMatches) {
         const [, color, otherStyles, innerHtml] = tokenMatch;
-        const text = unescape(innerHtml ?? '');
+        const text = unescape(innerHtml ?? "");
         this.tokens.push({
-          tokenType: 'syntax',
-          color: color ?? '',
-          otherStyles: otherStyles ?? '',
-          innerHtml: innerHtml ?? '',
+          tokenType: "syntax",
+          color: color ?? "",
+          otherStyles: otherStyles ?? "",
+          innerHtml: innerHtml ?? "",
           text,
           textStart: this.textLine.length,
           textEnd: this.textLine.length + text.length,
@@ -70,7 +70,7 @@ export class ShikiLine {
 
     // Go through all definitions, find matches for their text or regExp in textLine,
     // and fill markedRanges with their capture groups or entire matches
-    inlineMarkings.forEach(inlineMarking => {
+    inlineMarkings.forEach((inlineMarking) => {
       const matches = this.getInlineMarkingDefinitionMatches(inlineMarking);
       markedRanges.push(...matches);
     });
@@ -81,7 +81,7 @@ export class ShikiLine {
     const flattenedRanges = this.flattenMarkedRanges(markedRanges);
 
     // Build an array of marker elements to insert
-    const markerElements = flattenedRanges.map(range => ({
+    const markerElements = flattenedRanges.map((range) => ({
       markerType: range.markerType,
       opening: this.textPositionToTokenPosition(range.start),
       closing: this.textPositionToTokenPosition(range.end),
@@ -90,9 +90,9 @@ export class ShikiLine {
     // Mutate inline tokens in reverse direction (from end to start),
     // inserting opening and closing marker tokens at the determined positions,
     // optionally splitting syntax tokens if they only match partially
-    markerElements.reverse().forEach(markerElement => {
+    markerElements.reverse().forEach((markerElement) => {
       const markerToken: MarkerToken = {
-        tokenType: 'marker',
+        tokenType: "marker",
         markerType: markerElement.markerType,
       };
 
@@ -107,11 +107,11 @@ export class ShikiLine {
   ensureTokenColorContrast() {
     // Ensure proper color contrast of syntax tokens inside marked ranges
     // (note that only the lightness of the background color is used)
-    const backgroundColor = chroma('#2e336b');
+    const backgroundColor = chroma("#2e336b");
     const isLineMarked = this.getLineMarkerType() !== undefined;
     let inInlineMarker = false;
-    this.tokens.forEach(token => {
-      if (token.tokenType === 'marker') {
+    this.tokens.forEach((token) => {
+      if (token.tokenType === "marker") {
         inInlineMarker = !token.closing;
         return;
       }
@@ -124,16 +124,16 @@ export class ShikiLine {
   }
 
   renderToHtml() {
-    const classValue = [...this.classes].join(' ');
+    const classValue = [...this.classes].join(" ");
 
     // Build the line's inner HTML code by rendering all contained tokens
     let innerHtml = this.tokens
-      .map(token => {
-        if (token.tokenType === 'marker')
-          return `<${token.closing ? '/' : ''}${token.markerType}>`;
+      .map((token) => {
+        if (token.tokenType === "marker")
+          return `<${token.closing ? "/" : ""}${token.markerType}>`;
         return `<span style="color:${token.color}${token.otherStyles}">${token.innerHtml}</span>`;
       })
-      .join('');
+      .join("");
 
     // Browsers don't seem render the background color of completely empty lines,
     // so if the rendered inner HTML code is empty and we want to mark the line,
@@ -148,14 +148,14 @@ export class ShikiLine {
 
   getLineMarkerType(): MarkerType {
     return MarkerTypeOrder.find(
-      markerType => markerType && this.classes.has(markerType.toString())
+      (markerType) => markerType && this.classes.has(markerType.toString()),
     );
   }
 
   setLineMarkerType(newType: MarkerType) {
     // Remove all existing marker type classes (if any)
     MarkerTypeOrder.forEach(
-      markerType => markerType && this.classes.delete(markerType.toString())
+      (markerType) => markerType && this.classes.delete(markerType.toString()),
     );
 
     if (newType === undefined) return;
@@ -163,7 +163,7 @@ export class ShikiLine {
   }
 
   private getInlineMarkingDefinitionMatches(
-    inlineMarking: InlineMarkingDefinition
+    inlineMarking: InlineMarkingDefinition,
   ) {
     const markedRanges: MarkedRange[] = [];
 
@@ -177,7 +177,7 @@ export class ShikiLine {
         });
         idx = this.textLine.indexOf(
           inlineMarking.text,
-          idx + inlineMarking.text.length
+          idx + inlineMarking.text.length,
         );
       }
       return markedRanges;
@@ -198,7 +198,7 @@ export class ShikiLine {
         // If accessing the group indices is unsupported, use fallback logic
         if (!groupIndices || !groupIndices.length) {
           // Try to find the position of each capture group match inside the full match
-          groupIndices = match.map(groupValue => {
+          groupIndices = match.map((groupValue) => {
             const groupIndex = groupValue ? match[0].indexOf(groupValue) : -1;
             if (groupIndex === -1) return null;
             const groupStart = fullMatchIndex + groupIndex;
@@ -207,7 +207,7 @@ export class ShikiLine {
           });
         }
         // Remove null group indices
-        groupIndices = groupIndices.filter(range => range);
+        groupIndices = groupIndices.filter((range) => range);
         // If there are no non-null indices, use the full match instead
         if (!groupIndices.length) {
           groupIndices = [[fullMatchIndex, fullMatchIndex + match[0].length]];
@@ -218,7 +218,7 @@ export class ShikiLine {
           groupIndices.shift();
         }
         // Create marked ranges from all remaining group indices
-        groupIndices.forEach(range => {
+        groupIndices.forEach((range) => {
           if (!range) return;
           markedRanges.push({
             markerType: inlineMarking.markerType,
@@ -232,14 +232,14 @@ export class ShikiLine {
 
     throw new Error(
       `Missing matching logic for inlineMarking=${JSON.stringify(
-        inlineMarking
-      )}`
+        inlineMarking,
+      )}`,
     );
   }
 
   private textPositionToTokenPosition(textPosition: number): InsertionPoint {
     for (const [tokenIndex, token] of this.tokens.entries()) {
-      if (token.tokenType !== 'syntax') continue;
+      if (token.tokenType !== "syntax") continue;
 
       if (textPosition === token.textStart) {
         return {
@@ -256,9 +256,9 @@ export class ShikiLine {
         const innerHtmlOffset = (
           token.text.slice(0, textPosition - token.textStart) +
           // Insert our special character at textPosition
-          '\n' +
+          "\n" +
           token.text.slice(textPosition - token.textStart)
-        ).indexOf('\n');
+        ).indexOf("\n");
 
         return {
           tokenIndex,
@@ -276,19 +276,19 @@ export class ShikiLine {
 
   private insertMarkerTokenAtPosition(
     position: InsertionPoint,
-    markerToken: MarkerToken
+    markerToken: MarkerToken,
   ) {
     // Insert the new token inside the given token by splitting it
     if (position.innerHtmlOffset > 0) {
       const insideToken = this.tokens[position.tokenIndex];
-      if (insideToken?.tokenType !== 'syntax')
+      if (insideToken?.tokenType !== "syntax")
         throw new Error(
-          `Cannot insert a marker token inside a token of type "${insideToken?.tokenType}"!`
+          `Cannot insert a marker token inside a token of type "${insideToken?.tokenType}"!`,
         );
 
       const newInnerHtmlBeforeMarker = insideToken.innerHtml.slice(
         0,
-        position.innerHtmlOffset
+        position.innerHtmlOffset,
       );
       const tokenAfterMarker = {
         ...insideToken,
@@ -310,7 +310,7 @@ export class ShikiLine {
     const flattenedRanges: MarkedRange[] = [];
     const sortedRanges = [...markedRanges].sort((a, b) => a.start - b.start);
     const posInRange = (
-      pos: number
+      pos: number,
     ): { idx: number; range?: MarkedRange | undefined } => {
       for (let idx = 0; idx < flattenedRanges.length; idx++) {
         const range = flattenedRanges[idx];
@@ -326,10 +326,10 @@ export class ShikiLine {
       };
     };
 
-    MarkerTypeOrder.forEach(markerType => {
+    MarkerTypeOrder.forEach((markerType) => {
       sortedRanges
-        .filter(range => range.markerType === markerType)
-        .forEach(rangeToAdd => {
+        .filter((range) => range.markerType === markerType)
+        .forEach((rangeToAdd) => {
           // Clone range to avoid overriding values of the original object
           rangeToAdd = { ...rangeToAdd };
 
@@ -366,7 +366,7 @@ export class ShikiLine {
           flattenedRanges.splice(
             posStart.idx,
             posEnd.idx - posStart.idx + 1,
-            ...newElements
+            ...newElements,
           );
         });
     });

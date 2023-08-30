@@ -1,15 +1,15 @@
 ---
-import rangeParser from 'parse-numeric-range';
-import { ShikiBlock } from './ShikiBlock';
+import rangeParser from "parse-numeric-range";
+import { ShikiBlock } from "./ShikiBlock";
 import {
-  InlineMarkingDefinition,
-  LineMarkingDefinition,
-  MarkerType,
+  type InlineMarkingDefinition,
+  type LineMarkingDefinition,
+  type MarkerType,
   MarkerTypeOrder,
-} from './types';
+} from "./types";
 
-const copyButtonTitle = 'Copy to clipboard';
-const copyButtonTooltip = 'Copied!';
+const copyButtonTitle = "Copy to clipboard";
+const copyButtonTooltip = "Copied!";
 
 export interface Props {
   lang?: string;
@@ -21,25 +21,25 @@ export interface Props {
 }
 
 const {
-  lang = '',
-  removedLineIndex = '',
-  removedLineCount = '',
-  title = '',
-  lineMarkings = '',
-  inlineMarkings = '',
+  lang = "",
+  removedLineIndex = "",
+  removedLineCount = "",
+  title = "",
+  lineMarkings = "",
+  inlineMarkings = "",
 } = Astro.props as Props;
 
-const isTerminal = ['shellscript', 'shell', 'bash', 'sh', 'zsh'].includes(lang);
+const isTerminal = ["shellscript", "shell", "bash", "sh", "zsh"].includes(lang);
 const intRemovedLineIndex = parseInt(removedLineIndex) || 0;
 const intRemovedLineCount = parseInt(removedLineCount) || 0;
 
 // Generate HTML code from the title (if any), improving the ability to wrap long file paths
 // into multiple lines by inserting a line break opportunity after each slash
-const titleHtml = decodeURIComponent(title).replace(/([\\/])/g, '$1<wbr/>');
+const titleHtml = decodeURIComponent(title).replace(/([\\/])/g, "$1<wbr/>");
 
 // Render the default slot, which contains the syntax-highlighted code in HTML format
 // as processed by Astro's Shiki integration
-let codeSnippetHtml = await Astro.slots.render('default');
+let codeSnippetHtml = await Astro.slots.render("default");
 
 // Mark lines and expressions (if requested)
 codeSnippetHtml = applyMarkings(codeSnippetHtml, lineMarkings, inlineMarkings);
@@ -47,20 +47,20 @@ codeSnippetHtml = applyMarkings(codeSnippetHtml, lineMarkings, inlineMarkings);
 function applyMarkings(
   highlightedCodeHtml: string,
   strLineMarkings: string,
-  strInlineMarkings: string
+  strInlineMarkings: string,
 ) {
   const lineMarkings: LineMarkingDefinition[] = parseMarkingDefinition(
     strLineMarkings,
     // Syntax: [mark=|del=|ins=]{2-5,7}
     /^(?:(.*)=){(.+)}$/,
     `Invalid code snippet line marking: Expected a range like "{2-5,7}",
-		optionally with one of the prefixes "mark=", "del=" or "ins=", but got "$entry"`
+		optionally with one of the prefixes "mark=", "del=" or "ins=", but got "$entry"`,
   ).map(({ markerType, groupValues: [content] }) => {
     const lines = content ? rangeParser(content) : [];
 
     // If any lines were removed during preprocessing,
     // automatically shift marked line numbers accordingly
-    const shiftedLines = lines.map(lineNum => {
+    const shiftedLines = lines.map((lineNum) => {
       if (lineNum <= intRemovedLineIndex) return lineNum;
       if (lineNum > intRemovedLineIndex + intRemovedLineCount)
         return lineNum - intRemovedLineCount;
@@ -84,18 +84,18 @@ function applyMarkings(
     /^(?:(.*)=)([/"'])(.+)\2$/,
     `Invalid code snippet inline marking: Expected either a string in single or double quotes,
 		or a RegExp in forward slashes like "/hi [a-z]+/", optionally with one of the prefixes
-		"mark=", "del=" or "ins=", but got "$entry"`
+		"mark=", "del=" or "ins=", but got "$entry"`,
   ).map(({ markerType, groupValues: [delimiter, content] }) => {
     let text: string | undefined;
     let regExp: RegExp | undefined;
 
-    if (delimiter === '/') {
+    if (delimiter === "/") {
       try {
         // Try to use regular expressions with capture group indices
-        regExp = new RegExp(content ?? '', 'gd');
+        regExp = new RegExp(content ?? "", "gd");
       } catch (error) {
         // Use fallback if unsupported
-        regExp = new RegExp(content ?? '', 'g');
+        regExp = new RegExp(content ?? "", "g");
       }
     } else {
       text = content;
@@ -103,7 +103,7 @@ function applyMarkings(
 
     return {
       markerType,
-      text: text ?? '',
+      text: text ?? "",
       regExp,
     };
   });
@@ -119,23 +119,23 @@ function applyMarkings(
 function parseMarkingDefinition(
   serializedArr: string,
   parts: RegExp,
-  parseErrorMsg: string
+  parseErrorMsg: string,
 ) {
   return serializedArr
-    .split(',')
-    .map(entry => decodeURIComponent(entry))
-    .map(entry => {
+    .split(",")
+    .map((entry) => decodeURIComponent(entry))
+    .map((entry) => {
       const matches = entry.match(parts);
       let rawMarkerType = matches?.[1];
       // Fix common marker type mistakes
-      if (rawMarkerType === 'add') rawMarkerType = 'ins';
-      if (rawMarkerType === 'rem') rawMarkerType = 'del';
-      const markerType = (rawMarkerType as MarkerType) || 'mark';
+      if (rawMarkerType === "add") rawMarkerType = "ins";
+      if (rawMarkerType === "rem") rawMarkerType = "del";
+      const markerType = (rawMarkerType as MarkerType) || "mark";
       const isValid = matches && MarkerTypeOrder.includes(markerType);
       if (entry && !isValid) {
         const formattedParseErrorMsg = parseErrorMsg
-          .replace('$entry', entry)
-          .replace(/\r?\n\s+/g, ' ');
+          .replace("$entry", entry)
+          .replace(/\r?\n\s+/g, " ");
         console.error(`*** ${formattedParseErrorMsg}\n`);
       }
       return {
@@ -144,16 +144,16 @@ function parseMarkingDefinition(
         groupValues: isValid ? matches.slice(2) : [],
       };
     })
-    .filter(entry => entry.groupValues.length);
+    .filter((entry) => entry.groupValues.length);
 }
 ---
 
 <figure
   class:list={[
-    'code-snippet',
-    'relative',
-    isTerminal && 'is-terminal',
-    titleHtml && 'has-title',
+    "code-snippet",
+    "relative",
+    isTerminal && "is-terminal",
+    titleHtml && "has-title",
     `lang-${lang}`,
   ]}
 >
@@ -173,27 +173,27 @@ function parseMarkingDefinition(
 <script>
   // Find all buttons with the \`copy-button\` class on page.
   const buttons =
-    document.querySelectorAll<HTMLButtonElement>('button.copy-button');
+    document.querySelectorAll<HTMLButtonElement>("button.copy-button");
 
   /** Store timeout to clear when button is repeatedly clicked. */
   let copyTimeout: any;
 
   // Handle clicks on each button.
-  buttons.forEach(button => {
-    button.addEventListener('click', async () => {
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
       const codeText = decodeURIComponent(button.value);
       try {
         clearTimeout(copyTimeout);
         await navigator.clipboard.writeText(codeText);
-        button.nextElementSibling?.classList.remove('hidden');
+        button.nextElementSibling?.classList.remove("hidden");
         copyTimeout = setTimeout(() => {
-          button.nextElementSibling?.classList.add('hidden');
+          button.nextElementSibling?.classList.add("hidden");
         }, 3000);
       } catch (err) {
         clearTimeout(copyTimeout);
-        button.classList.add('copy-button-error');
+        button.classList.add("copy-button-error");
         copyTimeout = setTimeout(() => {
-          button.classList.remove('copy-button-error');
+          button.classList.remove("copy-button-error");
         }, 3000);
       }
     });
