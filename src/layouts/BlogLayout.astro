@@ -1,27 +1,28 @@
 ---
 import Layout from "./Layout.astro";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import PostPreview from "../components/PostPreview.astro";
 import Comments from "../components/Comments";
+import { Image } from "astro:assets";
 const { frontmatter } = Astro.props;
 interface Props {
-  frontmatter: {
+  frontmatter: CollectionEntry<"blog"> & {
     minutesRead: string;
-    title: string;
-    file: string;
     url: string;
-    date: string;
-    tags: string[];
   };
 }
-const convertedDate = new Date(frontmatter.date).toLocaleDateString("en-BE", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-});
+const convertedDate = new Date(frontmatter.data.date).toLocaleDateString(
+  "en-BE",
+  {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  },
+);
 const blogs = await getCollection(
   "blog",
-  (blog) => blog.data.title !== frontmatter.title && blog.data.draft !== true,
+  (blog) =>
+    blog.data.title !== frontmatter.data.title && blog.data.draft !== true,
 );
 const latestBlogs = await Promise.all(
   blogs
@@ -32,7 +33,11 @@ const latestBlogs = await Promise.all(
 
 <Layout
   description="Blog by Thomas Ledoux. Writes about Javascript/React/Next.js/Remix/Astro. Always looking to learn about the newest frameworks and features."
-  frontmatter={frontmatter}
+  frontmatter={{
+    minutesRead: frontmatter.minutesRead,
+    url: frontmatter.url,
+    title: frontmatter.data.title,
+  }}
 >
   <a rel="prefetch" href="/blog" class="flex items-center gap-x-2 lg:mb-4">
     <svg
@@ -51,7 +56,16 @@ const latestBlogs = await Promise.all(
      Back to overview
   </a>
   <article class="mdx">
-    <h1>{frontmatter.title}</h1>
+    <h1>{frontmatter.data.title}</h1>
+    <Image
+      transition:name={`blog-image-${frontmatter.id}`}
+      loading="eager"
+      decoding="sync"
+      class="max-w-[60%] mb-6"
+      src={frontmatter.data.image}
+      alt={frontmatter.data.imageAlt}
+      sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
+    />
     <div class="flex flex-col lg:flex-row gap-4 lg:items-center mb-4">
       <div class="flex gap-x-4">
         <time class="text-gray-500">{convertedDate}</time>
@@ -61,7 +75,7 @@ const latestBlogs = await Promise.all(
       <span class="text-gray-500 hidden lg:inline-block">|</span>
       <div class="flex gap-x-2 flex-wrap gap-y-2">
         {
-          frontmatter.tags.map((tag) => (
+          frontmatter.data.tags.map((tag) => (
             <a
               class="border-secondary border-2 text-secondary text-sm py-1 px-4 rounded-md tag font-semibold"
               href={`/blog/tags/${tag}`}

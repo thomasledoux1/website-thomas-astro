@@ -1,9 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
-import BlogLayout from '../../layouts/BlogLayout.astro';
+import { getCollection, type CollectionEntry } from "astro:content";
+interface Props {
+  entry: CollectionEntry<"blog">;
+}
+import BlogLayout from "../../layouts/BlogLayout.astro";
 export async function getStaticPaths() {
-  const blogs = await getCollection('blog', blog => blog.data.draft !== true);
-  return blogs.map(blog => ({
+  const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
+  return blogs.map((blog) => ({
     params: { slug: blog.slug },
     props: { entry: blog },
   }));
@@ -15,7 +18,7 @@ const { Content, remarkPluginFrontmatter } = await entry.render();
 
 <BlogLayout
   frontmatter={{
-    ...entry.data,
+    ...entry,
     url: `/blog/${entry.slug}`,
     minutesRead: remarkPluginFrontmatter?.minutesRead,
   }}

@@ -18,6 +18,7 @@ const loading = index > 3 ? "lazy" : "eager";
 >
   <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
     <Image
+      transition:name={`blog-image-${post.id}`}
       loading={loading}
       decoding={loading === "lazy" ? "async" : "sync"}
       class={`rounded-t-xl aspect-[1.33] ${
