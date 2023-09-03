@@ -1,0 +1,127 @@
+---
+title: "Developing a Chrome extension to convert the current page to localhost"
+tags: ["javascript", "chrome extension"]
+date: "2023-09-01T15:14:39.004Z"
+image: "./create-blog-notion-tailwind-nextjs.jpg"
+imageAlt: "PC with person drawing on paper behind it"
+---
+
+## Why?
+
+Often when I'm working on a project, I get bug reports of issues happening on production/acceptance environments with a URL pointing to the matching environment. The problem is that I have to copy the URL, remove the domain and paste it in my local environment and port to reproduce the issue. This is a tedious process, so I decided to create a Chrome extension to automate this.
+
+## How?
+
+I started out by creating a manifest.json file, which is required for every Chrome extension. This file contains the name, version, description, icons, permissions, etc. of the extension.
+
+```json title="manifest.json"
+{
+  "manifest_version": 3,
+  "name": "Convert to localhost",
+  "description": "Convert your current URL to localhost",
+  "version": "0.0.1",
+  "action": {
+    "default_popup": "convert-to-localhost.html",
+    "default_icon": "128x128.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "permissions": ["tabs", "storage"],
+  "icons": {
+    "16": "16x16.png",
+    "32": "32x32.png",
+    "48": "48x48.png",
+    "128": "128x128.png"
+  }
+}
+```
+
+The `action` property is used to define the popup that is shown when you click on the extension icon. The `options_ui` property is used to define the options page of the extension. The `permissions` property is used to define which permissions the extension needs. In this case, we need the `tabs` permission to get the current URL and the `storage` permission to store the user's settings. The `icons` property is used to define the icons of the extension.
+In the `action`'s HTML I reference the JavaScript file which I use to execute the logic of the extension.
+The port and the flag if HTTPS should be used come from the `options` of the extension (more on that below).
+It also displays the sentence "Converted URL to localhost" to give some feedback to the user.
+
+```html title="convert-to-localhost.html"
+<html>
+  <body>
+    <h1>Converted URL to localhost</h1>
+    <script src="convert-to-localhost.js"></script>
+  </body>
+</html>
+```
+
+The JavaScript itself is also quite simple:
+
+- get the currently active tab
+- get the URL from the tab and create a URL object from it, so we can read the `pathname` (the part we need) later
+- get the port from the user's settings and replace the domain with `http${secure ? 's' : ''}://localhost:${port}` and update the tab with the new URL.
+
+```javascript title="convert-to-localhost.js"
+(async () => {
+  let queryOptions = { active: true, currentWindow: true };
+  let [tab] = await chrome.tabs.query(queryOptions);
+  const url = new URL(tab.url);
+  const port = (await chrome.storage.sync.get("port")).port;
+  const secure = (await chrome.storage.sync.get("secure")).secure;
+  chrome.tabs.update({
+    url: `http${secure ? "s" : ""}://localhost:${port ?? "3000"}${
+      url.pathname
+    }`,
+  });
+})();
+```
+
+The `options` page is a simple HTML page with a form to set the port. The port is stored in the `storage` of the extension, so it's persisted between sessions.
+
+```html title="options.html"
+<html>
+  <body>
+    <form>
+      <label for="port">Port:</label>
+      <input type="number" id="port" name="port" />
+      <br />
+      <label for="secure">HTTPS:</label>
+      <input type="checkbox" id="secure" name="secure" />
+      <button id="save" type="submit">Save</button>
+    </form>
+    <script src="options.js"></script>
+  </body>
+</html>
+```
+
+The JavaScript for the `options` page is only contains a few lines do to:
+
+- on load, get the `port` and `secure` from the `storage` and set the value of the input to the port and secure checkbox
+- on submit, get the value of the inputs and store them in the `storage`
+
+```js title="options.js"
+// Saves options to chrome.storage
+const saveOptions = () => {
+  const port = document.getElementById("port").value;
+  const secure = document.getElementById("secure").checked;
+  chrome.storage.sync.set({ port, secure });
+  window.close();
+};
+
+// Restores select box and checkbox state using the preferences
+// stored in chrome.storage.
+const restoreOptions = async () => {
+  const syncItems = await chrome.storage.sync.get(["port", "secure"]);
+  console.log(syncItems);
+  document.getElementById("port").value = syncItems.port ?? "3000";
+  document.getElementById("secure").checked = syncItems.secure;
+};
+
+document.addEventListener("DOMContentLoaded", restoreOptions);
+document.getElementById("save").addEventListener("click", saveOptions);
+```
+
+Once the code was ready, the time had come to start testing it in Chrome. To do this, you have to go to `chrome://extensions/`, enable developer mode and click on "Load unpacked". Then you can select the folder containing the extension and it will be loaded in Chrome. Now you can test the extension by clicking on the icon and setting the port in the options page.
+
+When you change the source code, you do have to reload the extension by clicking the refresh icon on the extension in `chrome://extensions/`.
+Publishing to the Chrome store wasn't really something I wanted to do for this extension, so that's not covered in this article.
+Hope this was useful to you!
+
+Source code can be found on [GitHub](https://github.com/thomasledoux1/chrome-extension-localhost).
