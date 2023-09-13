@@ -2,7 +2,6 @@ import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
-import vercel from "@astrojs/vercel/serverless";
 import react from "@astrojs/react";
 import prefetch from "@astrojs/prefetch";
 import AutoImport from "astro-auto-import";
@@ -11,6 +10,8 @@ import {
   codeSnippetAutoImport,
 } from "./integrations/astro-code-snippets";
 import partytown from "@astrojs/partytown";
+
+import netlify from "@astrojs/netlify/functions";
 
 // https://astro.build/config
 export default defineConfig({
@@ -37,9 +38,7 @@ export default defineConfig({
     },
   },
   output: "hybrid",
-  adapter: vercel({
-    functionPerRoute: false,
-  }),
+  adapter: netlify(),
   markdown: {
     remarkPlugins: [remarkReadingTime],
   },

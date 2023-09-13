@@ -26,6 +26,7 @@
   "dependencies": {
     "@astrojs/check": "^0.2.0",
     "@astrojs/mdx": "^1.0.3",
+    "@astrojs/netlify": "^3.0.1",
     "@astrojs/partytown": "^2.0.0",
     "@astrojs/prefetch": "^0.4.0",
     "@astrojs/react": "^3.0.2",
