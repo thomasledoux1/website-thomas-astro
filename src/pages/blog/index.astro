@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import PostPreview from "../../components/PostPreview.astro";
+import { Image } from "astro:assets";
 import Tags from "../../components/Tags.astro";
 const allBlogPosts = await getCollection(
   "blog",
@@ -34,11 +34,56 @@ const sortedPosts = await Promise.all(
           const { remarkPluginFrontmatter } = await post.render();
 
           return (
-            <PostPreview
-              post={post}
-              minutesRead={remarkPluginFrontmatter?.minutesRead}
-              index={i}
-            />
+            <a
+              class="transform lg:text-center rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
+              href={`/blog/${post.slug}`}
+              rel="prefetch"
+            >
+              <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
+                <Image
+                  loading={i > 3 ? "lazy" : "eager"}
+                  decoding={i > 3 ? "async" : "sync"}
+                  class={`rounded-t-xl aspect-[1.33] ${
+                    post.data.containImage ? "object-contain" : "object-cover"
+                  }`}
+                  src={post.data.image}
+                  alt={post.data.imageAlt}
+                  sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
+                />
+
+                <div class="flex px-6 py-4 flex-grow flex-col">
+                  <date class="text-sm">
+                    {new Date(post.data.date).toLocaleDateString("en-BE", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </date>
+                  <div class="flex lg:items-center w-full flex-col gap-y-2 justify-between flex-grow">
+                    <div>
+                      <h2
+                        class="text-xl font-bold transition-colors"
+                        transition:name={`blog-title-${post.id}`}
+                      >
+                        {post.data.title}
+                      </h2>
+                      {remarkPluginFrontmatter ? (
+                        <p>{remarkPluginFrontmatter}ing time</p>
+                      ) : null}
+                    </div>
+                    <ul class="flex flex-wrap lg:justify-center w-full">
+                      {post.data.tags?.map((tag: string) => {
+                        return (
+                          <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
+                            {tag}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
+              </article>
+            </a>
           );
         })
       }
