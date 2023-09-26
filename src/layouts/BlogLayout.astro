@@ -56,9 +56,9 @@ const latestBlogs = await Promise.all(
      Back to overview
   </a>
   <article class="mdx">
-    <h1 transition:name={`blog-title-${frontmatter.id}`}>
+    <h2 transition:name={`blog-title-${frontmatter.id}`}>
       {frontmatter.data.title}
-    </h1>
+    </h2>
     <Image
       loading="eager"
       decoding="sync"
