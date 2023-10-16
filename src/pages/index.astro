@@ -40,6 +40,7 @@ const latestBlog = blogs.sort(
           alt="Profile picture"
           loading="eager"
           decoding="sync"
+          widths={[360, 640, 768, 1024, 1280, 1568]}
           sizes="(max-width: 1023px) 240px, 320px"
           srcset={`${mobileProfilePicture.src} 240w, ${desktopProfilePicture.src}`}
         />

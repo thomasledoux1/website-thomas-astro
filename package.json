@@ -12,28 +12,28 @@
     "prettier": "prettier --write ."
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^5.0.0",
+    "@astrojs/tailwind": "^5.0.2",
     "@types/chroma-js": "^2.4.1",
     "@types/html-escaper": "^3.0.0",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
-    "astro": "^3.0.12",
+    "@types/react": "^18.2.28",
+    "@types/react-dom": "^18.2.13",
+    "astro": "^3.3.0",
     "prettier": "^3.0.3",
     "prettier-plugin-astro": "^0.12.0",
-    "sharp": "^0.32.5",
+    "sharp": "^0.32.6",
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@astrojs/check": "^0.2.0",
-    "@astrojs/mdx": "^1.0.3",
-    "@astrojs/partytown": "^2.0.0",
-    "@astrojs/prefetch": "^0.4.0",
-    "@astrojs/react": "^3.0.2",
+    "@astrojs/check": "^0.2.1",
+    "@astrojs/mdx": "^1.1.2",
+    "@astrojs/partytown": "^2.0.1",
+    "@astrojs/prefetch": "^0.4.1",
+    "@astrojs/react": "^3.0.3",
     "@astrojs/rss": "^3.0.0",
-    "@astrojs/vercel": "^4.0.5",
+    "@astrojs/vercel": "^5.0.2",
     "@giscus/react": "^2.3.0",
-    "@trpc/client": "^10.38.2",
-    "@trpc/server": "^10.38.2",
+    "@trpc/client": "^10.40.0",
+    "@trpc/server": "^10.40.0",
     "astro-auto-import": "^0.3.1",
     "chroma-js": "^2.4.2",
     "clsx": "^2.0.0",
@@ -42,6 +42,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reading-time": "^1.5.0",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   }
 }
