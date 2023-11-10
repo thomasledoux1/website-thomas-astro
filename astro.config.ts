@@ -4,7 +4,6 @@ import mdx from "@astrojs/mdx";
 import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
 import vercel from "@astrojs/vercel/serverless";
 import react from "@astrojs/react";
-import prefetch from "@astrojs/prefetch";
 import AutoImport from "astro-auto-import";
 import {
   astroCodeSnippets,
@@ -23,7 +22,6 @@ export default defineConfig({
       imports: [codeSnippetAutoImport],
     }),
     astroCodeSnippets(),
-    prefetch(),
     partytown({
       config: {
         forward: ["dataLayer.push"],
@@ -35,6 +33,9 @@ export default defineConfig({
     define: {
       "process.env.NODE_ENV": `'${process.env.NODE_ENV}'`,
     },
+  },
+  prefetch: {
+    prefetchAll: true,
   },
   output: "hybrid",
   adapter: vercel({
