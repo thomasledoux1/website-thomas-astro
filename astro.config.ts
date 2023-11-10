@@ -2,7 +2,6 @@ import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
-import vercel from "@astrojs/vercel/serverless";
 import react from "@astrojs/react";
 import prefetch from "@astrojs/prefetch";
 import AutoImport from "astro-auto-import";
@@ -36,10 +35,7 @@ export default defineConfig({
       "process.env.NODE_ENV": `'${process.env.NODE_ENV}'`,
     },
   },
-  output: "hybrid",
-  adapter: vercel({
-    functionPerRoute: false,
-  }),
+  output: "static",
   markdown: {
     remarkPlugins: [remarkReadingTime],
   },
