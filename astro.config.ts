@@ -39,7 +39,7 @@ export default defineConfig({
   },
   output: "hybrid",
   adapter: vercel({
-    functionPerRoute: false,
+    speedInsights: { enabled: true },
   }),
   markdown: {
     remarkPlugins: [remarkReadingTime],
