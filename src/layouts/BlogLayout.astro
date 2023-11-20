@@ -65,6 +65,7 @@ const latestBlogs = await Promise.all(
       class="max-w-[60%] mb-6"
       src={frontmatter.data.image}
       alt={frontmatter.data.imageAlt}
+      transition:name={`blog-image-${frontmatter.id}`}
       sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
     />
     <div class="flex flex-col lg:flex-row gap-4 lg:items-center mb-4">

@@ -7,8 +7,8 @@ interface Props {
   index: number;
 }
 const { post, index } = Astro.props;
-const { remarkPluginFrontmatter } = await Astro.props.post.render()
-const { minutesRead } = remarkPluginFrontmatter
+const { remarkPluginFrontmatter } = await Astro.props.post.render();
+const { minutesRead } = remarkPluginFrontmatter;
 const loading = index > 3 ? "lazy" : "eager";
 ---
 
@@ -26,6 +26,7 @@ const loading = index > 3 ? "lazy" : "eager";
       }`}
       src={post.data.image}
       alt={post.data.imageAlt}
+      transition:name={`blog-image-${post.id}`}
       sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
     />
 
@@ -43,10 +44,7 @@ const loading = index > 3 ? "lazy" : "eager";
         class="flex lg:items-center w-full flex-col gap-y-2 justify-between flex-grow"
       >
         <div>
-          <h2
-            class="text-xl font-bold transition-colors"
-            transition:name={`blog-title-${post.id}`}
-          >
+          <h2 class="text-xl font-bold transition-colors">
             {post.data.title}
           </h2>
           {minutesRead ? <p>{minutesRead}ing time</p> : null}
