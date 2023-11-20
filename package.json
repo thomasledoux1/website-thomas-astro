@@ -21,7 +21,7 @@
     "prettier": "^3.1.0",
     "prettier-plugin-astro": "^0.12.2",
     "sharp": "^0.32.6",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.1",

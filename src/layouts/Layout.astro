@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import Footer from "../components/Footer.astro";
 
 interface Props {
@@ -16,6 +17,7 @@ import "../../styles/global.css";
 
 <html lang="en" class="scroll-smooth">
   <head>
+    <ViewTransitions />
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
     <meta content={title ?? frontmatter?.title} property="og:title" />

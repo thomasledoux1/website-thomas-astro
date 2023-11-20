@@ -4,10 +4,11 @@ import { Image } from "astro:assets";
 
 interface Props {
   post: CollectionEntry<"blog">;
-  minutesRead?: string;
   index: number;
 }
-const { post, minutesRead, index } = Astro.props;
+const { post, index } = Astro.props;
+const { remarkPluginFrontmatter } = await Astro.props.post.render();
+const { minutesRead } = remarkPluginFrontmatter;
 const loading = index > 3 ? "lazy" : "eager";
 ---
 
@@ -25,6 +26,7 @@ const loading = index > 3 ? "lazy" : "eager";
       src={post.data.image}
       alt={post.data.imageAlt}
       widths={[360, 640, 768, 1024, 1280, 1568]}
+      transition:name={`blog-image-${post.id}`}
       sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
     />
 

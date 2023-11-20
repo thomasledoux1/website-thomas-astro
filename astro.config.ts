@@ -1,8 +1,8 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
-import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
 import vercel from "@astrojs/vercel/serverless";
+import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
 import react from "@astrojs/react";
 import AutoImport from "astro-auto-import";
 import {

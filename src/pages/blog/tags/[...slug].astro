@@ -50,16 +50,8 @@ const postsWithTag = await Promise.all(
       class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-9 items-center auto-rows-min mt-4"
     >
       {
-        postsWithTag.map(async (post, i) => {
-          const { remarkPluginFrontmatter } = await post.render();
-
-          return (
-            <PostPreview
-              minutesRead={remarkPluginFrontmatter?.minutesRead}
-              post={post}
-              index={i}
-            />
-          );
+        postsWithTag.map((post, i) => {
+          return <PostPreview {post} index={i} />;
         })
       }
     </div>
