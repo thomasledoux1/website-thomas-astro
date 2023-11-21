@@ -21,6 +21,7 @@ const { Content, remarkPluginFrontmatter } = await entry.render();
     ...entry,
     url: `/blog/${entry.slug}`,
     minutesRead: remarkPluginFrontmatter?.minutesRead,
+    title: entry.data.title,
   }}
 >
   <Content />
