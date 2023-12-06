@@ -76,24 +76,22 @@ import "../../styles/global.css";
       property="og:image"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script
-      type="text/partytown"
-      src="https://www.googletagmanager.com/gtag/js?id=G-RPJ4MJ5W43"></script>
-    <script type="text/partytown">
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        window.dataLayer.push(arguments);
-      }
-      // @ts-ignore
-      gtag("js", new Date());
-      // @ts-ignore
-      gtag("config", "G-RPJ4MJ5W43");
-    </script>
   </head>
   <body class="flex flex-col font-body">
     <main class={`flex-grow flex flex-col container mx-auto h-full pt-8 pb-24`}>
       <slot />
     </main>
     <Footer />
+    <script async>
+      fetch("/api/view", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          slug: window.location.pathname,
+        }),
+      });
+    </script>
   </body>
 </html>

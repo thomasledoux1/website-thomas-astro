@@ -1,5 +1,5 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout
@@ -58,33 +58,38 @@ import Layout from '../../layouts/Layout.astro';
   </section>
 </Layout>
 <script>
-  import { trpcAstro } from '../../client';
-  const form = document.getElementById('contactForm') as HTMLFormElement | null;
-  form?.addEventListener('submit', async e => {
+  const form = document.getElementById("contactForm") as HTMLFormElement | null;
+  form?.addEventListener("submit", async (e) => {
     const submitBtn = document.getElementById(
-      'submitBtn'
+      "submitBtn",
     )! as HTMLButtonElement;
     submitBtn.disabled = true;
     e.preventDefault();
     const formData = new FormData(form);
-    const result = await trpcAstro.sendContactForm.mutate({
-      message: formData.get('message') as string | null,
-      email: formData.get('email') as string | null,
-    });
-    if (result.status === 'success') {
-      window.location.href = '/contact/thanks';
-    } else if (result.status === 'missingdata') {
-      if (!document.getElementById('error')?.classList.contains('hidden')) {
-        document.getElementById('error')?.classList.add('hidden');
+    const result = await fetch("/api/contact", {
+      method: "POST",
+      body: JSON.stringify({
+        email: formData.get("email"),
+        message: formData.get("message"),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.text());
+    if (result === "success") {
+      window.location.href = "/contact/thanks";
+    } else if (result === "missingdata") {
+      if (!document.getElementById("error")?.classList.contains("hidden")) {
+        document.getElementById("error")?.classList.add("hidden");
       }
-      document.getElementById('missingData')?.classList.remove('hidden');
+      document.getElementById("missingData")?.classList.remove("hidden");
     } else {
       if (
-        !document.getElementById('missingData')?.classList.contains('hidden')
+        !document.getElementById("missingData")?.classList.contains("hidden")
       ) {
-        document.getElementById('missingData')?.classList.add('hidden');
+        document.getElementById("missingData")?.classList.add("hidden");
       }
-      document.getElementById('error')?.classList.remove('hidden');
+      document.getElementById("error")?.classList.remove("hidden");
     }
     submitBtn.disabled = false;
   });
