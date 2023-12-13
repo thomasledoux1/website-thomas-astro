@@ -82,16 +82,5 @@ import "../../styles/global.css";
       <slot />
     </main>
     <Footer />
-    <script async>
-      fetch("/api/view", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          slug: window.location.pathname,
-        }),
-      });
-    </script>
   </body>
 </html>
