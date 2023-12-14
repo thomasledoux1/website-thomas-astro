@@ -1,34 +1,34 @@
-import type { AstroIntegration } from 'astro';
-import type { BlockContent, Parent, Root } from 'mdast';
-import type { Plugin, Transformer } from 'unified';
-import { visit } from 'unist-util-visit';
-import type { BuildVisitor } from 'unist-util-visit/complex-types';
-import { makeComponentNode } from './utils/makeComponentNode';
+import type { AstroIntegration } from "astro";
+import type { Root } from "mdast";
+import type { Plugin, Transformer } from "unified";
+import { visit } from "unist-util-visit";
+import type { BuildVisitor } from "unist-util-visit/complex-types";
+import { makeComponentNode } from "./utils/makeComponentNode";
 
-const CodeSnippetTagname = 'AutoImportedCodeSnippet';
+const CodeSnippetTagname = "AutoImportedCodeSnippet";
 export const codeSnippetAutoImport: Record<string, [string, string][]> = {
-  '~/components/CodeSnippet/CodeSnippet.astro': [
-    ['default', CodeSnippetTagname],
+  "~/components/CodeSnippet/CodeSnippet.astro": [
+    ["default", CodeSnippetTagname],
   ],
 };
 
 const LanguageGroups = {
   code: [
-    'astro',
-    'cjs',
-    'htm',
-    'html',
-    'js',
-    'jsx',
-    'mjs',
-    'svelte',
-    'ts',
-    'tsx',
-    'vue',
+    "astro",
+    "cjs",
+    "htm",
+    "html",
+    "js",
+    "jsx",
+    "mjs",
+    "svelte",
+    "ts",
+    "tsx",
+    "vue",
   ],
-  data: ['env', 'json', 'yaml', 'yml'],
-  styles: ['css'],
-  textContent: ['markdown', 'md', 'mdx'],
+  data: ["env", "json", "yaml", "yml"],
+  styles: ["css"],
+  textContent: ["markdown", "md", "mdx"],
 };
 const FileNameCommentRegExp = new RegExp(
   [
@@ -48,7 +48,7 @@ const FileNameCommentRegExp = new RegExp(
     // Optional sequence of characters allowed in file paths
     `([\\w./[\\]\\\\-]*`,
     // Mandatory dot and supported file extension
-    `\\.(?:${Object.values(LanguageGroups).flat().sort().join('|')}))`,
+    `\\.(?:${Object.values(LanguageGroups).flat().sort().join("|")}))`,
     // Optional whitespace
     `\\s*`,
     // Optional HTML comment end (`-->`)
@@ -57,22 +57,22 @@ const FileNameCommentRegExp = new RegExp(
     `\\s*`,
     // End of line
     `$`,
-  ].join('')
+  ].join(""),
 );
 
-export interface CodeSnippetWrapper extends Parent {
-  type: 'codeSnippetWrapper';
-  children: BlockContent[];
-}
+// export interface CodeSnippetWrapper extends Parent {
+//   type: 'codeSnippetWrapper';
+//   children: BlockContent[];
+// }
 
-declare module 'mdast' {
-  interface BlockContentMap {
-    codeSnippetWrapper: CodeSnippetWrapper;
-  }
-}
+// declare module 'mdast' {
+//   interface BlockContentMap {
+//     codeSnippetWrapper: CodeSnippetWrapper;
+//   }
+// }
 
 export function remarkCodeSnippets(): Plugin<[], Root> {
-  const visitor: BuildVisitor<Root, 'code'> = (code, index, parent) => {
+  const visitor: BuildVisitor<Root, "code"> = (code, index, parent) => {
     if (index === null || parent === null) return;
 
     // Parse optional meta information after the opening code fence,
@@ -81,7 +81,7 @@ export function remarkCodeSnippets(): Plugin<[], Root> {
       title: metaTitle,
       lineMarkings,
       inlineMarkings,
-    } = parseMeta(code.meta || '');
+    } = parseMeta(code.meta || "");
     let title = metaTitle;
 
     // Preprocess the code
@@ -92,9 +92,9 @@ export function remarkCodeSnippets(): Plugin<[], Root> {
       removedLineCount,
     } = preprocessCode(
       code.value,
-      code.lang || '',
+      code.lang || "",
       // Only try to extract a file name from the code if no meta title was found above
-      title === undefined
+      title === undefined,
     );
     code.value = preprocessedCode;
     if (extractedFileName) {
@@ -108,10 +108,10 @@ export function remarkCodeSnippets(): Plugin<[], Root> {
       const prev = parent.children[index - 1];
       const strongContent =
         // The previous node must be a paragraph...
-        prev?.type === 'paragraph' &&
+        prev?.type === "paragraph" &&
         // ...it must contain exactly one child with strong formatting...
         prev.children.length === 1 &&
-        prev?.children?.[0]?.type === 'strong' &&
+        prev?.children?.[0]?.type === "strong" &&
         // ...this child must also contain exactly one child
         prev.children[0].children.length === 1 &&
         // ...which is the result of this expression
@@ -119,10 +119,10 @@ export function remarkCodeSnippets(): Plugin<[], Root> {
 
       // Require the strong content to be either raw text or inline code and retrieve its value
       const prevParaStrongTextValue =
-        strongContent && strongContent.type === 'text' && strongContent.value;
+        strongContent && strongContent.type === "text" && strongContent.value;
       const prevParaStrongCodeValue =
         strongContent &&
-        strongContent.type === 'inlineCode' &&
+        strongContent.type === "inlineCode" &&
         strongContent.value;
       const potentialFileName =
         prevParaStrongTextValue || prevParaStrongCodeValue;
@@ -135,8 +135,8 @@ export function remarkCodeSnippets(): Plugin<[], Root> {
         // Yes, store the file name and replace the paragraph with an empty node
         title = matches[2];
         parent.children[index - 1] = {
-          type: 'html',
-          value: '',
+          type: "html",
+          value: "",
         };
       }
     }
@@ -153,14 +153,14 @@ export function remarkCodeSnippets(): Plugin<[], Root> {
     const codeSnippetWrapper = makeComponentNode(
       CodeSnippetTagname,
       { attributes },
-      code
+      code,
     );
 
     parent.children.splice(index, 1, codeSnippetWrapper);
   };
 
-  const transformer: Transformer<Root> = tree => {
-    visit(tree, 'code', visitor);
+  const transformer: Transformer<Root> = (tree) => {
+    visit(tree, "code", visitor);
   };
 
   return function attacher() {
@@ -181,8 +181,8 @@ function parseMeta(meta: string) {
     /(?:\s|^)title\s*=\s*(["'])(.*?)(?<!\\)\1/,
     (_, __, content) => {
       title = content;
-      return '';
-    }
+      return "";
+    },
   );
 
   // Find line marking definitions inside curly braces, with an optional marker type prefix.
@@ -196,9 +196,9 @@ function parseMeta(meta: string) {
   meta = meta.replace(
     /(?:\s|^)(?:([a-zA-Z]+)\s*=\s*)?({[0-9,\s-]*})/g,
     (_, prefix, range) => {
-      lineMarkings.push(`${prefix || 'mark'}=${range}`);
-      return '';
-    }
+      lineMarkings.push(`${prefix || "mark"}=${range}`);
+      return "";
+    },
   );
 
   // Find inline marking definitions inside single or double quotes (to match plaintext strings)
@@ -221,10 +221,10 @@ function parseMeta(meta: string) {
     /(?:\s|^)(?:([a-zA-Z]+)\s*=\s*)?([/"'])(.*?)(?<!\\)\2(?=\s|$)/g,
     (_, prefix, delimiter, expression) => {
       inlineMarkings.push(
-        `${prefix || 'mark'}=${delimiter}${expression}${delimiter}`
+        `${prefix || "mark"}=${delimiter}${expression}${delimiter}`,
       );
-      return '';
-    }
+      return "";
+    },
   );
 
   return {
@@ -261,7 +261,7 @@ function preprocessCode(code: string, lang: string, extractFileName: boolean) {
 
   // If requested, try to find a file name comment in the first 5 lines of the given code
   if (extractFileName) {
-    const lineIdx = lines.slice(0, 4).findIndex(line => {
+    const lineIdx = lines.slice(0, 4).findIndex((line) => {
       const matches = FileNameCommentRegExp.exec(line);
       if (matches) {
         extractedFileName = matches[2];
@@ -273,8 +273,8 @@ function preprocessCode(code: string, lang: string, extractFileName: boolean) {
     // If the syntax highlighting language is contained in our known language groups,
     // ensure that the extracted file name has an extension that matches the group
     if (extractedFileName) {
-      const languageGroup = Object.values(LanguageGroups).find(group =>
-        group.includes(lang)
+      const languageGroup = Object.values(LanguageGroups).find((group) =>
+        group.includes(lang),
       );
       const fileExt = extractedFileName.match(/\.([^.]+)$/)?.[1];
       if (languageGroup && fileExt && !languageGroup.includes(fileExt)) {
@@ -299,13 +299,13 @@ function preprocessCode(code: string, lang: string, extractFileName: boolean) {
   }
 
   // If only one line is left, trim any leading indentation
-  if (lines.length === 1) lines[0] = lines?.[0]?.trimStart() ?? '';
+  if (lines.length === 1) lines[0] = lines?.[0]?.trimStart() ?? "";
 
   // Rebuild code with normalized line endings
-  let preprocessedCode = lines.join('\n');
+  let preprocessedCode = lines.join("\n");
 
   // Convert tabs to 2 spaces
-  preprocessedCode = preprocessedCode.replace(/\t/g, '  ');
+  preprocessedCode = preprocessedCode.replace(/\t/g, "  ");
 
   return {
     preprocessedCode,
@@ -324,7 +324,7 @@ export function encodeMarkdownStringProp(input: string | undefined) {
 export function encodeMarkdownStringArrayProp(arrInput: string[] | undefined) {
   if (arrInput === undefined) return undefined;
   return (
-    arrInput.map(input => encodeURIComponent(input)).join(',') || undefined
+    arrInput.map((input) => encodeURIComponent(input)).join(",") || undefined
   );
 }
 
@@ -334,9 +334,9 @@ export function encodeMarkdownStringArrayProp(arrInput: string[] | undefined) {
  */
 export function astroCodeSnippets(): AstroIntegration {
   return {
-    name: '@astrojs/code-snippets',
+    name: "@astrojs/code-snippets",
     hooks: {
-      'astro:config:setup': ({ updateConfig }) => {
+      "astro:config:setup": ({ updateConfig }) => {
         updateConfig({
           markdown: {
             remarkPlugins: [remarkCodeSnippets()],
