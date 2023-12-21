@@ -1,18 +1,30 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+export const prerender = false;
+import { type CollectionEntry, getEntry } from "astro:content";
 interface Props {
   entry: CollectionEntry<"blog">;
 }
 import BlogLayout from "../../layouts/BlogLayout.astro";
-export async function getStaticPaths() {
-  const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
-  return blogs.map((blog) => ({
-    params: { slug: blog.slug },
-    props: { entry: blog },
-  }));
-}
+const { slug } = Astro.params;
 
-const { entry } = Astro.props;
+// export async function getStaticPaths() {
+//   const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
+//   return blogs.map((blog) => ({
+//     params: { slug: blog.slug },
+//     props: { entry: blog },
+//   }));
+// }
+if (!slug) {
+  return {
+    status: 404,
+  };
+}
+const entry = await getEntry("blog", slug);
+if (!entry) {
+  return {
+    status: 404,
+  };
+}
 const { Content, remarkPluginFrontmatter } = await entry.render();
 ---
 

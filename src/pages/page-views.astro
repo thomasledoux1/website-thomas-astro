@@ -1,0 +1,110 @@
+---
+export const prerender = false;
+import ViewChart from "~/components/ViewChart";
+import Layout from "~/layouts/Layout.astro";
+import { client } from "~/lib/dbClient";
+const request = Astro.request;
+let dateRange = "all-time";
+if (request.method === "POST") {
+  try {
+    const data = await request.formData();
+    dateRange = (data.get("date-range") as string | undefined) ?? "all-time";
+    // Do something with the data
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+let dateGreaterThan: string | undefined;
+const dateLessThan = new Date(Date.now()).toUTCString();
+switch (dateRange) {
+  case "past-day":
+    dateGreaterThan = new Date(Date.now() - 24 * 60 * 60 * 1000).toUTCString();
+    break;
+  case "past-week":
+    dateGreaterThan = new Date(
+      Date.now() - 7 * 24 * 60 * 60 * 1000,
+    ).toUTCString();
+    break;
+  case "past-month":
+    dateGreaterThan = new Date(
+      Date.now() - 30 * 24 * 60 * 60 * 1000,
+    ).toUTCString();
+    break;
+  case "past-year":
+    dateGreaterThan = new Date(
+      Date.now() - 365 * 24 * 60 * 60 * 1000,
+    ).toUTCString();
+    break;
+  default:
+    break;
+}
+
+const views = dateGreaterThan
+  ? await client.sql`
+  SELECT
+    url,
+    COUNT(*) AS pageViews
+  FROM
+    page_views
+  WHERE
+    date >= ${dateGreaterThan} AND date <= ${dateLessThan}
+  GROUP BY
+    GROUPING SETS ((url), ())
+  ORDER BY
+    pageViews DESC`
+  : await client.sql`
+  SELECT
+    url,
+    COUNT(*) AS pageViews
+  FROM
+    page_views
+  GROUP BY
+    GROUPING SETS ((url), ())
+  ORDER BY
+    pageViews DESC`;
+const viewsSorted = views.rows.slice(1).map((el) => ({
+  ...el,
+  url: el.url,
+  pageviews: Number(el.pageviews),
+}));
+const totalViews = views.rows[0]?.pageviews;
+---
+
+<Layout title="Page views" description="Page views">
+  <h1>Page views (migrated from GA on 21 Dec. 2023)</h1>
+  <h2>Total</h2>
+  <p>Total views on all pages: {totalViews}</p>
+  <form id="date-range-form" method="POST">
+    <select
+      class="border-black border p-1 my-2"
+      name="date-range"
+      id="date-range"
+    >
+      <option selected={dateRange === "all-time"} value="all-time"
+        >All time</option
+      >
+      <option selected={dateRange === "past-day"} value="past-day"
+        >Past day</option
+      >
+      <option selected={dateRange === "past-week"} value="past-week"
+        >Past week</option
+      >
+      <option selected={dateRange === "past-month"} value="past-month"
+        >Past month</option
+      >
+      <option selected={dateRange === "past-year"} value="past-year"
+        >Past year</option
+      >
+    </select>
+  </form>
+  <ViewChart data={viewsSorted} client:load />
+  <script>
+    const dateRange = document.getElementById("date-range");
+    dateRange?.addEventListener("change", () => {
+      const dateRangeForm = document.getElementById("date-range-form");
+      (dateRangeForm as HTMLFormElement | undefined)?.submit();
+    });
+  </script>
+</Layout>
