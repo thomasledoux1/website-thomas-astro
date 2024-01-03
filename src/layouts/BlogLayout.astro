@@ -3,6 +3,7 @@ import Layout from "./Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import PostPreview from "../components/PostPreview.astro";
 import Comments from "../components/Comments";
+import ViewCount from "../components/ViewCount";
 import { Image } from "astro:assets";
 const { frontmatter } = Astro.props;
 interface Props {
@@ -63,7 +64,7 @@ const latestBlogs = await Promise.all(
     <Image
       loading="eager"
       decoding="sync"
-      class="max-w-[60%] mb-6"
+      class="lg:max-w-[60%] mb-6"
       src={frontmatter.data.image}
       alt={frontmatter.data.imageAlt}
       transition:name={`blog-image-${frontmatter.id}`}
@@ -89,6 +90,7 @@ const latestBlogs = await Promise.all(
         }
       </div>
     </div>
+    <ViewCount className="mb-4" url={`/blog/${frontmatter.slug}`} client:idle />
     <slot />
   </article>
   <Comments client:idle />

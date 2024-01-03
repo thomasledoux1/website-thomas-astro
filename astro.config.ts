@@ -9,7 +9,6 @@ import {
   astroCodeSnippets,
   codeSnippetAutoImport,
 } from "./integrations/astro-code-snippets";
-import partytown from "@astrojs/partytown";
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,11 +21,6 @@ export default defineConfig({
       imports: [codeSnippetAutoImport],
     }),
     astroCodeSnippets(),
-    partytown({
-      config: {
-        forward: ["dataLayer.push"],
-      },
-    }),
     mdx(),
   ],
   vite: {
@@ -48,10 +42,6 @@ export default defineConfig({
   },
   site: "https://www.thomasledoux.be",
 });
-console.log(
-  process.env.VERCEL_ANALYTICS_ID,
-  process.env.PUBLIC_VERCEL_ANALYTICS_ID,
-);
 if (!process.env.VERCEL_ANALYTICS_ID) {
   process.env.VERCEL_ANALYTICS_ID = process.env.PUBLIC_VERCEL_ANALYTICS_ID;
 }
