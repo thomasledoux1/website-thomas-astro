@@ -1,12 +1,12 @@
-const blogsImportResult = import.meta.glob('../content/blog/*.mdx', {
+const blogsImportResult = import.meta.glob("../content/blog/*.mdx", {
   eager: true,
 });
 const blogs = Object.values(blogsImportResult);
 const uniqueTags = [
-  ...new Set(blogs.map(blog => blog.frontmatter.tags).flat()),
+  ...new Set(blogs.map((blog) => blog.frontmatter.tags).flat()),
 ];
 
-export const get = () => {
+export const GET = () => {
   return {
     body: `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -18,20 +18,20 @@ export const get = () => {
   <url><loc>https://www.thomasledoux.be/portfolio</loc></url>
     ${blogs
       .map(
-        blog => `<url>
+        (blog) => `<url>
     <loc>https://www.thomasledoux.be${blog.url
-      .replace('src/content', '')
-      .replace('.mdx', '')}</loc>
-  </url>`
+      .replace("src/content", "")
+      .replace(".mdx", "")}</loc>
+  </url>`,
       )
-      .join('')}
+      .join("")}
           ${uniqueTags
             .map(
-              tag => `<url>
+              (tag) => `<url>
     <loc>https://www.thomasledoux.be/blog/tags/${tag}</loc>
-  </url>`
+  </url>`,
             )
-            .join('')}
+            .join("")}
   </urlset>`,
   };
 };
