@@ -34,7 +34,7 @@ export default defineConfig({
   output: "hybrid",
   adapter: vercel({
     speedInsights: {
-      enabled: true,
+      enabled: false,
     },
   }),
   markdown: {

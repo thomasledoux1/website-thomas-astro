@@ -37,6 +37,7 @@
     "@trpc/server": "^10.45.0",
     "@vercel/kv": "^1.0.1",
     "@vercel/postgres": "^0.5.1",
+    "@vercel/speed-insights": "^1.0.2",
     "astro-auto-import": "^0.4.2",
     "chroma-js": "^2.4.2",
     "clsx": "^2.1.0",

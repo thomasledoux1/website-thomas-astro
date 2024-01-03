@@ -1,5 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+// @ts-expect-error
+import SpeedInsights from "@vercel/speed-insights/astro";
 import Footer from "../components/Footer.astro";
 
 interface Props {
@@ -76,6 +78,7 @@ import "../../styles/global.css";
       property="og:image"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SpeedInsights />
   </head>
   <body class="flex flex-col font-body min-h-[100dvh]">
     <main class={`flex-grow flex flex-col container mx-auto h-full pt-8 pb-24`}>
