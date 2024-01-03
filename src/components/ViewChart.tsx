@@ -16,9 +16,12 @@ type ViewChartProps = {
 };
 
 const ViewChart = ({ data }: ViewChartProps) => {
-  console.log(data);
   return (
-    <ResponsiveContainer className="-ml-16" width="100%" height={2500}>
+    <ResponsiveContainer
+      className="-ml-16"
+      width="100%"
+      height={data.length * 50}
+    >
       <BarChart layout="vertical" data={data}>
         <YAxis
           type="category"

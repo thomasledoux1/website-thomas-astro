@@ -3,19 +3,11 @@ export const prerender = false;
 import ViewChart from "~/components/ViewChart";
 import Layout from "~/layouts/Layout.astro";
 import { client } from "~/lib/dbClient";
-const request = Astro.request;
-let dateRange = "all-time";
-if (request.method === "POST") {
-  try {
-    const data = await request.formData();
-    dateRange = (data.get("date-range") as string | undefined) ?? "all-time";
-    // Do something with the data
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
-  }
-}
+const searchParams = Astro.url.searchParams;
+const dateRange = searchParams.get("date-range") ?? "all-time";
+const page = Astro.url.searchParams.get("page")
+  ? Number(Astro.url.searchParams.get("page"))
+  : 1;
 let dateGreaterThan: string | undefined;
 const dateLessThan = new Date(Date.now()).toUTCString();
 switch (dateRange) {
@@ -41,6 +33,10 @@ switch (dateRange) {
     break;
 }
 
+const pageSize = 10;
+const offset = (page - 1) * pageSize;
+const search = searchParams.get("search") ?? "";
+
 const views = dateGreaterThan
   ? await client.sql`
   SELECT
@@ -50,26 +46,57 @@ const views = dateGreaterThan
     page_views
   WHERE
     date >= ${dateGreaterThan} AND date <= ${dateLessThan}
+    AND url LIKE '%' || ${search}::text || '%'
   GROUP BY
-    GROUPING SETS ((url), ())
+    url
   ORDER BY
-    pageViews DESC`
+    pageViews DESC
+    LIMIT ${pageSize}
+    OFFSET ${offset}`
   : await client.sql`
   SELECT
     url,
     COUNT(*) AS pageViews
   FROM
     page_views
+  WHERE
+    url LIKE '%' || ${search}::text || '%'
   GROUP BY
-    GROUPING SETS ((url), ())
+    url
   ORDER BY
-    pageViews DESC`;
-const viewsSorted = views.rows.slice(1).map((el) => ({
+    pageViews DESC
+    LIMIT ${pageSize}
+    OFFSET ${offset}`;
+
+const totalViewsRes = dateGreaterThan
+  ? await client.sql`
+    SELECT 
+      COUNT(DISTINCT url) AS totalUniqueURLs,
+      COUNT(*) AS totalCount
+    FROM
+      page_views
+    WHERE
+      date >= ${dateGreaterThan} AND date <= ${dateLessThan}
+      AND url LIKE '%' || ${search}::text || '%'`
+  : await client.sql`
+    SELECT 
+      COUNT(DISTINCT url) AS totalUniqueURLs,
+      COUNT(*) AS totalCount
+    FROM
+      page_views
+    WHERE
+      url LIKE '%' || ${search}::text || '%'`;
+const totalViews = totalViewsRes.rows[0]?.totalcount;
+const totalUniqueURLs = totalViewsRes.rows[0]?.totaluniqueurls;
+const viewsSorted = views.rows.map((el) => ({
   ...el,
   url: el.url,
   pageviews: Number(el.pageviews),
 }));
-const totalViews = views.rows[0]?.pageviews;
+const totalPages = Math.ceil(totalUniqueURLs / pageSize);
+const paginationButtonClasses = "border p-2 rounded-md my-2 border-black";
+const paginationButtonClassesDisabled =
+  "border p-2 my-2 rounded-md cursor-not-allowed text-gray-300 border-gray-300";
 ---
 
 <Layout title="Page views" description="Page views">
@@ -77,6 +104,16 @@ const totalViews = views.rows[0]?.pageviews;
   <h2>Total</h2>
   <p>Total views on all pages: {totalViews}</p>
   <form id="date-range-form" method="POST">
+    <input
+      type="search"
+      id="search"
+      name="search"
+      class="p-1 border border-black"
+      placeholder="Search for a URL"
+      value={search}
+    />
+    <button type="submit">Submit</button>
+    <br />
     <select
       class="border-black border p-1 my-2"
       name="date-range"
@@ -100,11 +137,71 @@ const totalViews = views.rows[0]?.pageviews;
     </select>
   </form>
   <ViewChart data={viewsSorted} client:load />
+  {
+    totalPages > 1 ? (
+      <div class="flex gap-x-4 items-center">
+        {offset === 0 ? (
+          <>
+            <span class={paginationButtonClassesDisabled}>First</span>
+            <span class={paginationButtonClassesDisabled}>Previous</span>
+          </>
+        ) : (
+          <>
+            <a
+              class={paginationButtonClasses}
+              href={`?page=1&date-range=${dateRange}`}
+            >
+              First
+            </a>
+            <a
+              class={paginationButtonClasses}
+              href={`?page=${page - 1}&date-range=${dateRange}`}
+            >
+              Previous
+            </a>
+          </>
+        )}
+        <span>{page}</span>
+        {page === totalPages ? (
+          <>
+            <span class={paginationButtonClassesDisabled}>Next</span>
+            <span class={paginationButtonClassesDisabled}>Last</span>
+          </>
+        ) : (
+          <>
+            <a
+              class={paginationButtonClasses}
+              href={`?page=${page + 1}&date-range=${dateRange}`}
+            >
+              Next
+            </a>
+            <a
+              class={paginationButtonClasses}
+              href={`?page=${totalPages}&date-range=${dateRange}`}
+            >
+              Last
+            </a>
+          </>
+        )}
+      </div>
+    ) : null
+  }
   <script>
-    const dateRange = document.getElementById("date-range");
-    dateRange?.addEventListener("change", () => {
-      const dateRangeForm = document.getElementById("date-range-form");
-      (dateRangeForm as HTMLFormElement | undefined)?.submit();
+    document.addEventListener("astro:page-load", () => {
+      const dateRange = document.getElementById("date-range");
+      dateRange?.addEventListener("change", () => {
+        document.location.href = `?date-range=${
+          (dateRange as HTMLSelectElement).value
+        }&page=1`;
+      });
+      const form = document.getElementById("date-range-form");
+      form?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(form as HTMLFormElement);
+        document.location.href = `?date-range=${
+          (dateRange as HTMLSelectElement).value
+        }&page=1&search=${formData.get("search")}`;
+      });
     });
   </script>
 </Layout>
