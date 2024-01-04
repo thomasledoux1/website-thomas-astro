@@ -37,8 +37,10 @@ const pageSize = 10;
 const offset = (page - 1) * pageSize;
 const search = searchParams.get("search") ?? "";
 
-const views = dateGreaterThan
-  ? await client.sql`
+const start = performance.now();
+
+const viewsPromise = dateGreaterThan
+  ? client.sql`
   SELECT
     url,
     COUNT(*) AS pageViews
@@ -53,7 +55,7 @@ const views = dateGreaterThan
     pageViews DESC
     LIMIT ${pageSize}
     OFFSET ${offset}`
-  : await client.sql`
+  : client.sql`
   SELECT
     url,
     COUNT(*) AS pageViews
@@ -68,8 +70,8 @@ const views = dateGreaterThan
     LIMIT ${pageSize}
     OFFSET ${offset}`;
 
-const totalViewsRes = dateGreaterThan
-  ? await client.sql`
+const totalViewsPromise = dateGreaterThan
+  ? client.sql`
     SELECT 
       COUNT(DISTINCT url) AS totalUniqueURLs,
       COUNT(*) AS totalCount
@@ -78,7 +80,7 @@ const totalViewsRes = dateGreaterThan
     WHERE
       date >= ${dateGreaterThan} AND date <= ${dateLessThan}
       AND url LIKE '%' || ${search}::text || '%'`
-  : await client.sql`
+  : client.sql`
     SELECT 
       COUNT(DISTINCT url) AS totalUniqueURLs,
       COUNT(*) AS totalCount
@@ -86,6 +88,12 @@ const totalViewsRes = dateGreaterThan
       page_views
     WHERE
       url LIKE '%' || ${search}::text || '%'`;
+const [totalViewsRes, views] = await Promise.all([
+  totalViewsPromise,
+  viewsPromise,
+]);
+const end = performance.now();
+console.log(`Query took ${end - start}ms`);
 const totalViews = totalViewsRes.rows[0]?.totalcount;
 const totalUniqueURLs = totalViewsRes.rows[0]?.totaluniqueurls;
 const viewsSorted = views.rows.map((el) => ({
