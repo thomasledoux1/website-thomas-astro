@@ -48,7 +48,7 @@ const viewsPromise = dateGreaterThan
     page_views
   WHERE
     date >= ${dateGreaterThan} AND date <= ${dateLessThan}
-    AND url LIKE '%' || ${search}::text || '%'
+    AND search_vector @@ to_tsquery('english', ${search})
   GROUP BY
     url
   ORDER BY
@@ -62,7 +62,7 @@ const viewsPromise = dateGreaterThan
   FROM
     page_views
   WHERE
-    url LIKE '%' || ${search}::text || '%'
+    search_vector @@ to_tsquery('english', ${search})
   GROUP BY
     url
   ORDER BY
@@ -79,7 +79,7 @@ const totalViewsPromise = dateGreaterThan
       page_views
     WHERE
       date >= ${dateGreaterThan} AND date <= ${dateLessThan}
-      AND url LIKE '%' || ${search}::text || '%'`
+      AND search_vector @@ to_tsquery('english', ${search})`
   : client.sql`
     SELECT 
       COUNT(DISTINCT url) AS totalUniqueURLs,
@@ -87,7 +87,7 @@ const totalViewsPromise = dateGreaterThan
     FROM
       page_views
     WHERE
-      url LIKE '%' || ${search}::text || '%'`;
+      search_vector @@ to_tsquery('english', ${search})`;
 const [totalViewsRes, views] = await Promise.all([
   totalViewsPromise,
   viewsPromise,
