@@ -1,4 +1,5 @@
 export const prerender = false;
+import { isbot } from "isbot";
 
 import type { APIRoute } from "astro";
 import { client } from "~/lib/dbClient";
@@ -8,6 +9,14 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         error: "This endpoint is not available in development",
+      }),
+      { status: 400 },
+    );
+  }
+  if (isbot(request.headers.get("user-agent"))) {
+    return new Response(
+      JSON.stringify({
+        error: "This endpoint is not available for bots",
       }),
       { status: 400 },
     );
