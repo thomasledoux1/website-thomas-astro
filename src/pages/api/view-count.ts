@@ -1,8 +1,9 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
+import { count, eq } from "drizzle-orm";
 import { isbot } from "isbot";
-import { client } from "~/lib/dbClient";
+import { PageViewsTable, client } from "~/lib/dbClient";
 
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url).searchParams.get("url");
@@ -14,13 +15,21 @@ export const GET: APIRoute = async ({ request }) => {
       { status: 400 },
     );
   }
-  const viewCount =
-    (await client.sql`SELECT COUNT(*) as count FROM page_views WHERE url = ${url}`.then(
-      (res) => res.rows[0]?.count,
-    )) || 0;
+  if (!url) {
+    return new Response(
+      JSON.stringify({
+        error: "Missing URL",
+      }),
+      { status: 400 },
+    );
+  }
+  const viewCount = await client
+    .select({ value: count() })
+    .from(PageViewsTable)
+    .where(eq(PageViewsTable.url, url));
   return new Response(
     JSON.stringify({
-      count: viewCount,
+      count: viewCount[0]?.value,
     }),
     {
       status: 200,

@@ -1,33 +1,28 @@
 ---
 export const prerender = false;
+import { and, count, countDistinct, desc, gte, like, lte } from "drizzle-orm";
 import ViewChart from "~/components/ViewChart";
 import Layout from "~/layouts/Layout.astro";
-import { client } from "~/lib/dbClient";
+import { PageViewsTable, client } from "~/lib/dbClient";
 const searchParams = Astro.url.searchParams;
 const dateRange = searchParams.get("date-range") ?? "all-time";
 const page = Astro.url.searchParams.get("page")
   ? Number(Astro.url.searchParams.get("page"))
   : 1;
-let dateGreaterThan: string | undefined;
-const dateLessThan = new Date(Date.now()).toUTCString();
+let dateGreaterThan: Date | undefined;
+const dateLessThan = new Date(Date.now());
 switch (dateRange) {
   case "past-day":
-    dateGreaterThan = new Date(Date.now() - 24 * 60 * 60 * 1000).toUTCString();
+    dateGreaterThan = new Date(Date.now() - 24 * 60 * 60 * 1000);
     break;
   case "past-week":
-    dateGreaterThan = new Date(
-      Date.now() - 7 * 24 * 60 * 60 * 1000,
-    ).toUTCString();
+    dateGreaterThan = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     break;
   case "past-month":
-    dateGreaterThan = new Date(
-      Date.now() - 30 * 24 * 60 * 60 * 1000,
-    ).toUTCString();
+    dateGreaterThan = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     break;
   case "past-year":
-    dateGreaterThan = new Date(
-      Date.now() - 365 * 24 * 60 * 60 * 1000,
-    ).toUTCString();
+    dateGreaterThan = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
     break;
   default:
     break;
@@ -39,68 +34,39 @@ const search = searchParams.get("search") ?? "";
 
 const start = performance.now();
 
-const viewsPromise = dateGreaterThan
-  ? client.sql`
-  SELECT
-    url,
-    COUNT(*) AS pageViews
-  FROM
-    page_views
-  WHERE
-    date >= ${dateGreaterThan} AND date <= ${dateLessThan}
-    AND url LIKE '%' || ${search}::text || '%'
-  GROUP BY
-    url
-  ORDER BY
-    pageViews DESC
-    LIMIT ${pageSize}
-    OFFSET ${offset}`
-  : client.sql`
-  SELECT
-    url,
-    COUNT(*) AS pageViews
-  FROM
-    page_views
-  WHERE
-    url LIKE '%' || ${search}::text || '%'
-  GROUP BY
-    url
-  ORDER BY
-    pageViews DESC
-    LIMIT ${pageSize}
-    OFFSET ${offset}`;
+const conditions = [];
+if (dateGreaterThan) {
+  conditions.push(gte(PageViewsTable.date, dateGreaterThan));
+  conditions.push(lte(PageViewsTable.date, dateLessThan));
+}
+if (search !== "") {
+  conditions.push(like(PageViewsTable.url, `%${search}%`));
+}
+const totalViewsQuery = client
+  .select({
+    totalUniqueURLs: countDistinct(PageViewsTable.url),
+    totalCount: count(),
+  })
+  .from(PageViewsTable)
+  .where(and(...conditions));
 
-const totalViewsPromise = dateGreaterThan
-  ? client.sql`
-    SELECT 
-      COUNT(DISTINCT url) AS totalUniqueURLs,
-      COUNT(*) AS totalCount
-    FROM
-      page_views
-    WHERE
-      date >= ${dateGreaterThan} AND date <= ${dateLessThan}
-      AND url LIKE '%' || ${search}::text || '%'`
-  : client.sql`
-    SELECT 
-      COUNT(DISTINCT url) AS totalUniqueURLs,
-      COUNT(*) AS totalCount
-    FROM
-      page_views
-    WHERE
-      url LIKE '%' || ${search}::text || '%'`;
-const [totalViewsRes, views] = await Promise.all([
-  totalViewsPromise,
-  viewsPromise,
-]);
+const viewsQuery = client
+  .select({
+    url: PageViewsTable.url,
+    pageviews: count(),
+  })
+  .from(PageViewsTable)
+  .where(and(...conditions))
+  .limit(pageSize)
+  .offset(offset)
+  .groupBy(PageViewsTable.url)
+  .orderBy(desc(count()));
+const [totalViewsRes, views] = await Promise.all([totalViewsQuery, viewsQuery]);
+
 const end = performance.now();
 console.log(`Query took ${end - start}ms`);
-const totalViews = totalViewsRes.rows[0]?.totalcount;
-const totalUniqueURLs = totalViewsRes.rows[0]?.totaluniqueurls;
-const viewsSorted = views.rows.map((el) => ({
-  ...el,
-  url: el.url,
-  pageviews: Number(el.pageviews),
-}));
+const totalViews = totalViewsRes[0]?.totalCount ?? 0;
+const totalUniqueURLs = totalViewsRes[0]?.totalUniqueURLs ?? 0;
 const totalPages = Math.ceil(totalUniqueURLs / pageSize);
 const paginationButtonClasses = "border p-2 rounded-md my-2 border-black";
 const paginationButtonClassesDisabled =
@@ -144,7 +110,7 @@ const paginationButtonClassesDisabled =
       >
     </select>
   </form>
-  <ViewChart data={viewsSorted} client:load />
+  <ViewChart data={views} client:load />
   {
     totalPages > 1 ? (
       <div class="flex gap-x-4 items-center">
@@ -196,13 +162,14 @@ const paginationButtonClassesDisabled =
   }
   <script>
     document.addEventListener("astro:page-load", () => {
+      const form = document.getElementById("date-range-form");
       const dateRange = document.getElementById("date-range");
       dateRange?.addEventListener("change", () => {
+        const formData = new FormData(form as HTMLFormElement);
         document.location.href = `?date-range=${
           (dateRange as HTMLSelectElement).value
-        }&page=1`;
+        }&page=1&search=${formData.get("search")}`;
       });
-      const form = document.getElementById("date-range-form");
       form?.addEventListener("submit", (e) => {
         e.preventDefault();
         const formData = new FormData(form as HTMLFormElement);
