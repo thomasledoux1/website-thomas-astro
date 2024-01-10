@@ -71,6 +71,14 @@ const totalPages = Math.ceil(totalUniqueURLs / pageSize);
 const paginationButtonClasses = "border p-2 rounded-md my-2 border-black";
 const paginationButtonClassesDisabled =
   "border p-2 my-2 rounded-md cursor-not-allowed text-gray-300 border-gray-300";
+const previousPageUrl = new URLSearchParams(searchParams);
+previousPageUrl.set("page", `${page - 1}`);
+const firstPageUrl = new URLSearchParams(searchParams);
+firstPageUrl.set("page", "1");
+const lastPageUrl = new URLSearchParams(searchParams);
+lastPageUrl.set("page", `${totalPages}`);
+const nextPageUrl = new URLSearchParams(searchParams);
+nextPageUrl.set("page", `${page + 1}`);
 ---
 
 <Layout title="Page views" description="Page views">
@@ -123,13 +131,13 @@ const paginationButtonClassesDisabled =
           <>
             <a
               class={paginationButtonClasses}
-              href={`?page=1&date-range=${dateRange}`}
+              href={`?${firstPageUrl.toString()}`}
             >
               First
             </a>
             <a
               class={paginationButtonClasses}
-              href={`?page=${page - 1}&date-range=${dateRange}`}
+              href={`?${previousPageUrl.toString()}`}
             >
               Previous
             </a>
@@ -145,13 +153,13 @@ const paginationButtonClassesDisabled =
           <>
             <a
               class={paginationButtonClasses}
-              href={`?page=${page + 1}&date-range=${dateRange}`}
+              href={`?${nextPageUrl.toString()}`}
             >
               Next
             </a>
             <a
               class={paginationButtonClasses}
-              href={`?page=${totalPages}&date-range=${dateRange}`}
+              href={`?${lastPageUrl.toString()}`}
             >
               Last
             </a>
@@ -165,17 +173,18 @@ const paginationButtonClassesDisabled =
       const form = document.getElementById("date-range-form");
       const dateRange = document.getElementById("date-range");
       dateRange?.addEventListener("change", () => {
-        const formData = new FormData(form as HTMLFormElement);
-        document.location.href = `?date-range=${
-          (dateRange as HTMLSelectElement).value
-        }&page=1&search=${formData.get("search")}`;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set("date-range", (dateRange as HTMLSelectElement).value);
+        urlParams.set("page", "1");
+        document.location.href = `?${urlParams.toString()}`;
       });
       form?.addEventListener("submit", (e) => {
         e.preventDefault();
+        const urlParams = new URLSearchParams(window.location.search);
         const formData = new FormData(form as HTMLFormElement);
-        document.location.href = `?date-range=${
-          (dateRange as HTMLSelectElement).value
-        }&page=1&search=${formData.get("search")}`;
+        urlParams.set("page", "1");
+        urlParams.set("search", formData.get("search") as string);
+        document.location.href = `?${urlParams.toString()}`;
       });
     });
   </script>
