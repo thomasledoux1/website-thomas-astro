@@ -1,0 +1,343 @@
+---
+title: "Basic analytics with Vercel Postgres, Drizzle and Astro"
+tags: ["vercel", "databases", "typescript", "astro"]
+date: "2024-01-16T16:14:39.004Z"
+image: "./basic-analytics-vercel-postgres-astro.jpg"
+imageAlt: "Screenshot of an analytics dashboard"
+---
+
+## TL;DR
+
+Full code can be found on [GitHub](https://github.com/thomasledoux1/website-thomas-astro), live data can be seen on [my website](https://thomasledoux.be/page-views).
+
+## Why?
+
+Since Vercel's [analytics](https://vercel.com/analytics) pricing is a bit too expensive for my use case (where I hit the limit of 2,500 requests per month), and I didn't like using Google Analytics (not a big fan of Google), I decided to build my own analytics dashboard.
+Databases was something I didn't work with much before directly, so I decided to use an ORM, [Drizzle](https://orm.drizzle.team/), which is quite lightweight and easy to use.
+
+## Setting up the database
+
+I used [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) as my database and [Astro](https://astro.build/) as my frontend framework.
+Vercel Postgres is basically a wrapper around [Neon](https://neon.tech/), a serverless SQL server provider.
+Setting up the database is pretty straightforward, I just followed the [docs](https://vercel.com/docs/storage/vercel-postgres/quickstart) and got my database up and running in no time.
+Once my database was up and running, the time came to set up the database schema.
+The schema is pretty simple, it consists of a table called `page_views` with the following columns:
+
+- `url`: the URL of the viewed page
+- `date`: the data of the page view
+
+The SQL query to create this table is the following:
+
+```sql
+CREATE TABLE page_views (
+  url VARCHAR(255) NOT NULL,
+  date TIMESTAMP NOT NULL
+);
+```
+
+## Setting up Drizzle
+
+To set up the Drizzle client, I first created a `pool` using the `@vercel/postgres` createPool function.
+Once the pool is created, I can instantiate the Drizzle client with the pool.
+In the client I also create an export of the PageViews table, which is a Drizzle table that represents the `page_views` table in the database.
+
+```ts
+import { createPool } from "@vercel/postgres";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { drizzle } from "drizzle-orm/vercel-postgres";
+
+export const PageViewsTable = pgTable("page_views", {
+  url: text("url").notNull(),
+  date: timestamp("date").defaultNow().notNull(),
+});
+
+// Connect to Vercel Postgres
+
+const pool = createPool({
+  connectionString: import.meta.env.POSTGRES_URL,
+});
+const client = drizzle(pool);
+
+export { client };
+```
+
+## Filling up the database
+
+Now that the database is set up, it's time to fill it up with data.
+Since I was using Google Analytics before this, I had a lot of data already available.
+Porting this data to my own database required a bit of work:
+
+- Export the data from Google Analytics by downloading a CSV file
+- Create an API route in Astro
+- Inside the API route, convert the CSV file to JSON with [csv-parser](https://github.com/mafintosh/csv-parser)
+- Once converted, insert the data into the database using the Drizzle client
+
+The code for the API route is the following:
+
+```ts
+import type { APIRoute } from "astro";
+import csv from "csv-parser";
+import fs from "fs";
+import { PageViewsTable, client } from "~/lib/dbClient";
+
+export const GET: APIRoute = async () => {
+  const csvFilePath = "./public/data-export.csv";
+  const jsonArray: { "Page path": string; views: string }[] = [];
+
+  fs.createReadStream(csvFilePath)
+    .pipe(csv())
+    .on("data", (data) => jsonArray.push(data))
+    .on("end", async () => {
+      for (const item of jsonArray) {
+        let count = 0;
+        while (count < parseInt(item.views)) {
+          await client.insert(PageViewsTable).values({
+            url: item["Page path"],
+            date: new Date(),
+          });
+          count++;
+        }
+      }
+    });
+
+  return new Response(
+    JSON.stringify({
+      message: "Succesfully updated views",
+    }),
+    { status: 200 },
+  );
+};
+```
+
+After a few seconds or minutes (depending on the size of your CSV and amount of views), the database should be filled up with data.
+
+## Tracking new views
+
+Now the database is filled up with the historic data, but I'm not tracking new views yet.
+To do this, I created a new API route that inserts a new row into the database every time a page is viewed.
+This API route is called when the `astro:page-load` event is triggered on the document (see [Astro docs on View Transitions](https://docs.astro.build/en/guides/view-transitions/#astropage-load)).
+This event is triggered whenever a new page is loaded when you're using View Transitions.
+I use the `isbot` package to check if the page is loaded by a crawler/bot to prevent bots from being tracked, and when running the site in development mode, I return an error to prevent the database from being filled up with development views.
+The code for the API route is the following:
+
+```ts
+export const prerender = false;
+import { isbot } from "isbot";
+
+import type { APIRoute } from "astro";
+import { PageViewsTable, client } from "~/lib/dbClient";
+
+export const POST: APIRoute = async ({ request }) => {
+  if (import.meta.env.NODE_ENV === "development") {
+    return new Response(
+      JSON.stringify({
+        error: "This endpoint is not available in development",
+      }),
+      { status: 400 },
+    );
+  }
+  if (isbot(request.headers.get("user-agent"))) {
+    return new Response(
+      JSON.stringify({
+        error: "This endpoint is not available for bots",
+      }),
+      { status: 400 },
+    );
+  }
+  const body = await request.json();
+  if (!body.url) {
+    return new Response(
+      JSON.stringify({
+        error: "Missing URL",
+      }),
+      { status: 400 },
+    );
+  }
+  if (body.url === "/page-views") {
+    return new Response(
+      JSON.stringify({
+        error: "This url is not tracked",
+      }),
+      { status: 202 },
+    );
+  }
+  try {
+    await client.insert(PageViewsTable).values({
+      url: body.url,
+      date: new Date(),
+    });
+  } catch (e) {
+    console.error(e);
+    return new Response(
+      JSON.stringify({
+        error: "Error updating views",
+      }),
+      { status: 400 },
+    );
+  }
+
+  return new Response(
+    JSON.stringify({
+      message: "Succesfully updated views",
+    }),
+    { status: 200 },
+  );
+};
+```
+
+## Creating the dashboard
+
+Now I have my historic and new data coming into my database, it's time to create the dashboard.
+I created a (publicly available) route called `/page-views` that shows the dashboard.
+This is a `.astro` page that uses the Drizzle client to query the database and show the data.
+There's a few things going on here:
+
+- A search input that allows you to search for a specific page
+- A dropdown with some predefined time ranges (past day, past week, past month, past year, all time)
+- A bar chart that shows the amount of views per page
+- Pagination buttons to go to the next or previous page of results, with a maximum of 10 results per page
+
+The code to handle the query to the database looks like this:
+
+```ts
+import { and, count, countDistinct, desc, gte, like, lte } from "drizzle-orm";
+import { PageViewsTable, client } from "~/lib/dbClient";
+const searchParams = Astro.url.searchParams;
+const dateRange = searchParams.get("date-range") ?? "all-time";
+const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
+let dateGreaterThan: Date | undefined;
+const dateLessThan = new Date(Date.now());
+switch (dateRange) {
+  case "past-day":
+    dateGreaterThan = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    break;
+  case "past-week":
+    dateGreaterThan = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    break;
+  case "past-month":
+    dateGreaterThan = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    break;
+  case "past-year":
+    dateGreaterThan = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
+    break;
+  default:
+    break;
+}
+
+const pageSize = 10;
+const offset = (page - 1) * pageSize;
+const search = searchParams.get("search") ?? "";
+
+const start = performance.now();
+
+const conditions = [];
+if (dateGreaterThan) {
+  conditions.push(gte(PageViewsTable.date, dateGreaterThan));
+  conditions.push(lte(PageViewsTable.date, dateLessThan));
+}
+if (search !== "") {
+  conditions.push(like(PageViewsTable.url, `%${search}%`));
+}
+const totalViewsQuery = client
+  .select({
+    totalUniqueURLs: countDistinct(PageViewsTable.url),
+    totalCount: count(),
+  })
+  .from(PageViewsTable)
+  .where(and(...conditions));
+
+const viewsQuery = client
+  .select({
+    url: PageViewsTable.url,
+    pageviews: count(),
+  })
+  .from(PageViewsTable)
+  .where(and(...conditions))
+  .limit(pageSize)
+  .offset(offset)
+  .groupBy(PageViewsTable.url)
+  .orderBy(desc(count()));
+```
+
+The `totalViewsQuery` is used to get the total amount of views and unique URLs, and the `viewsQuery` is used to get the data for the bar chart.
+The total views are used to provide the pagination at the bottom of the page.
+I left out the code for the search input and dropdown, but it's pretty straightforward and can be found on GitHub if you're interested (see links at bottom of the article).
+
+The bar chart is created using `recharts` and the code looks like this:
+
+```tsx
+import {
+  Bar,
+  BarChart,
+  LabelList,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+type ViewChartProps = {
+  data: {
+    url: string;
+    pageviews: number;
+  }[];
+};
+
+const ViewChart = ({ data }: ViewChartProps) => {
+  return (
+    <ResponsiveContainer
+      className="-ml-16"
+      width="100%"
+      height={data.length * 50}
+    >
+      <BarChart layout="vertical" data={data}>
+        <YAxis
+          type="category"
+          dataKey="url"
+          stroke="#888888"
+          fontSize={12}
+          tickLine={false}
+          axisLine={false}
+          tick={false}
+        />
+        <XAxis type="number" hide />
+        <Tooltip
+          wrapperStyle={{ maxWidth: "300px" }}
+          // @ts-expect-error
+          labelStyle={{ textWrap: "balance" }}
+        />
+        <Bar
+          label={false}
+          dataKey="pageviews"
+          fill="#2c6e49"
+          radius={[4, 4, 0, 0]}
+        >
+          <LabelList
+            dataKey="url"
+            position="insideLeft"
+            style={{ fill: "#000" }}
+          />
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
+
+export default ViewChart;
+```
+
+## Conclusion
+
+Now I own my own analytics data, I can choose how the visualize it myself, what to track and what not to track.
+Of course I'm not storing IP addresses or any other personal data, so I'm not violating any privacy laws.
+I'm also not tracking any data that I don't need, so I'm not wasting any resources.
+
+The only downside I encountered so far with the Vercel Postgres database, is the cold starts.
+Since the database is serverless, it needs to start up when it's not used for a while, so the first request after a while takes a bit longer (up to 1.5 seconds).
+
+I'm pretty happy with the result, and I hope you learned something from this post!
+This gave me the opportunity to learn more about SQL and Drizzle, which is another thing I can check off my list.
+
+There's still room for improvement on the UI side, and the tracking data could also be improved by tracking things like the referrer etc.
+
+Full code can be found on [GitHub](https://github.com/thomasledoux1/website-thomas-astro), live data can be seen on [my website](https://thomasledoux.be/page-views).

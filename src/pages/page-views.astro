@@ -6,9 +6,7 @@ import Layout from "~/layouts/Layout.astro";
 import { PageViewsTable, client } from "~/lib/dbClient";
 const searchParams = Astro.url.searchParams;
 const dateRange = searchParams.get("date-range") ?? "all-time";
-const page = Astro.url.searchParams.get("page")
-  ? Number(Astro.url.searchParams.get("page"))
-  : 1;
+const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
 let dateGreaterThan: Date | undefined;
 const dateLessThan = new Date(Date.now());
 switch (dateRange) {
