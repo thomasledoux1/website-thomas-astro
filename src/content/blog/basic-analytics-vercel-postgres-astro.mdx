@@ -326,6 +326,112 @@ const ViewChart = ({ data }: ViewChartProps) => {
 export default ViewChart;
 ```
 
+## Getting page views for a specific page
+
+The last thing I wanted to do was to get the page views for a specific page.
+This is done by creating a new API route that returns the amount of views for a specific page.
+I decided to execute the request to the API route on the client side, so I don't block the rendering of my blog pages just to calculate the view count for this blog post.
+To accomodate this (together with a loading skeleton), I decided to use React (since I'm most familiar with it) combined with Tanstack Query. The code for this looks like this:
+
+```tsx
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+import { useState } from "react";
+
+type ViewCountInnerProps = {
+  url: string;
+};
+
+const ViewCountInner = ({ url }: ViewCountInnerProps) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["viewCount", url],
+    queryFn: async () => {
+      const response = await fetch(`/api/view-count?url=${url}`);
+      const data = await response.json();
+      return data;
+    },
+  });
+  return (
+    <>
+      View count:{" "}
+      {isLoading ? (
+        <span className="animate-loading h-4 inline-block w-12 rounded-sm" />
+      ) : (
+        <span className="font-bold">{data.count}</span>
+      )}
+    </>
+  );
+};
+
+type ViewCountProps = {
+  url: string;
+  className?: string;
+};
+
+const ViewCount = ({ url, className }: ViewCountProps) => {
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <div className={className}>
+        <ViewCountInner url={url} />
+      </div>
+    </QueryClientProvider>
+  );
+};
+
+export default ViewCount;
+```
+
+The code for this API route is the following:
+
+```ts
+export const prerender = false;
+
+import type { APIRoute } from "astro";
+import { count, eq } from "drizzle-orm";
+import { isbot } from "isbot";
+import { PageViewsTable, client } from "~/lib/dbClient";
+
+export const GET: APIRoute = async ({ request }) => {
+  const url = new URL(request.url).searchParams.get("url");
+  if (isbot(request.headers.get("user-agent"))) {
+    return new Response(
+      JSON.stringify({
+        error: "This endpoint is not available for bots",
+      }),
+      { status: 400 },
+    );
+  }
+  if (!url) {
+    return new Response(
+      JSON.stringify({
+        error: "Missing URL",
+      }),
+      { status: 400 },
+    );
+  }
+  const viewCount = await client
+    .select({ value: count() })
+    .from(PageViewsTable)
+    .where(eq(PageViewsTable.url, url));
+  return new Response(
+    JSON.stringify({
+      count: viewCount[0]?.value,
+    }),
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "s-maxage=3600, stale-while-revalidate",
+      },
+    },
+  );
+};
+```
+
 ## Conclusion
 
 Now I own my own analytics data, I can choose how the visualize it myself, what to track and what not to track.
