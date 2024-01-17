@@ -31,6 +31,7 @@
     "@astrojs/rss": "^4.0.1",
     "@astrojs/vercel": "^6.1.3",
     "@giscus/react": "^2.4.0",
+    "@neondatabase/serverless": "^0.7.2",
     "@tanstack/react-query": "^5.17.9",
     "@trpc/client": "^10.45.0",
     "@trpc/server": "^10.45.0",
