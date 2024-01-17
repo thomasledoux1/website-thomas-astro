@@ -3,7 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 interface Props {
   entry: CollectionEntry<"blog">;
 }
-import BlogLayout from "../../layouts/BlogLayout.astro";
+import BlogLayout from "../../../layouts/BlogLayout.astro";
 export async function getStaticPaths() {
   const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
   return blogs.map((blog) => ({
