@@ -1,6 +1,16 @@
 ---
 export const prerender = false;
-import { and, count, countDistinct, desc, gte, like, lte } from "drizzle-orm";
+import {
+  and,
+  count,
+  countDistinct,
+  desc,
+  gte,
+  like,
+  lte,
+  sql,
+} from "drizzle-orm";
+import UrlChart from "~/components/UrlChart";
 import ViewChart from "~/components/ViewChart";
 import Layout from "~/layouts/Layout.astro";
 import { PageViewsTable, client } from "~/lib/dbClient";
@@ -23,6 +33,7 @@ switch (dateRange) {
     dateGreaterThan = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
     break;
   default:
+    dateGreaterThan = new Date("2024-01-04");
     break;
 }
 
@@ -40,32 +51,73 @@ if (dateGreaterThan) {
 if (search !== "") {
   conditions.push(like(PageViewsTable.url, `%${search}%`));
 }
-const totalViewsQuery = client
-  .select({
-    totalUniqueURLs: countDistinct(PageViewsTable.url),
-    totalCount: count(),
-  })
-  .from(PageViewsTable)
-  .where(and(...conditions));
-
-const viewsQuery = client
-  .select({
-    url: PageViewsTable.url,
-    pageviews: count(),
-  })
-  .from(PageViewsTable)
-  .where(and(...conditions))
-  .limit(pageSize)
-  .offset(offset)
-  .groupBy(PageViewsTable.url)
-  .orderBy(desc(count()));
-const [totalViewsRes, views] = await Promise.all([totalViewsQuery, viewsQuery]);
+let totalViews;
+let pageViews;
+let viewsPerUrl;
+let totalUniqueURLs;
+let totalPages;
+if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
+  const whereClause = dateGreaterThan
+    ? `WHERE date >= '${dateGreaterThan.toISOString()}'`
+    : "";
+  const pageViewsQuery = client.execute(
+    sql.raw(`SELECT
+    date_trunc('day', date) AS day,
+    COUNT(*) AS page_views_count
+  FROM
+    page_views
+  ${whereClause}
+  GROUP BY
+    day
+  ORDER BY
+    day ASC;`),
+  );
+  let totalViewsRes;
+  let pageViewsRes;
+  const totalViewsQuery = client
+    .select({
+      totalUniqueURLs: countDistinct(PageViewsTable.url),
+      totalCount: count(),
+    })
+    .from(PageViewsTable)
+    .where(and(...conditions));
+  [pageViewsRes, totalViewsRes] = await Promise.all([
+    pageViewsQuery,
+    totalViewsQuery,
+  ]);
+  pageViews = pageViewsRes.rows as { day: string; page_views_count: string }[];
+  totalViews = totalViewsRes[0]?.totalCount ?? 0;
+} else {
+  let totalViewsRes;
+  const totalViewsQuery = client
+    .select({
+      totalUniqueURLs: countDistinct(PageViewsTable.url),
+      totalCount: count(),
+    })
+    .from(PageViewsTable)
+    .where(and(...conditions));
+  const viewsQuery = client
+    .select({
+      url: PageViewsTable.url,
+      pageviews: count(),
+    })
+    .from(PageViewsTable)
+    .where(and(...conditions))
+    .limit(pageSize)
+    .offset(offset)
+    .groupBy(PageViewsTable.url)
+    .orderBy(desc(count()));
+  [totalViewsRes, viewsPerUrl] = await Promise.all([
+    totalViewsQuery,
+    viewsQuery,
+  ]);
+  totalViews = totalViewsRes[0]?.totalCount ?? 0;
+  totalUniqueURLs = totalViewsRes[0]?.totalUniqueURLs ?? 0;
+  totalPages = Math.ceil(totalUniqueURLs / pageSize);
+}
 
 const end = performance.now();
 console.log(`Query took ${end - start}ms`);
-const totalViews = totalViewsRes[0]?.totalCount ?? 0;
-const totalUniqueURLs = totalViewsRes[0]?.totalUniqueURLs ?? 0;
-const totalPages = Math.ceil(totalUniqueURLs / pageSize);
 const paginationButtonClasses = "border p-2 rounded-md my-2 border-black";
 const paginationButtonClassesDisabled =
   "border p-2 my-2 rounded-md cursor-not-allowed text-gray-300 border-gray-300";
@@ -77,24 +129,47 @@ const lastPageUrl = new URLSearchParams(searchParams);
 lastPageUrl.set("page", `${totalPages}`);
 const nextPageUrl = new URLSearchParams(searchParams);
 nextPageUrl.set("page", `${page + 1}`);
+console.log(pageViews);
 ---
 
 <Layout title="Page views" description="Page views">
-  <h1>Page views (migrated from GA on 21 Dec. 2023)</h1>
-  <h2>Total</h2>
-  <p>Total views on all pages: {totalViews}</p>
+  <h1 class="text-2xl mb-4">Page views (migrated from GA on 4 Jan. 2024)</h1>
+  <p class="mb-2">Total views on all pages: <b>{totalViews}</b></p>
+  <div class="flex mb-4">
+    <a
+      class={`text-sm py-2 px-4 rounded-l-md font-semibold ${
+        !searchParams.get("mode") || searchParams.get("mode") === "page-views"
+          ? "bg-secondary text-white"
+          : "border-secondary border-2 text-secondary"
+      }`}
+      href="?mode=page-views">Page views</a
+    ><a
+      class={`py-2 px-4 rounded-r-md font-semibold text-sm ${
+        searchParams.get("mode") === "per-url"
+          ? "bg-secondary text-white"
+          : "border-secondary border-2 text-secondary"
+      }`}
+      href="?mode=per-url">Per URL</a
+    >
+  </div>
   <form id="date-range-form" method="POST">
-    <input
-      type="search"
-      id="search"
-      name="search"
-      class="p-1 border border-black"
-      placeholder="Search for a URL"
-      value={search}
-    />
-    <button type="submit">Submit</button>
-    <br />
-    <select
+    {
+      searchParams.get("mode") === "per-url" ? (
+        <>
+          <input
+            type="search"
+            id="search"
+            name="search"
+            class="p-1 border border-black"
+            placeholder="Search for a URL"
+            value={search}
+          />
+          <button type="submit">Submit</button>
+          <br />
+        </>
+      ) : null
+    }
+    <span>Period:</span>{" "}<select
       class="border-black border p-1 my-2"
       name="date-range"
       id="date-range"
@@ -116,9 +191,15 @@ nextPageUrl.set("page", `${page + 1}`);
       >
     </select>
   </form>
-  <ViewChart data={views} client:load />
   {
-    totalPages > 1 ? (
+    viewsPerUrl ? (
+      <UrlChart data={viewsPerUrl} client:load />
+    ) : pageViews ? (
+      <ViewChart data={pageViews} client:load />
+    ) : null
+  }
+  {
+    totalPages && totalPages > 1 ? (
       <div class="flex gap-x-4 items-center">
         {offset === 0 ? (
           <>

@@ -1,7 +1,7 @@
 import {
-  Bar,
-  BarChart,
-  LabelList,
+  Area,
+  AreaChart,
+  CartesianGrid,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -10,47 +10,43 @@ import {
 
 type ViewChartProps = {
   data: {
-    url: string;
-    pageviews: number;
+    day: string;
+    page_views_count: string;
   }[];
 };
 
 const ViewChart = ({ data }: ViewChartProps) => {
   return (
-    <ResponsiveContainer
-      className="-ml-16"
-      width="100%"
-      height={data.length * 50}
-    >
-      <BarChart layout="vertical" data={data}>
-        <YAxis
-          type="category"
-          dataKey="url"
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tick={false}
-        />
-        <XAxis type="number" hide />
-        <Tooltip
-          wrapperStyle={{ maxWidth: "300px" }}
-          // @ts-expect-error
-          labelStyle={{ textWrap: "balance" }}
-        />
-        <Bar
-          label={false}
-          dataKey="pageviews"
+    <ResponsiveContainer width="100%" height={400}>
+      <AreaChart
+        width={500}
+        height={400}
+        data={data.map((el) => ({
+          ...el,
+          day: new Date(el.day).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          }),
+          page_views_count: +el.page_views_count,
+        }))}
+        margin={{
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="day" />
+        <YAxis />
+        <Tooltip />
+        <Area
+          type="monotone"
+          dataKey="page_views_count"
+          stroke="#2c6e49"
           fill="#2c6e49"
-          radius={[4, 4, 0, 0]}
-        >
-          <LabelList
-            dataKey="url"
-            position="insideLeft"
-            style={{ fill: "#000" }}
-          />
-        </Bar>
-      </BarChart>
+        />
+      </AreaChart>
     </ResponsiveContainer>
   );
 };
