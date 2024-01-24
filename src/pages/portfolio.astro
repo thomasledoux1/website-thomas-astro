@@ -22,13 +22,13 @@ import logoLallemand from "../assets/logolallemand.svg";
   description="Projects Thomas Ledoux worked on"
   title="Thomas Ledoux | Portfolio"
 >
-  <section class="my-auto">
-    <div class="items-center content-center">
+  <section class="my-auto col-span-3">
+    <div class="items-center content-center track">
       <h1 class="text-center text-2xl lg:text-5xl mb-6 md:mb-12 font-bold">
         Some of my work
       </h1>
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-9"
+      <ul
+        class="flex flex-col lg:flex-row px-4 gap-y-4 lg:gap-y-0 lg:px-0 lg:ps-[20vw] carousel my-auto lg:pe-[20vw] lg:gap-x-8 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto lg:scroll-smooth"
       >
         <Case
           url="https://www.karaton.be"
@@ -36,6 +36,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoKaraton}
           logoWidth={218}
           tags={["mongodb", "expressjs", "angular", "nodejs"]}
+          id="one"
         >
           <p class="mb-4">
             For Happs Development I created and maintained the <b>Angular</b>{
@@ -61,6 +62,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoRialto}
           logoWidth={321}
           tags={["swift", "ios"]}
+          id="two"
         >
           <p class="mb-4">
             At my internship for Rialto I created an iOS app from scratch in{
@@ -84,6 +86,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoCarlier}
           logoWidth={100}
           tags={["react-native", "react"]}
+          id="three"
         >
           <p class="mb-4">
             While working at Happs Development I also created a mobile
@@ -107,6 +110,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoCarglass}
           logoWidth={374}
           tags={["sitecore", "react", "less"]}
+          id="four"
         >
           <p class="mb-4">
             At my current job at The Reference I help maintain the website for
@@ -129,6 +133,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoNalo}
           logoWidth={240}
           tags={["sitecore", "react", "sass"]}
+          id="five"
         >
           <p class="mb-4">
             One of the other clients I work for at The Reference is Nationale
@@ -152,6 +157,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoAchterderegenboog}
           logoWidth={150}
           tags={["wordpress", "html", "css"]}
+          id="six"
         >
           <p class="mb-4">
             In my free time I like to experiment with other frameworks and
@@ -173,6 +179,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoDuckduckgo}
           logoWidth={100}
           tags={["open source", "hacktoberfest", "stencil", "typescript"]}
+          id="seven"
         >
           <p class="mb-4">
             In 2020 I participated in <b>Hacktoberfest</b> for the first time ever.
@@ -191,6 +198,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoAccent}
           logoWidth={532}
           tags={["gatsby", "drupal", "typescript", "emotion"]}
+          id="eight"
         >
           <p class="mb-4">
             At the end of 2020, I got the opportunity to work on a project
@@ -208,6 +216,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoPoa}
           logoWidth={199}
           tags={["nextjs", "drupal", "typescript", "tailwind", "algolia"]}
+          id="nine"
         >
           <p class="mb-4">
             Starting february 2021, we started working on a new website for the
@@ -236,6 +245,7 @@ import logoLallemand from "../assets/logolallemand.svg";
             "algolia",
             "kubernetes",
           ]}
+          id="ten"
         >
           <p class="mb-4">
             For SD Worx we went with almost the same stack as the project for
@@ -254,6 +264,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoSibelco}
           logoWidth={305}
           tags={["nextjs", "kontent.ai", "typescript", "tailwind", "algolia"]}
+          id="eleven"
         >
           <p class="mb-4">
             Sibelco was the first client for who we worked with{" "}
@@ -277,6 +288,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoBrachot}
           logoWidth={300}
           tags={["nextjs", "typescript", "tailwind", "commercetools"]}
+          id="twelve"
         >
           <p class="mb-4">
             This was the first e-commerce project I worked on. For this project
@@ -298,6 +310,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoMaterialise}
           logoWidth={300}
           tags={["nextjs", "typescript", "tailwind", "kontent.ai"]}
+          id="thirteen"
         >
           <p class="mb-4">
             For Materialise we also worked with Kontent.ai, which was a breeze
@@ -311,6 +324,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoVlerick}
           logoWidth={100}
           tags={["gatsby", "typescript", "kontent.ai"]}
+          id="fourteen"
         >
           <p class="mb-4">
             For Vlerick we used Gatsby, which was nice to work with again. The
@@ -330,6 +344,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoLallemand}
           logoWidth={300}
           tags={["nextjs", "commercetools", "storybook"]}
+          id="fifteen"
         >
           <p class="mb-4">
             For Lallemand we are using Commercetools Frontend for the first
@@ -349,6 +364,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           url="https://www.psychotherapiepraktijkkortrijk.be"
           logoAlt="Psychotherapiepraktijk Kortrijk"
           tags={["squarespace"]}
+          id="sixteen"
         >
           <p>
             For a family member of mine who started a psychotherapy practice, I
@@ -362,6 +378,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           url="/"
           logoAlt="thomas ledoux"
           tags={["astro", "typescript", "tailwind"]}
+          id="seventeen"
         >
           <p class="mb-4">
             I like to use my personal website as a playground for new ideas and
@@ -376,6 +393,79 @@ import logoLallemand from "../assets/logolallemand.svg";
             default is a huge win for my site.
           </p>
         </Case>
+      </ul>
+      <div
+        class="track__indicators h-5 absolute left-1/2 gap-x-1 -translate-x-1/2 flex"
+        aria-hidden="true"
+      >
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#one"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#two"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#three"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#four"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#five"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#six"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#seven"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#eight"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          href="#nine"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
+          href="#ten"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
+          href="#eleven"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
+          href="#twelve"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
+          href="#thirteen"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
+          href="#fourteen"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
+          href="#fifteen"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
+          href="#sixteen"
+          class="indicator"></a>
+        <a
+          class="indicator min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
+          href="#seventeen"
+          class="indicator"></a>
       </div>
     </div>
   </section>

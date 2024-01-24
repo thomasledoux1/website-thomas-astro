@@ -7,7 +7,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/inter-v12-latin-regular.woff2') format('woff2');
+  src: url("/fonts/inter-v12-latin-regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -15,7 +15,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/inter-v12-latin-700.woff2') format('woff2');
+  src: url("/fonts/inter-v12-latin-700.woff2") format("woff2");
 }
 
 @font-face {
@@ -24,7 +24,7 @@
   font-weight: 600;
   font-display: swap;
   unicode-range: U+000-5FF;
-  src: url('/fonts/CalSans-SemiBold.woff2') format('woff2');
+  src: url("/fonts/CalSans-SemiBold.woff2") format("woff2");
 }
 
 :root {
@@ -340,4 +340,144 @@ figcaption ~ .copy-button-wrapper .copy-button-tooltip {
 
 .mdx ul {
   @apply list-disc list-inside mb-3 marker:text-secondary;
+}
+
+.carousel {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .track {
+    width: 100vw;
+    position: relative;
+    timeline-scope: --one, --two, --three, --four, --five, --six, --seven,
+      --eight, --nine, --ten, --eleven, --twelve, --thirteen, --fourteen,
+      --fifteen, --sixteen, --seventeen;
+  }
+
+  .track__indicators {
+    aspect-ratio: 17 / 1;
+  }
+
+  li:nth-of-type(1) {
+    view-timeline: --one inline;
+  }
+  li:nth-of-type(2) {
+    view-timeline: --two inline;
+  }
+  li:nth-of-type(3) {
+    view-timeline: --three inline;
+  }
+  li:nth-of-type(4) {
+    view-timeline: --four inline;
+  }
+  li:nth-of-type(5) {
+    view-timeline: --five inline;
+  }
+  li:nth-of-type(6) {
+    view-timeline: --six inline;
+  }
+  li:nth-of-type(7) {
+    view-timeline: --seven inline;
+  }
+  li:nth-of-type(8) {
+    view-timeline: --eight inline;
+  }
+  li:nth-of-type(9) {
+    view-timeline: --nine inline;
+  }
+  li:nth-of-type(10) {
+    view-timeline: --ten inline;
+  }
+  li:nth-of-type(11) {
+    view-timeline: --eleven inline;
+  }
+  li:nth-of-type(12) {
+    view-timeline: --twelve inline;
+  }
+  li:nth-of-type(13) {
+    view-timeline: --thirteen inline;
+  }
+  li:nth-of-type(14) {
+    view-timeline: --fourteen inline;
+  }
+  li:nth-of-type(15) {
+    view-timeline: --fifteen inline;
+  }
+  li:nth-of-type(16) {
+    view-timeline: --sixteen inline;
+  }
+  li:nth-of-type(17) {
+    view-timeline: --seventeen inline;
+  }
+
+  .indicator {
+    --buffer: calc(60vw * 0.9);
+    animation: blink both linear;
+    animation-range: contain calc(50% - var(--buffer)) contain
+      calc(50% + var(--buffer));
+  }
+
+  .indicator:nth-of-type(1) {
+    animation-timeline: --one;
+  }
+  .indicator:nth-of-type(2) {
+    animation-timeline: --two;
+  }
+  .indicator:nth-of-type(3) {
+    animation-timeline: --three;
+  }
+  .indicator:nth-of-type(4) {
+    animation-timeline: --four;
+  }
+  .indicator:nth-of-type(5) {
+    animation-timeline: --five;
+  }
+  .indicator:nth-of-type(6) {
+    animation-timeline: --six;
+  }
+  .indicator:nth-of-type(7) {
+    animation-timeline: --seven;
+  }
+  .indicator:nth-of-type(8) {
+    animation-timeline: --eight;
+  }
+  .indicator:nth-of-type(9) {
+    animation-timeline: --nine;
+  }
+  .indicator:nth-of-type(10) {
+    animation-timeline: --ten;
+  }
+  .indicator:nth-of-type(11) {
+    animation-timeline: --eleven;
+  }
+  .indicator:nth-of-type(12) {
+    animation-timeline: --twelve;
+  }
+  .indicator:nth-of-type(13) {
+    animation-timeline: --thirteen;
+  }
+  .indicator:nth-of-type(14) {
+    animation-timeline: --fourteen;
+  }
+  .indicator:nth-of-type(15) {
+    animation-timeline: --fifteen;
+  }
+  .indicator:nth-of-type(16) {
+    animation-timeline: --sixteen;
+  }
+  .indicator:nth-of-type(17) {
+    animation-timeline: --seventeen;
+  }
+
+  @keyframes blink {
+    50% {
+      flex: 3;
+    }
+  }
 }

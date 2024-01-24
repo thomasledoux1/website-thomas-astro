@@ -8,41 +8,42 @@ interface Props {
   logoAlt?: string;
   logoWidth?: number;
   tags: string[];
+  id: string;
 }
-const { img, url, logoWidth, logoAlt, tags } = Astro.props;
+const { img, url, logoWidth, logoAlt, tags, id } = Astro.props;
 ---
 
-<a
-  target="_blank"
-  rel="noopener noreferrer"
-  class="transform flex flex-col lg:text-center rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
-  href={url}
+<li
+  id={id}
+  class="transform lg:h-[400px] border p-4 lg:p-6 lg:snap-center lg:min-w-[60vw] lg:max-w-[60vw] flex rounded-xl shadow-lg"
 >
-  <div
-    class="h-24 max-h-24 max-w-[80%] mx-auto text-center flex items-center justify-center"
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    href={url}
+    class="grid lg:grid-cols-7 gap-x-6"
   >
-    {
-      img && logoWidth ? (
-        <Image
-          width={logoWidth}
-          height={100}
-          alt={`Logo ${logoAlt}`}
-          src={img}
-          class="inline-block max-w-full lg:max-w-xs"
-        />
-      ) : (
-        <span class="text-3xl lg:text-3xl">{logoAlt}</span>
-      )
-    }
-  </div>
-  <div class="p-4 flex-grow flex flex-col">
-    <slot />
-    <div class="flex flex-col pt-4 mt-auto flex-grow justify-end">
-      <ul class="flex flex-wrap">
+    <div class="lg:col-span-2 flex flex-col justify-center">
+      <div class={`max-h-24 lg:mx-0 max-w-[80%] lg:max-w-full flex`}>
+        {
+          img && logoWidth ? (
+            <Image
+              width={logoWidth}
+              height={100}
+              alt={`Logo ${logoAlt}`}
+              src={img}
+              class="inline-block"
+            />
+          ) : (
+            <span class="text-2xl break-all">{logoAlt}</span>
+          )
+        }
+      </div>
+      <ul class="flex lg:order-1 flex-wrap my-4 gap-2 lg:mb-0 w-full">
         {
           tags.map((tag) => {
             return (
-              <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
+              <li class="bg-secondary text-white text-sm py-1 px-4 rounded-md">
                 {tag}
               </li>
             );
@@ -50,5 +51,8 @@ const { img, url, logoWidth, logoAlt, tags } = Astro.props;
         }
       </ul>
     </div>
-  </div>
-</a>
+    <div class="lg:p-4 lg:col-span-5 flex-grow justify-center flex flex-col">
+      <slot />
+    </div>
+  </a>
+</li>
