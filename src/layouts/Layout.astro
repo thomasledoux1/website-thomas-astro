@@ -80,10 +80,8 @@ import "../../styles/global.css";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SpeedInsights />
   </head>
-  <body class="font-body">
-    <main
-      class={`grid min-h-[100dvh] grid-cols-[1rem,1fr,1rem] sm:grid-cols-[1fr,640px,1fr] md:grid-cols-[1fr,768px,1fr] lg:grid-cols-[1fr,1024px,1fr] xl:grid-cols-[1fr,1280px,1fr] 2xl:grid-cols-[1fr,1536px,1fr] h-full pt-8 pb-24`}
-    >
+  <body class="flex flex-col font-body min-h-[100dvh]">
+    <main class={`flex-grow flex flex-col container mx-auto h-full pt-8 pb-24`}>
       <slot />
     </main>
     <Footer />

@@ -1,34 +1,26 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Case from "../components/Case.astro";
-import logoNalo from "../assets/logonalo.png";
-import logoCarglass from "../assets/logocarglass.png";
 import logoKaraton from "../assets/logokaraton.png";
 import logoRialto from "../assets/logorialto.png";
 import logoCarlier from "../assets/logocarlier.png";
 import logoAchterderegenboog from "../assets/logoachterderegenboog.png";
 import logoDuckduckgo from "../assets/logoduckduckgo.png";
-import logoAccent from "../assets/logoaccent.png";
-import logoPoa from "../assets/logopoa.webp";
-import logoSd from "../assets/logosd.webp";
-import logoSibelco from "../assets/logosibelco.webp";
-import logoBrachot from "../assets/logobrachot.svg";
-import logoMaterialise from "../assets/logomaterialise.png";
-import logoVlerick from "../assets/logovlerick.png";
-import logoLallemand from "../assets/logolallemand.svg";
 ---
 
 <Layout
   description="Projects Thomas Ledoux worked on"
   title="Thomas Ledoux | Portfolio"
 >
-  <section class="my-auto col-span-3">
-    <div class="items-center content-center track">
+  <section
+    class="my-auto lg:-mx-[calc(4rem+((100vw-1024px)/2))] xl:-mx-[calc(5rem+((100vw-1280px)/2))] 2xl:-mx-[calc(12rem+((100vw-1536px)/2))]"
+  >
+    <div class="relative">
       <h1 class="text-center text-2xl lg:text-5xl mb-6 md:mb-12 font-bold">
         Some of my work
       </h1>
       <ul
-        class="flex flex-col lg:flex-row px-4 gap-y-4 lg:gap-y-0 lg:px-0 lg:ps-[20vw] carousel my-auto lg:pe-[20vw] lg:gap-x-8 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto lg:scroll-smooth"
+        class="flex flex-col lg:flex-row gap-y-4 lg:gap-y-0 lg:ps-[20vw] carousel my-auto lg:pe-[20vw] lg:gap-x-8 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto lg:!scroll-smooth"
       >
         <Case
           url="https://www.karaton.be"
@@ -105,59 +97,12 @@ import logoLallemand from "../assets/logolallemand.svg";
           </p>
         </Case>
         <Case
-          url="https://www.carglass.be"
-          logoAlt="Carglass"
-          img={logoCarglass}
-          logoWidth={374}
-          tags={["sitecore", "react", "less"]}
-          id="four"
-        >
-          <p class="mb-4">
-            At my current job at The Reference I help maintain the website for
-            Carglass, we keep adding new features and maintain the older code in
-            sprints.
-          </p>
-          <p class="mb-4">
-            We have a separate Backend Development team, so my focus is purely
-            on the Frontend Development in <b>React</b>.
-          </p>
-          <p>
-            In the booking flows we make heavy use of MobX for state management,
-            Local- and Sessionstorage to save intermediary input by the users
-            and integrate with APIs from different parties.
-          </p>
-        </Case>
-        <Case
-          url="https://www.nationale-loterij.be"
-          logoAlt="Nationale Loterij"
-          img={logoNalo}
-          logoWidth={240}
-          tags={["sitecore", "react", "sass"]}
-          id="five"
-        >
-          <p class="mb-4">
-            One of the other clients I work for at The Reference is Nationale
-            Loterij, for this client we constantly create new features with a
-            modern look on a monthly basis.
-          </p>
-          <p class="mb-4">
-            In this project I get to test out even more new technologies, and
-            new features in the existing technologies (think <b>React Hooks</b>,
-            CSS3 animations..).
-          </p>
-          <p>
-            The feature I&apos;m most proud of is the interactive Sponsoring Map
-            of Belgium we created with some nice animations and beautiful
-            design.
-          </p>
-        </Case>
-        <Case
           url="https://www.achterderegenboog.be"
           logoAlt="Achter De Regenboog"
           img={logoAchterderegenboog}
           logoWidth={150}
           tags={["wordpress", "html", "css"]}
-          id="six"
+          id="four"
         >
           <p class="mb-4">
             In my free time I like to experiment with other frameworks and
@@ -179,7 +124,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           img={logoDuckduckgo}
           logoWidth={100}
           tags={["open source", "hacktoberfest", "stencil", "typescript"]}
-          id="seven"
+          id="five"
         >
           <p class="mb-4">
             In 2020 I participated in <b>Hacktoberfest</b> for the first time ever.
@@ -193,178 +138,10 @@ import logoLallemand from "../assets/logolallemand.svg";
           </p>
         </Case>
         <Case
-          url="https://www.accentjobs.be"
-          logoAlt="Accent Jobs"
-          img={logoAccent}
-          logoWidth={532}
-          tags={["gatsby", "drupal", "typescript", "emotion"]}
-          id="eight"
-        >
-          <p class="mb-4">
-            At the end of 2020, I got the opportunity to work on a project
-            within The Reference using our new MACH stack.
-          </p>
-          <p class="mb-4">
-            This was the first time I was using <b>Gatsby</b> for a production website,
-            and I must say it makes developing a breeze. Connecting everything through
-            API&apos;s, no hard dependecies on a CMS.. I love it.
-          </p>
-        </Case>
-        <Case
-          url="https://www.portofantwerp.be"
-          logoAlt="Port Of Antwerp"
-          img={logoPoa}
-          logoWidth={199}
-          tags={["nextjs", "drupal", "typescript", "tailwind", "algolia"]}
-          id="nine"
-        >
-          <p class="mb-4">
-            Starting february 2021, we started working on a new website for the
-            Port of Antwerp. This website uses the MACH stack as mentioned
-            above, but with <b>Next.js</b> instead of Gatsby, and{" "}
-            <b>Tailwind</b> for styling!
-          </p>
-          <p>
-            I really like this combo (this website is made with these
-            technologies), so I couldn&apos;t be happier to be the lead frontend
-            developer on this project. So far I&apos;ve learned a lot about the
-            many features and possibilities of Next.js, and I&apos;m hoping to
-            create the most performant website for this high profile client.
-          </p>
-        </Case>
-        <Case
-          url="https://www.sdworx.com"
-          logoAlt="SD Worx"
-          img={logoSd}
-          logoWidth={377}
-          tags={[
-            "nextjs",
-            "drupal",
-            "typescript",
-            "bootstrap",
-            "algolia",
-            "kubernetes",
-          ]}
-          id="ten"
-        >
-          <p class="mb-4">
-            For SD Worx we went with almost the same stack as the project for
-            Port of Antwerp, only this time we were forced to use Bootstrap
-            instead of Tailwind. On this project I&apos;m also lead frontend
-            developer, and I do some devops work here too.
-          </p>
-          <p>
-            The devops work is mostly setting up the Azure build pipelines,
-            managing the <b>Kubernetes</b> cluster...
-          </p>
-        </Case>
-        <Case
-          url="https://www.sibelco.com"
-          logoAlt="Sibelco"
-          img={logoSibelco}
-          logoWidth={305}
-          tags={["nextjs", "kontent.ai", "typescript", "tailwind", "algolia"]}
-          id="eleven"
-        >
-          <p class="mb-4">
-            Sibelco was the first client for who we worked with{" "}
-            <b>Kontent.ai</b>, which was a really great experience to work with.
-            We also started using <b>Storybook</b> for the first time at The Reference
-            in this project, which helped us a lot to prototype fast, and create
-            consistency.
-          </p>
-          <p>
-            In this project I coached 4 people, while also actively developing
-            new features. The greatest part was setting up the <b>Algolia</b>{
-              " "
-            }
-            integrations to index the materials and products, which was a breeze
-            with Algolia.
-          </p>
-        </Case>
-        <Case
-          url="https://www.brachot.com"
-          logoAlt="Brachot"
-          img={logoBrachot}
-          logoWidth={300}
-          tags={["nextjs", "typescript", "tailwind", "commercetools"]}
-          id="twelve"
-        >
-          <p class="mb-4">
-            This was the first e-commerce project I worked on. For this project
-            we worked with Commercetools, a headless & API-first commerce
-            engine. There was a lot of learning to do regarding their APIs, but
-            we managed to get it working very well in the end.
-          </p>
-          <p>
-            This was also the first project where I worked with next-auth for
-            authentication, which connected with Azure ADB2C, so clients of
-            Brachot can easily login with their existing accounts. Technically
-            one of the more challenging projects I worked on, but the more
-            satisfying!
-          </p>
-        </Case>
-        <Case
-          url="https://www.materialise.com"
-          logoAlt="Materialise"
-          img={logoMaterialise}
-          logoWidth={300}
-          tags={["nextjs", "typescript", "tailwind", "kontent.ai"]}
-          id="thirteen"
-        >
-          <p class="mb-4">
-            For Materialise we also worked with Kontent.ai, which was a breeze
-            to work with. We also used Storybook again, which was a great help
-            to create consistency in the components.
-          </p>
-        </Case>
-        <Case
-          url="https://www.vlerick.com"
-          logoAlt="Vlerick"
-          img={logoVlerick}
-          logoWidth={100}
-          tags={["gatsby", "typescript", "kontent.ai"]}
-          id="fourteen"
-        >
-          <p class="mb-4">
-            For Vlerick we used Gatsby, which was nice to work with again. The
-            unified API to bundle all data together is really great. We also
-            used Kontent.ai again, as it was a good fit for the use case of
-            Vlerick.
-          </p>
-          <p>
-            We also created a custom plugin for Kontent.ai to easily integrate
-            Bynder images into the website. This was a great learning
-            experience.
-          </p>
-        </Case>
-        <Case
-          url="https://www.lallemand.com"
-          logoAlt="Lallemand"
-          img={logoLallemand}
-          logoWidth={300}
-          tags={["nextjs", "commercetools", "storybook"]}
-          id="fifteen"
-        >
-          <p class="mb-4">
-            For Lallemand we are using Commercetools Frontend for the first
-            time, which comes with a visual editor and a starter template for
-            the Next.js application together with a custom backend to connect to
-            all external systems. Having this template makes it easy to get
-            started and it's quite easy to plug in new components.
-          </p>
-          <p>
-            The template also works with the Next.js App Router, which makes it
-            the first project where we are using this feature. So far it's been
-            a great learning experience, and I'm looking forward to working on
-            this project more.
-          </p>
-        </Case>
-        <Case
           url="https://www.psychotherapiepraktijkkortrijk.be"
           logoAlt="Psychotherapiepraktijk Kortrijk"
           tags={["squarespace"]}
-          id="sixteen"
+          id="six"
         >
           <p>
             For a family member of mine who started a psychotherapy practice, I
@@ -378,7 +155,7 @@ import logoLallemand from "../assets/logolallemand.svg";
           url="/"
           logoAlt="thomas ledoux"
           tags={["astro", "typescript", "tailwind"]}
-          id="seventeen"
+          id="seven"
         >
           <p class="mb-4">
             I like to use my personal website as a playground for new ideas and
@@ -395,78 +172,65 @@ import logoLallemand from "../assets/logolallemand.svg";
         </Case>
       </ul>
       <div
-        class="track__indicators h-5 absolute left-1/2 -translate-x-1/2 flex"
+        class="track__indicators h-6 absolute -bottom-12 left-1/2 -translate-x-1/2 flex"
         aria-hidden="true"
       >
         <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           href="#one"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           href="#two"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           href="#three"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           href="#four"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           href="#five"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           href="#six"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
+          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           href="#seven"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
-          href="#eight"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4 relative"
-          href="#nine"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
-          href="#ten"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
-          href="#eleven"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
-          href="#twelve"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
-          href="#thirteen"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
-          href="#fourteen"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
-          href="#fifteen"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
-          href="#sixteen"
-          class="indicator"></a>
-        <a
-          class="indicator bg-clip-padding min-w-5 rounded-[100px] flex-1 bg-red-500 border-transparent border-4"
-          href="#seventeen"
           class="indicator"></a>
       </div>
     </div>
   </section>
+  <script>
+    import gsap from "gsap";
+    import ScrollTrigger from "gsap/ScrollTrigger";
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.set(".track__indicators", { aspectRatio: "8 / 1" });
+
+    const INDICATORS = document.querySelectorAll(".indicator");
+    const ARTICLES = document.querySelectorAll("li.case");
+    INDICATORS.forEach((indicator, index) => {
+      // Here need to animate the indicator based on the position of the card
+      gsap.to(indicator, {
+        flex: 5,
+        repeat: 1,
+        yoyo: true,
+        // @ts-expect-error
+        scrollTrigger: {
+          scrub: true,
+          horizontal: true,
+          trigger: ARTICLES[index],
+          scroller: "ul",
+          start: "right right",
+          end: "left left",
+          snap: [0, 1],
+        },
+      });
+    });
+  </script>
 </Layout>
