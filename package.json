@@ -33,8 +33,6 @@
     "@giscus/react": "^2.4.0",
     "@neondatabase/serverless": "^0.7.2",
     "@tanstack/react-query": "^5.17.19",
-    "@trpc/client": "^10.45.0",
-    "@trpc/server": "^10.45.0",
     "@vercel/postgres": "^0.7.2",
     "@vercel/speed-insights": "^1.0.8",
     "astro-auto-import": "^0.4.2",
