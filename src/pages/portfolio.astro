@@ -214,6 +214,7 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
 
     const INDICATORS = document.querySelectorAll(".indicator");
     const ARTICLES = document.querySelectorAll("li.case");
+    const UL = document.querySelector(".carousel");
     INDICATORS.forEach((indicator, index) => {
       // Here need to animate the indicator based on the position of the card
       gsap.to(indicator, {
@@ -225,10 +226,9 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
           scrub: true,
           horizontal: true,
           trigger: ARTICLES[index],
-          scroller: "ul",
+          scroller: UL,
           start: "right right",
           end: "left left",
-          snap: [0, 1],
         },
       });
     });
