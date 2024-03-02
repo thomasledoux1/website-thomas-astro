@@ -176,60 +176,45 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
         aria-hidden="true"
       >
         <a
-          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          href="#one"
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="one"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          href="#two"
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="two"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          href="#three"
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="three"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          href="#four"
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="four"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          href="#five"
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="five"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          href="#six"
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="six"
           class="indicator"></a>
         <a
-          class="indicator bg-clip-padding min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          href="#seven"
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="seven"
           class="indicator"></a>
       </div>
     </div>
   </section>
   <script>
-    import gsap from "gsap";
-    import ScrollTrigger from "gsap/ScrollTrigger";
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.set(".track__indicators", { aspectRatio: "8 / 1" });
-
     const INDICATORS = document.querySelectorAll(".indicator");
-    const ARTICLES = document.querySelectorAll("li.case");
-    const UL = document.querySelector(".carousel");
-    INDICATORS.forEach((indicator, index) => {
-      // Here need to animate the indicator based on the position of the card
-      gsap.to(indicator, {
-        flex: 5,
-        repeat: 1,
-        yoyo: true,
-        // @ts-expect-error
-        scrollTrigger: {
-          scrub: true,
-          horizontal: true,
-          trigger: ARTICLES[index],
-          scroller: UL,
-          start: "right right",
-          end: "left left",
-        },
+    INDICATORS.forEach((indicator) => {
+      indicator.addEventListener("click", (e) => {
+        if (e.target instanceof HTMLElement && e.target?.dataset.slide) {
+          document.getElementById(e.target?.dataset.slide)?.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
       });
     });
   </script>
