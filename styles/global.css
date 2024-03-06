@@ -350,3 +350,7 @@ figcaption ~ .copy-button-wrapper .copy-button-tooltip {
 .carousel::-webkit-scrollbar {
   display: none;
 }
+
+.vertical-text {
+  writing-mode: vertical-rl;
+}

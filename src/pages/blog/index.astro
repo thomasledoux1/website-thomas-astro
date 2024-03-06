@@ -29,9 +29,17 @@ const sortedPosts = await Promise.all(
     <div
       class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-9 items-center auto-rows-min mt-6"
     >
-      {
-        sortedPosts.map((post, i) => <PostPreview {post} index={i} />)
-      }
+      {sortedPosts.map((post, i) => <PostPreview {post} index={i} />)}
+    </div>
+    <div
+      class="hidden lg:block bg-secondary text-nowrap py-4 px-2 vertical-text break-all fixed top-1/2 z-40 left-0 -translate-y-1/2 text-white font-bold rounded-r-lg"
+    >
+      <p>
+        I am looking for work for my side business. <a
+          class="underline"
+          href="mailto:hello@thomasledoux.be">Contact me</a
+        >
+      </p>
     </div>
   </section>
 </Layout>
