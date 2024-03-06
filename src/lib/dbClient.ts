@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
 export const PageViewsTable = pgTable("page_views", {
@@ -8,8 +8,6 @@ export const PageViewsTable = pgTable("page_views", {
 });
 
 // Connect to Vercel Postgres
-
-neonConfig.fetchConnectionCache = true;
 const client = drizzle(neon(import.meta.env.POSTGRES_URL));
 
 export { client };
