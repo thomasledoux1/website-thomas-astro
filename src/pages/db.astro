@@ -1,0 +1,8 @@
+---
+import { db, PageView } from "astro:db";
+
+const pageViews = await db.select().from(PageView);
+console.log(pageViews);
+---
+
+<div>Test</div>
