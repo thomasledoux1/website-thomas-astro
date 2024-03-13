@@ -6,6 +6,8 @@ import logoRialto from "../assets/logorialto.png";
 import logoCarlier from "../assets/logocarlier.png";
 import logoAchterderegenboog from "../assets/logoachterderegenboog.png";
 import logoDuckduckgo from "../assets/logoduckduckgo.png";
+import logoMartino from "../assets/logomartino.png";
+import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
 ---
 
 <Layout
@@ -23,12 +25,53 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
         class="flex flex-col lg:flex-row gap-y-4 lg:gap-y-0 lg:ps-[20vw] carousel my-auto lg:pe-[20vw] lg:gap-x-8 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto lg:!scroll-smooth"
       >
         <Case
+          url="https://snackbarmartino.be"
+          logoAlt="Snackbar Martino"
+          tags={["wordpress"]}
+          img={logoMartino}
+          logoWidth={150}
+          id="one"
+        >
+          <p class="mb-4">
+            I was contacted by the lovely people at Martino to give their
+            website a bit of an update. Since I'm a fan of their restaurant, I
+            was immediately enthousiastic about this project.
+          </p>
+          <p>
+            Their website was already built in Wordpress, so it was easy for me
+            to jump in and do the necessary changes. I adapted the font used to
+            their house font "Hobo", added a navigation and a contact page and
+            they're good to go again!
+          </p>
+        </Case>
+        <Case
+          url="https://borluutjoggers.be"
+          logoAlt="Borluut Joggers"
+          tags={["wordpress"]}
+          img={logoBorluutJoggers}
+          logoWidth={150}
+          id="two"
+        >
+          <p class="mb-4">
+            My colleague Hilde was in need of a refresh and redesign of the
+            current website of their running club Borljuut Joggers, so she came
+            to me to take care of this.
+          </p>
+          <p>
+            With the existing website already being built in Wordpress, I had a
+            good base to work on. I applied a new theme and changed the content
+            architecture to make the pages and navigation easier to navigate
+            through. One of my focus points was also to get a good mobile-first
+            experience, which wasn't a focus on the previous website.
+          </p>
+        </Case>
+        <Case
           url="https://www.karaton.be"
           logoAlt="Karaton"
           img={logoKaraton}
           logoWidth={218}
           tags={["mongodb", "expressjs", "angular", "nodejs"]}
-          id="one"
+          id="three"
         >
           <p class="mb-4">
             For Happs Development I created and maintained the <b>Angular</b>{
@@ -54,7 +97,7 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
           img={logoRialto}
           logoWidth={321}
           tags={["swift", "ios"]}
-          id="two"
+          id="four"
         >
           <p class="mb-4">
             At my internship for Rialto I created an iOS app from scratch in{
@@ -78,7 +121,7 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
           img={logoCarlier}
           logoWidth={100}
           tags={["react-native", "react"]}
-          id="three"
+          id="five"
         >
           <p class="mb-4">
             While working at Happs Development I also created a mobile
@@ -102,7 +145,7 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
           img={logoAchterderegenboog}
           logoWidth={150}
           tags={["wordpress", "html", "css"]}
-          id="four"
+          id="six"
         >
           <p class="mb-4">
             In my free time I like to experiment with other frameworks and
@@ -124,7 +167,7 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
           img={logoDuckduckgo}
           logoWidth={100}
           tags={["open source", "hacktoberfest", "stencil", "typescript"]}
-          id="five"
+          id="seven"
         >
           <p class="mb-4">
             In 2020 I participated in <b>Hacktoberfest</b> for the first time ever.
@@ -141,7 +184,7 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
           url="https://www.psychotherapiepraktijkkortrijk.be"
           logoAlt="Psychotherapiepraktijk Kortrijk"
           tags={["squarespace"]}
-          id="six"
+          id="eight"
         >
           <p>
             For a family member of mine who started a psychotherapy practice, I
@@ -155,7 +198,7 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
           url="/"
           logoAlt="thomas ledoux"
           tags={["astro", "typescript", "tailwind"]}
-          id="seven"
+          id="nine"
         >
           <p class="mb-4">
             I like to use my personal website as a playground for new ideas and
@@ -184,34 +227,51 @@ import logoDuckduckgo from "../assets/logoduckduckgo.png";
         class="track__indicators h-6 absolute -bottom-12 left-1/2 -translate-x-1/2 flex"
         aria-hidden="true"
       >
-        <a
+        <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           data-slide="one"
-          class="indicator"></a>
-        <a
+          class="indicator"
+          aria-label="Scroll to slide 1"></button>
+        <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           data-slide="two"
-          class="indicator"></a>
-        <a
+          class="indicator"
+          aria-label="Scroll to slide 2"></button>
+        <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           data-slide="three"
-          class="indicator"></a>
-        <a
+          class="indicator"
+          aria-label="Scroll to slide 3"></button>
+        <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           data-slide="four"
-          class="indicator"></a>
-        <a
+          class="indicator"
+          aria-label="Scroll to slide 4"></button>
+        <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           data-slide="five"
-          class="indicator"></a>
-        <a
+          class="indicator"
+          aria-label="Scroll to slide 5"></button>
+        <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           data-slide="six"
-          class="indicator"></a>
-        <a
+          class="indicator"
+          aria-label="Scroll to slide 6"></button>
+        <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
           data-slide="seven"
-          class="indicator"></a>
+          class="indicator"
+          aria-label="Scroll to slide 7"></button>
+        <button
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="eight"
+          class="indicator"
+          aria-label="Scroll to slide 8"></button>
+        <button
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          data-slide="nine"
+          class="indicator"
+          aria-label="Scroll to slide 9"></button>
       </div>
     </div>
   </section>
