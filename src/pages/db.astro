@@ -1,8 +1,16 @@
 ---
+import { eq, and } from "astro:db";
 import { db, PageView } from "astro:db";
 
 const pageViews = await db.select().from(PageView);
-console.log(pageViews);
+const res = await db
+  .delete(PageView)
+  .where(
+    and(
+      eq(PageView.url, "/test"),
+      eq(PageView.date, new Date("2024-03-12T19:39:32.730Z")),
+    ),
+  );
 ---
 
 <div>Test</div>

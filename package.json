@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host",
-    "start": "astro dev",
+    "start": "astro dev --remote",
     "build": "astro check && tsc --noEmit && astro build",
     "preview": "vercel dev",
     "astro": "astro",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "db-login": "astro db login",
+    "db-push": "astro db execute db/seed.ts --remote"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^5.1.0",

@@ -1,6 +1,6 @@
 import { column, defineDb, defineTable } from "astro:db";
 
-const PageView = defineTable({
+export const PageView = defineTable({
   columns: {
     url: column.text(),
     date: column.date(),

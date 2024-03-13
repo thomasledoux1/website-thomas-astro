@@ -1,19 +1,11 @@
 ---
 export const prerender = false;
-import {
-  and,
-  count,
-  countDistinct,
-  desc,
-  gte,
-  like,
-  lte,
-  sql,
-} from "drizzle-orm";
+import { db, and, desc, gte, like, lte, sql } from "astro:db";
+import { PageView } from "astro:db";
+import { count } from "drizzle-orm/sql";
 import UrlChart from "~/components/UrlChart";
 import ViewChart from "~/components/ViewChart";
 import Layout from "~/layouts/Layout.astro";
-import { PageViewsTable, client } from "~/lib/dbClient";
 const searchParams = Astro.url.searchParams;
 const dateRange = searchParams.get("date-range") ?? "all-time";
 const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
@@ -45,11 +37,11 @@ const start = performance.now();
 
 const conditions = [];
 if (dateGreaterThan) {
-  conditions.push(gte(PageViewsTable.date, dateGreaterThan));
-  conditions.push(lte(PageViewsTable.date, dateLessThan));
+  conditions.push(gte(PageView.date, dateGreaterThan));
+  conditions.push(lte(PageView.date, dateLessThan));
 }
 if (search !== "") {
-  conditions.push(like(PageViewsTable.url, `%${search}%`));
+  conditions.push(like(PageView.url, `%${search}%`));
 }
 let totalViews;
 let pageViews;
@@ -60,8 +52,7 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
   const whereClause = dateGreaterThan
     ? `WHERE date >= '${dateGreaterThan.toISOString()}'`
     : "";
-  const pageViewsQuery = client.execute(
-    sql.raw(`SELECT
+  const pageViewsQuery = sql.raw(`SELECT
     date_trunc('day', date) AS day,
     COUNT(*) AS page_views_count
   FROM
@@ -70,16 +61,15 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
   GROUP BY
     day
   ORDER BY
-    day ASC;`),
-  );
+    day ASC;`);
   let totalViewsRes;
   let pageViewsRes;
-  const totalViewsQuery = client
+  const totalViewsQuery = db
     .select({
-      totalUniqueURLs: countDistinct(PageViewsTable.url),
+      totalUniqueURLs: countDistinct(PageView.url),
       totalCount: count(),
     })
-    .from(PageViewsTable)
+    .from(PageView)
     .where(and(...conditions));
   [pageViewsRes, totalViewsRes] = await Promise.all([
     pageViewsQuery,
@@ -89,23 +79,23 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
   totalViews = totalViewsRes[0]?.totalCount ?? 0;
 } else {
   let totalViewsRes;
-  const totalViewsQuery = client
+  const totalViewsQuery = db
     .select({
-      totalUniqueURLs: countDistinct(PageViewsTable.url),
+      totalUniqueURLs: countDistinct(PageView.url),
       totalCount: count(),
     })
-    .from(PageViewsTable)
+    .from(PageView)
     .where(and(...conditions));
-  const viewsQuery = client
+  const viewsQuery = db
     .select({
-      url: PageViewsTable.url,
+      url: PageView.url,
       pageviews: count(),
     })
-    .from(PageViewsTable)
+    .from(PageView)
     .where(and(...conditions))
     .limit(pageSize)
     .offset(offset)
-    .groupBy(PageViewsTable.url)
+    .groupBy(PageView.url)
     .orderBy(desc(count()));
   [totalViewsRes, viewsPerUrl] = await Promise.all([
     totalViewsQuery,
