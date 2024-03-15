@@ -9,10 +9,7 @@ import {
 } from "recharts";
 
 type ViewChartProps = {
-  data: {
-    day: string;
-    page_views_count: string;
-  }[];
+  data: [date: string, pageViewNumber: number][];
 };
 
 const ViewChart = ({ data }: ViewChartProps) => {
@@ -23,11 +20,11 @@ const ViewChart = ({ data }: ViewChartProps) => {
         height={400}
         data={data.map((el) => ({
           ...el,
-          day: new Date(el.day).toLocaleDateString("en-US", {
+          day: new Date(el[0]).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
           }),
-          page_views_count: +el.page_views_count,
+          page_views_count: +el[1],
         }))}
         margin={{
           top: 10,
