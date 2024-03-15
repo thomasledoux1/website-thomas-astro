@@ -2,7 +2,7 @@
 export const prerender = false;
 import { db, and, desc, gte, like, lte, sql } from "astro:db";
 import { PageView } from "astro:db";
-import { count } from "drizzle-orm/sql";
+import { count, countDistinct } from "drizzle-orm";
 import UrlChart from "~/components/UrlChart";
 import ViewChart from "~/components/ViewChart";
 import Layout from "~/layouts/Layout.astro";
@@ -46,27 +46,31 @@ if (search !== "") {
 let totalViews;
 let pageViews;
 let viewsPerUrl;
-let totalUniqueURLs;
+let totalUniqueURLs: number | undefined;
 let totalPages;
 if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
   const whereClause = dateGreaterThan
     ? `WHERE date >= '${dateGreaterThan.toISOString()}'`
     : "";
-  const pageViewsQuery = sql.raw(`SELECT
-    date_trunc('day', date) AS day,
-    COUNT(*) AS page_views_count
+  const pageViewsQuery = db.run(
+    sql.raw(`SELECT
+    strftime('%Y-%m-%d', date) AS day,
+        COUNT(*) AS page_views_count
   FROM
-    page_views
+    PageView
   ${whereClause}
   GROUP BY
     day
   ORDER BY
-    day ASC;`);
+    day ASC;`),
+  );
   let totalViewsRes;
   let pageViewsRes;
   const totalViewsQuery = db
     .select({
+      // @ts-expect-error
       totalUniqueURLs: countDistinct(PageView.url),
+      // @ts-expect-error
       totalCount: count(),
     })
     .from(PageView)
@@ -75,13 +79,18 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
     pageViewsQuery,
     totalViewsQuery,
   ]);
-  pageViews = pageViewsRes.rows as { day: string; page_views_count: string }[];
+  pageViews = pageViewsRes as unknown as [
+    date: string,
+    pageViewNumber: number,
+  ][];
   totalViews = totalViewsRes[0]?.totalCount ?? 0;
 } else {
   let totalViewsRes;
   const totalViewsQuery = db
     .select({
+      // @ts-expect-error
       totalUniqueURLs: countDistinct(PageView.url),
+      // @ts-expect-error
       totalCount: count(),
     })
     .from(PageView)
@@ -89,6 +98,7 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
   const viewsQuery = db
     .select({
       url: PageView.url,
+      // @ts-expect-error
       pageviews: count(),
     })
     .from(PageView)
@@ -96,13 +106,14 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
     .limit(pageSize)
     .offset(offset)
     .groupBy(PageView.url)
+    // @ts-expect-error
     .orderBy(desc(count()));
   [totalViewsRes, viewsPerUrl] = await Promise.all([
     totalViewsQuery,
     viewsQuery,
   ]);
   totalViews = totalViewsRes[0]?.totalCount ?? 0;
-  totalUniqueURLs = totalViewsRes[0]?.totalUniqueURLs ?? 0;
+  totalUniqueURLs = (totalViewsRes[0]?.totalUniqueURLs as number) ?? 0;
   totalPages = Math.ceil(totalUniqueURLs / pageSize);
 }
 
@@ -182,7 +193,15 @@ nextPageUrl.set("page", `${page + 1}`);
   </form>
   {
     viewsPerUrl ? (
-      <UrlChart data={viewsPerUrl} client:load />
+      <UrlChart
+        data={
+          viewsPerUrl as unknown as {
+            url: string;
+            pageviews: number;
+          }[]
+        }
+        client:load
+      />
     ) : pageViews ? (
       <ViewChart data={pageViews} client:load />
     ) : null

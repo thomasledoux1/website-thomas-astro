@@ -1,8 +1,8 @@
 export const prerender = false;
 import { isbot } from "isbot";
+import { PageView, db } from "astro:db";
 
 import type { APIRoute } from "astro";
-import { PageViewsTable, client } from "~/lib/dbClient";
 
 export const POST: APIRoute = async ({ request }) => {
   if (import.meta.env.NODE_ENV === "development") {
@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
   try {
-    await client.insert(PageViewsTable).values({
+    await db.insert(PageView).values({
       url: body.url,
       date: new Date(),
     });
