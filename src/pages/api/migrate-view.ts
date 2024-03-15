@@ -4,7 +4,7 @@ import { db, PageView } from "astro:db";
 import { asc } from "drizzle-orm";
 import { PageViewsTable, client } from "~/lib/dbClient";
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async () => {
   try {
     const entries = (
       await client
