@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev --host",
     "start": "astro dev --remote",
-    "build": "astro check && tsc --noEmit && astro build",
+    "build": "astro check && tsc --noEmit && astro build --remote",
     "preview": "vercel dev",
     "astro": "astro",
     "prettier": "prettier --write .",
