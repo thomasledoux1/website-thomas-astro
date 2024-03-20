@@ -1,8 +1,17 @@
 ---
 export const prerender = false;
-import { db, and, desc, gte, like, lte, sql } from "astro:db";
+import {
+  db,
+  and,
+  desc,
+  gte,
+  like,
+  lte,
+  sql,
+  count,
+  countDistinct,
+} from "astro:db";
 import { PageView } from "astro:db";
-import { count, countDistinct } from "drizzle-orm";
 import UrlChart from "~/components/UrlChart";
 import ViewChart from "~/components/ViewChart";
 import Layout from "~/layouts/Layout.astro";
@@ -68,9 +77,7 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
   let pageViewsRes;
   const totalViewsQuery = db
     .select({
-      // @ts-expect-error
       totalUniqueURLs: countDistinct(PageView.url),
-      // @ts-expect-error
       totalCount: count(),
     })
     .from(PageView)
@@ -88,9 +95,7 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
   let totalViewsRes;
   const totalViewsQuery = db
     .select({
-      // @ts-expect-error
       totalUniqueURLs: countDistinct(PageView.url),
-      // @ts-expect-error
       totalCount: count(),
     })
     .from(PageView)
@@ -98,7 +103,6 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
   const viewsQuery = db
     .select({
       url: PageView.url,
-      // @ts-expect-error
       pageviews: count(),
     })
     .from(PageView)
@@ -106,7 +110,6 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
     .limit(pageSize)
     .offset(offset)
     .groupBy(PageView.url)
-    // @ts-expect-error
     .orderBy(desc(count()));
   [totalViewsRes, viewsPerUrl] = await Promise.all([
     totalViewsQuery,

@@ -1,7 +1,6 @@
 export const prerender = false;
 import type { APIRoute } from "astro";
-import { db, gt, PageView } from "astro:db";
-import { asc } from "drizzle-orm";
+import { db, asc, gt, PageView } from "astro:db";
 import { PageViewsTable, client } from "~/lib/dbClient";
 
 export const GET: APIRoute = async () => {
@@ -10,7 +9,6 @@ export const GET: APIRoute = async () => {
       .select()
       .from(PageViewsTable)
       .orderBy(asc(PageViewsTable.date))
-      // @ts-expect-error
       .where(gt(PageViewsTable.date, new Date("2024-03-16")));
     console.log(entries);
     for (const entry of entries) {

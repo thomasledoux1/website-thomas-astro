@@ -1,9 +1,8 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { count, eq } from "drizzle-orm";
 import { isbot } from "isbot";
-import { PageView, db } from "astro:db";
+import { PageView, eq, db, count } from "astro:db";
 
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url).searchParams.get("url");
@@ -24,10 +23,8 @@ export const GET: APIRoute = async ({ request }) => {
     );
   }
   const viewCount = await db
-    // @ts-expect-error
     .select({ value: count() })
     .from(PageView)
-    // @ts-expect-error
     .where(eq(PageView.url, url));
   return new Response(
     JSON.stringify({
