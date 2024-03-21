@@ -74,7 +74,6 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
     day ASC;`),
   );
   let totalViewsRes;
-  let pageViewsRes;
   const totalViewsQuery = db
     .select({
       totalUniqueURLs: countDistinct(PageView.url),
@@ -82,14 +81,10 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
     })
     .from(PageView)
     .where(and(...conditions));
-  [pageViewsRes, totalViewsRes] = await Promise.all([
+  [pageViews, totalViewsRes] = await Promise.all([
     pageViewsQuery,
     totalViewsQuery,
   ]);
-  pageViews = pageViewsRes as unknown as [
-    date: string,
-    pageViewNumber: number,
-  ][];
   totalViews = totalViewsRes[0]?.totalCount ?? 0;
 } else {
   let totalViewsRes;
@@ -116,7 +111,7 @@ if (!searchParams.get("mode") || searchParams.get("mode") === "page-views") {
     viewsQuery,
   ]);
   totalViews = totalViewsRes[0]?.totalCount ?? 0;
-  totalUniqueURLs = (totalViewsRes[0]?.totalUniqueURLs as number) ?? 0;
+  totalUniqueURLs = totalViewsRes[0]?.totalUniqueURLs ?? 0;
   totalPages = Math.ceil(totalUniqueURLs / pageSize);
 }
 
@@ -196,17 +191,10 @@ nextPageUrl.set("page", `${page + 1}`);
   </form>
   {
     viewsPerUrl ? (
-      <UrlChart
-        data={
-          viewsPerUrl as unknown as {
-            url: string;
-            pageviews: number;
-          }[]
-        }
-        client:load
-      />
+      <UrlChart data={viewsPerUrl} client:load />
     ) : pageViews ? (
-      <ViewChart data={pageViews} client:load />
+      // @ts-expect-error
+      <ViewChart data={pageViews.rows} client:load />
     ) : null
   }
   {
