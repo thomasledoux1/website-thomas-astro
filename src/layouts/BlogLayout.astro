@@ -91,7 +91,11 @@ const latestBlogs = await Promise.all(
         }
       </div>
     </div>
-    <ViewCount className="mb-4" url={`/blog/${frontmatter.slug}`} client:idle />
+    <ViewCount
+      className="mb-4 flex gap-x-2 items-center"
+      url={`/blog/${frontmatter.slug}`}
+      client:idle
+    />
     <slot />
   </article>
   <Comments client:idle />

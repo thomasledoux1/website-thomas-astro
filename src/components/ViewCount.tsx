@@ -22,7 +22,7 @@ const ViewCountInner = ({ url }: ViewCountInnerProps) => {
     <>
       View count:{" "}
       {isLoading ? (
-        <span className="animate-loading h-4 inline-block w-12 rounded-sm" />
+        <span className="animate-loading h-[19.5px] inline-block w-12 rounded-sm" />
       ) : (
         <span className="font-bold">{data.count}</span>
       )}

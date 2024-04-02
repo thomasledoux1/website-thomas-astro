@@ -1,0 +1,143 @@
+---
+title: "Astro DB: Migrating my analytics data from Vercel Postgres"
+tags: ["astro", "database", "vercel", "postgres", "libsql"]
+date: "2024-03-29T15:14:39.004Z"
+image: "./astro-db-migrating-analytics-postgres.jpg"
+imageAlt: "Astral picture"
+---
+
+## Why migrate?
+
+A few months ago I wrote about setting up [Basic analytics with Vercel Postgres - Drizzle - Astro](https://wwww.thomasledoux.be/blog/basic-analytics-vercel-postgres-astro).
+At the time I chose Vercel Postgres as a database because it had an ok free tier, and I thought it was easy to manage all my hosted tools in one place.
+But earlier this month the Astro team announced [Astro DB](https://astro.build/db/), a fully managed (lib)SQL database.
+They partnered with [Turso](https://turso.tech/) to provide very generous free tiers with infinite scalability.
+I was immediately sold!
+
+## Setting up Astro DB
+
+As with every Astro feature, you can just run `npx astro add db`, and all dependencies and configurations will be put into place for you.
+Once this is done, you can [define and seed your database](https://docs.astro.build/en/guides/astro-db/).
+
+```ts title="db/config.ts"
+import { column, defineDb, defineTable } from "astro:db";
+
+export const PageView = defineTable({
+  columns: {
+    url: column.text(),
+    date: column.date(),
+  },
+  indexes: {
+    url_idx: { on: ["url"], unique: false },
+    date_idx: { on: ["date"], unique: false },
+  },
+});
+
+export default defineDb({
+  tables: { PageView },
+});
+```
+
+```ts title="db/seed.ts"
+import { db, PageView } from "astro:db";
+
+export default async function () {
+  await db.insert(PageView).values([
+    { date: new Date(), url: "/" },
+    { date: new Date(new Date().getTime() - 1000), url: "/test" },
+  ]);
+}
+```
+
+During development, whenever you start your development server, a new database is created locally and will contain the data from your `db/seed.ts` file.
+
+## Migrating data from Vercel Postgres to Astro DB
+
+I didn't want to spend too much time on the code for this functionality, and since Vercel doesn't provide the functionality to export the database, I created an API route in my Astro app where I query the Vercel postgres database, and then write the resulting dataset to Astro DB.
+This could probably be done in a more efficient way using batching or transactions, but databases aren't my specialty, so I didn't dive into it deeper.
+
+```ts title="pages/api/migrate-view.ts"
+export const prerender = false;
+import type { APIRoute } from "astro";
+import { db, asc, gt, PageView } from "astro:db";
+import { PageViewsTable, client } from "~/lib/dbClient";
+
+export const GET: APIRoute = async () => {
+  try {
+    const entries = await client
+      .select()
+      .from(PageViewsTable)
+      .orderBy(asc(PageViewsTable.date))
+      .where(gt(PageViewsTable.date, new Date("2024-01-16")));
+    for (const entry of entries) {
+      await db.insert(PageView).values({ url: entry.url, date: entry.date });
+    }
+  } catch (e) {
+    console.error(e);
+    return new Response(
+      JSON.stringify({
+        error: "Error updating views",
+      }),
+      { status: 400 },
+    );
+  }
+
+  return new Response(
+    JSON.stringify({
+      message: "Succesfully updated views",
+    }),
+    { status: 200 },
+  );
+};
+```
+
+Due to the fact that I had around 30k views to migrate, my function timed out a few times, and I had to find out what the `date` of the last migrated entry was, to know what to use as the greater than value for my query to Vercel Postgres.
+
+## Querying Astro DB
+
+Now that I've got data in Astro DB, I can start with the fun part, querying the data!
+To query your database and to insert data into it, you'll be using `Drizzle`, a type-safe ORM which is built into Astro.
+This was great news for me, since I already used Drizzle in my previous implementation with Vercel Postgres.
+You can import `db` and start querying right away, all with full TypeScript support.
+An example where I query the count of page views for a certain URL:
+
+```ts
+import { PageView, eq, db, count } from "astro:db";
+
+const viewCount = await db
+  .select({ value: count() })
+  .from(PageView)
+  .where(eq(PageView.url, url));
+```
+
+The return type here will be inferred automatically and would look like:
+
+```ts
+{
+  value: number;
+}
+[];
+```
+
+## Inserting data into Astro DB
+
+Inserting is as easy as it gets, just call `db.insert()` and off you go.
+On the inserts, Drizzle will check the types of the values being passed to it again, so if you'd send a `number` for the `url` field, this would fail, since it's expecting a `string`.
+
+```ts
+await db.insert(PageView).values({
+  url: body.url,
+  date: new Date(),
+});
+```
+
+## Conclusion
+
+Since Drizzle abstracts away the differences between Postgres & LibSQL behind the scenes, I didn't have to change much to my queries. This made the migration very easy. Having the type-safety of Drizzle, I could just do the changes and do a quick type-check to see if any TS errors popped up, if there weren't any, I was done.
+Now the migration's done, I don't have to worry about hitting the limits of the free tier anywhere soon, and the DX got even better, double win!
+If you want to see the changes I had to do to move from Vercel Postgres to Astro DB in code, you can check this [compare](https://github.com/thomasledoux1/website-thomas-astro/compare/7f135c2c5fca09c4673fe44eb14c202593f29969...edf99302226eb2d85ca53cc8cfaf2ebca1a2968d). You'll see a lot of the changed files are from moving my `pages/page-views` route to a static route, and handling all the data fetching for it on the client side.
+This was mainly done to avoid seeing an empty page for too long while server rendering the dataset.
+
+Hope you like it, now go give it a try!
+[GitHub code](https://github.com/thomasledoux1/website-thomas-astro/tree/edf99302226eb2d85ca53cc8cfaf2ebca1a2968d)
+[Live site](https://www.thomasledoux.be)
