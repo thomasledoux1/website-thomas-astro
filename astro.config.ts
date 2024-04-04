@@ -6,8 +6,9 @@ import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
 import react from "@astrojs/react";
 import AutoImport from "astro-auto-import";
 import { astroCodeSnippets, codeSnippetAutoImport } from "./integrations/astro-code-snippets";
-
 import db from "@astrojs/db";
+
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,7 +16,7 @@ export default defineConfig({
     applyBaseStyles: false
   }), react(), AutoImport({
     imports: [codeSnippetAutoImport]
-  }), astroCodeSnippets(), mdx(), db()],
+  }), astroCodeSnippets(), mdx(), db(), sitemap()],
   vite: {
     define: {
       "process.env.NODE_ENV": `'${process.env.NODE_ENV}'`
