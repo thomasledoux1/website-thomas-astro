@@ -1,30 +1,30 @@
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-  keepPreviousData,
-} from "@tanstack/react-query";
+import { QueryClient, useQuery, keepPreviousData } from "@tanstack/react-query";
 import { Fragment, useState } from "react";
 import UrlChart from "./UrlChart";
 import ViewChart from "./ViewChart";
 
-const PageViewsInner = () => {
+const queryClient = new QueryClient();
+
+const PageViews = () => {
   const [mode, setMode] = useState("page-views");
   const [searchLocalState, setSearchLocalState] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dateRange, setDateRange] = useState("all-time");
-  const { data, isLoading } = useQuery({
-    queryKey: ["pageViews", search, mode, page, dateRange],
-    placeholderData: keepPreviousData,
-    queryFn: async () => {
-      const response = await fetch(
-        `/api/page-views?mode=${mode}&search=${search}&page=${page}&date-range=${dateRange}`,
-      );
-      const data = await response.json();
-      return data;
+  const { data, isLoading } = useQuery(
+    {
+      queryKey: ["pageViews", search, mode, page, dateRange],
+      placeholderData: keepPreviousData,
+      queryFn: async () => {
+        const response = await fetch(
+          `/api/page-views?mode=${mode}&search=${search}&page=${page}&date-range=${dateRange}`,
+        );
+        const data = await response.json();
+        return data;
+      },
     },
-  });
+    queryClient,
+  );
   const paginationButtonClasses = "border p-2 rounded-md my-2 border-black";
   const paginationButtonClassesDisabled =
     "border p-2 my-2 rounded-md cursor-not-allowed text-gray-300 border-gray-300";
@@ -153,16 +153,6 @@ const PageViewsInner = () => {
         </div>
       ) : null}
     </Fragment>
-  );
-};
-
-const PageViews = () => {
-  const [queryClient] = useState(() => new QueryClient());
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <PageViewsInner />
-    </QueryClientProvider>
   );
 };
 
