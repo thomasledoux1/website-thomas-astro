@@ -1,0 +1,166 @@
+---
+title: "Feature flags with Astro + Vercel Toolbar"
+tags: ["vercel", "javascript", "astro"]
+date: "2024-05-09T16:14:39.004Z"
+image: "./feature-flags-astro-vercel-toolbar.jpg"
+imageAlt: "Person drawing flags on the ground"
+---
+
+import { Image } from "astro:assets";
+import featureFlag from "../../assets/screenshot-feature-flag.png";
+
+I've been using Vercel for a few years now to host my website(s), but I never really looked into the [Vercel Toolbar](https://vercel.com/docs/workflow-collaboration/vercel-toolbar) until now.
+I though it was mainly used for leaving comments, but apparently it has evolved a lot, and Vercel added a lot of new capabilities.
+One of those caught my eye: the [feature flags](https://vercel.com/docs/workflow-collaboration/feature-flags).
+Feature flags is a concept where you can toggle on or off certain functionalities, allowing for controlled release and testing of new features.
+
+Now we know what feature flags are, let's see how to implement them in an Astro website.
+
+## Adding the Vercel Toolbar locally
+
+We start by adding the `@vercel/toolbar` dependency.
+
+```bash title="terminal"
+npm i @vercel/toolbar
+```
+
+The use the `vercel CLI` to link your local project to your Vercel project
+
+```bash title="terminal"
+vercel link [path-to-directory]
+```
+
+Vercel injects the Toolbar into your deployment previews automatically, but while developing locally of course this is not available.
+That's why I added the check on the NODE_ENV variable, to only add the script when we're developing locally.
+So let's add the Toolbar to the `Layout`, which is shared by all pages on my website.
+We just need to add a `<script>` tag to our Astro code.
+
+```astro title="src/layouts/Layout.astro"
+{
+  import.meta.env.NODE_ENV === "development" ? (
+    <script
+      is:inline
+      src="https://vercel.live/_next-live/feedback/feedback.js"
+      data-explicit-opt-in="true"
+      data-owner-id="team_PK64Z6zzqG3h5W3BmmCZX9aS"
+      data-project-id="prj_UlaZ1TGeEMBpy8kKmj3wnD7F3M9a"
+      data-branch="main"
+    />
+  ) : null
+}
+```
+
+To know what to fill in on the `data-owner-id` and `data-project-id`, it's best to follow [Vercels guide](https://vercel.com/docs/workflow-collaboration/vercel-toolbar/in-production-and-localhost/add-to-localhost).
+
+Once this is set up, you should see the toolbar appear at the bottom of the page:
+![Screenshot of the Vercel Toolbar](../../assets/screenshot-toolbar.png)
+
+## Setting up Feature Flags
+
+First we need to set an environment variable called `FLAGS_SECRET` inside the Vercel settings for our website, and then pull the environment variable using `vercel env pull`.
+The FLAGS_SECRET value must have a specific length (32 random bytes encoded in base64) to work as an encryption key.
+You can generate this value using `nodejs`:
+
+```bash title="terminal"
+node -e "console.log(crypto.randomBytes(32).toString('base64url'))"
+```
+
+The Vercel Toolbar will send GET requests to an endpoint with the URL `.well-known/vercel/flags` on the current domain to retrieve the configuration for the feature flags.
+So we should make sure we have an API route which listens on this URL for GET requests, and returns a configuration.
+The configuration should have the following shape:
+
+```ts
+type ApiData = {
+  definitions: Record<
+    string,
+    {
+      description?: string;
+      origin?: string;
+      options?: { value: any; label?: string }[];
+    }
+  >;
+  hints?: { key: string; text: string }[];
+  overrideEncryptionMode?: "plaintext" | "encrypted";
+};
+```
+
+Let's implement this into an API route in our Astro codebase:
+
+```ts title="src/pages/.well-known/vercel/flags/index.ts"
+export const prerender = false;
+
+import { verifyAccess } from "../../../../lib/vercel-flags-port.mjs";
+import type { APIRoute } from "astro";
+
+export const GET: APIRoute = async ({ request }) => {
+  const access = await verifyAccess(request.headers.get("Authorization"));
+  if (!access) {
+    return new Response(null, { status: 401 });
+  }
+
+  return new Response(
+    JSON.stringify({
+      definitions: {
+        newFeature: {
+          description: "Controls whether the new feature is visible",
+          options: [
+            { value: false, label: "Off" },
+            { value: true, label: "On" },
+          ],
+        },
+      },
+    }),
+  );
+};
+```
+
+Note that I added `export const prerender = false` at the top of the file, because I'm using [hybrid](https://docs.astro.build/en/guides/server-side-rendering/#configure-server-or-hybrid) rendering, it's necessary to flag non-static routes.
+You can also see I import `verifyAccess` from a local file, this is done because I could not get the `@vercel/flags` package to work with Astro, because the `@vercel/flags` package checks for an environment variable on `process.env`, but Astro (actually Vite) uses environment variables on the `import.meta.env` property.
+Because of this, the package thinks the environment variable is not defined, and throws errors.
+Therefore, I ported the file over to my own codebase, and replace `process.env` mentions with `import.meta.env`, and it works!
+
+The `verifyAccess` token will make sure the request to our API route is actually coming from the Vercel Toolbar.
+
+When we click on the feature flags button inside of the toolbar we'll see our newly created feature flag pop up:
+
+<Image src={featureFlag} alt="Screenshot of the new feature flag" width={600} />
+
+Once we select one of the overrides, a cookie with the key `vercel-flag-overrides` will be created, containing the encypted value of the flag.
+You'll also see the Vercel Toolbar turns purple when you activate a flag.
+
+Now we want to actually read the flag and do something with it.
+I decided to use the flag as an indication that the homepage should be redirected to another version of the homepage.
+Because I want to redirect as early as possible, I decided to put this logic into a [middleware](https://docs.astro.build/en/guides/middleware/).
+In the middleware, we can read the cookies of the incoming request, and execute logic based on that.
+
+```ts title="src/middleware.ts"
+import { defineMiddleware } from "astro:middleware";
+import { decrypt } from "./lib/vercel-flags-port.mjs";
+
+// `context` and `next` are automatically typed
+export const onRequest = defineMiddleware(async (context, next) => {
+  const response = await next();
+  const featureFlagOverrideCookie = context.cookies.get(
+    "vercel-flag-overrides",
+  )?.value;
+  if (featureFlagOverrideCookie && context.url.pathname === "/") {
+    const decryptedFlags = (await decrypt(featureFlagOverrideCookie)) as {
+      newFeature: boolean;
+    };
+    if (decryptedFlags.newFeature) {
+      return context.redirect("/homepage-alternative-feature-flag");
+    }
+  }
+  return response;
+});
+```
+
+So we get the cookies from the `context`, check if the requested page is the homepage and read the `vercel-flag-overrides` cookie's value.
+If there's a cookie and the request is for the homepage, we `decrypt` the cookie's value and check if the `newFeature` flag is set to `true`.
+If this is the case, we'll redirect the user (using `context.redirect()`) to an alternative homepage.
+
+On more thing that needed to be changed was that I had to change my homepage to also be server rendered (so adding `export const prerender = false;` to the top of the file) instead of statically rendered, otherwise it was not possible to read the cookies for the request for that page.
+
+The source code can be found [on Github](https://github.com/thomasledoux1/website-thomas-astro/tree/feature-flags-vercel-toolbar).
+
+Thanks for reading! Hope it helps someone further.
