@@ -86,16 +86,10 @@ import "../../styles/global.css";
     </main>
     <Footer />
     <script>
+      import { actions } from "astro:actions";
+
       document.addEventListener("astro:page-load", () => {
-        fetch("/api/update-view", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            url: window.location.pathname,
-          }),
-        });
+        actions.pageView({ url: window.location.pathname });
       });
     </script>
   </body>
