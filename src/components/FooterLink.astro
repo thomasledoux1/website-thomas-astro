@@ -37,6 +37,7 @@ const parsedUrl = new URL(url);
     </div>
     {
       parsedUrl.pathname === href ||
+      parsedUrl.pathname === `${href}/` ||
       (parsedUrl.pathname.startsWith("/blog") && href === "/blog") ? (
         <span class="w-1 h-1 bg-secondary absolute rounded-full left-1/2 -translate-x-1/2 -bottom-2" />
       ) : null
