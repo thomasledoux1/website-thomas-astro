@@ -122,7 +122,7 @@ export const GET: APIRoute = async ({ request }) => {
     ]);
     totalViews = totalViewsRes[0]?.totalCount ?? 0;
     totalUniqueURLs = totalViewsRes[0]?.totalUniqueURLs ?? 0;
-    totalPages = Math.ceil(totalUniqueURLs / pageSize);
+    totalPages = Math.ceil((totalUniqueURLs ?? 0) / pageSize);
   }
 
   const end = performance.now();
