@@ -1,5 +1,4 @@
 ---
-import { ViewTransitions } from "astro:transitions";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import Footer from "../components/Footer.astro";
 
@@ -17,8 +16,12 @@ import "../../styles/global.css";
 ---
 
 <html lang="en" class="scroll-smooth">
-  <head>
-    <ViewTransitions />
+  <head
+    ><style>
+      @view-transition {
+        navigation: auto; /* enabled! */
+      }
+    </style>
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
