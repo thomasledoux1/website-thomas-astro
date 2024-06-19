@@ -89,17 +89,8 @@ import "../../styles/global.css";
     </main>
     <Footer />
     <script>
-      document.addEventListener("astro:page-load", () => {
-        fetch("/api/update-view", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            url: window.location.pathname,
-          }),
-        });
-      });
+      import { actions } from "astro:actions";
+      actions.pageView({ url: window.location.pathname });
     </script>
   </body>
 </html>

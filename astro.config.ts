@@ -34,6 +34,9 @@ export default defineConfig({
       enabled: false,
     },
   }),
+  experimental: {
+    actions: true,
+  },
   markdown: {
     remarkPlugins: [remarkReadingTime],
   },

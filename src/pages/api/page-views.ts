@@ -61,16 +61,6 @@ export const GET: APIRoute = async ({ request }) => {
     const whereClause = dateGreaterThan
       ? `WHERE date >= '${dateGreaterThan.toISOString()}'`
       : "";
-    console.log(`SELECT
-      strftime('%Y-%m-%d', date) AS day,
-          COUNT(*) AS page_views_count
-    FROM
-      PageView
-    ${whereClause}
-    GROUP BY
-      day
-    ORDER BY
-      day ASC;`);
     const pageViewsQuery = db.run(
       sql.raw(`SELECT
     strftime('%Y-%m-%d', date) AS day,
