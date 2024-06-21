@@ -8,13 +8,21 @@ interface Props {
   logoAlt?: string;
   logoWidth?: number;
   tags: string[];
-  id: string;
+  eager?: boolean;
+  hasBlackBackground?: boolean;
 }
-const { img, url, logoWidth, logoAlt, tags, id } = Astro.props;
+const {
+  img,
+  url,
+  logoWidth,
+  logoAlt,
+  tags,
+  eager = false,
+  hasBlackBackground = false,
+} = Astro.props;
 ---
 
 <li
-  id={id}
   class="transform lg:h-[40vh] case border-2 border-primary p-4 lg:p-6 lg:snap-center lg:min-w-[60vw] lg:max-w-[60vw] flex rounded-xl shadow-lg"
 >
   <a
@@ -23,8 +31,10 @@ const { img, url, logoWidth, logoAlt, tags, id } = Astro.props;
     href={url}
     class="grid lg:grid-cols-7 gap-x-6"
   >
-    <div class="lg:col-span-2 flex flex-col justify-center">
-      <div class={`max-h-[150px] lg:mx-0 max-w-[80%] lg:max-w-full flex`}>
+    <div class="lg:col-span-2 flex flex-col items-center justify-center">
+      <div
+        class={`max-h-[150px] lg:mx-0 max-w-[80%] lg:max-w-full flex ${hasBlackBackground ? "bg-black p-2" : ""}`}
+      >
         {
           img && logoWidth ? (
             <Image
@@ -33,14 +43,16 @@ const { img, url, logoWidth, logoAlt, tags, id } = Astro.props;
               alt={`Logo ${logoAlt}`}
               src={img}
               class="inline-block"
-              loading={id === "one" || id === "two" ? "eager" : "lazy"}
+              loading={eager ? "eager" : "lazy"}
             />
           ) : (
-            <span class="text-2xl break-all">{logoAlt}</span>
+            <span class="text-2xl text-center break-all">{logoAlt}</span>
           )
         }
       </div>
-      <ul class="flex lg:order-1 flex-wrap my-4 gap-2 lg:mb-0 w-full">
+      <ul
+        class="flex lg:order-1 justify-center flex-wrap my-4 gap-2 lg:mb-0 w-full"
+      >
         {
           tags.map((tag) => {
             return (

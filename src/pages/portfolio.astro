@@ -8,6 +8,7 @@ import logoAchterderegenboog from "../assets/logoachterderegenboog.png";
 import logoDuckduckgo from "../assets/logoduckduckgo.png";
 import logoMartino from "../assets/logomartino.png";
 import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
+import logoMaatwerk from "../assets/logomaatwerk.png";
 ---
 
 <Layout
@@ -25,12 +26,32 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
         class="flex flex-col lg:flex-row gap-y-4 lg:gap-y-0 lg:ps-[20vw] carousel my-auto lg:pe-[20vw] lg:gap-x-8 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto lg:!scroll-smooth"
       >
         <Case
+          url="https://maat-werk.be"
+          logoAlt="Maat.Werk"
+          tags={["wordpress"]}
+          img={logoMaatwerk}
+          logoWidth={150}
+          hasBlackBackground
+        >
+          <p class="mb-4">
+            Through a colleague I was brought into contact with the interior
+            company Maat.Werk, a company formed by 3 friends who handle
+            everything regarding renovations from start to finish.
+          </p>
+          <p>
+            Since the company was newly formed, there was no website to base
+            myself on. Together with the client I went to work to get a design
+            which matches the style they use for all their other communication
+            through Instagram, Facebook.. In the end we landed a very good
+            looking and minimal design.
+          </p>
+        </Case>
+        <Case
           url="https://snackbarmartino.be"
           logoAlt="Snackbar Martino"
           tags={["wordpress"]}
           img={logoMartino}
           logoWidth={150}
-          id="one"
         >
           <p class="mb-4">
             I was contacted by the lovely people at Martino to give their
@@ -50,7 +71,6 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
           tags={["wordpress"]}
           img={logoBorluutJoggers}
           logoWidth={150}
-          id="two"
         >
           <p class="mb-4">
             My colleague Hilde was in need of a refresh and redesign of the
@@ -71,7 +91,6 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
           img={logoKaraton}
           logoWidth={218}
           tags={["mongodb", "expressjs", "angular", "nodejs"]}
-          id="three"
         >
           <p class="mb-4">
             For Happs Development I created and maintained the <b>Angular</b>{
@@ -97,7 +116,6 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
           img={logoRialto}
           logoWidth={321}
           tags={["swift", "ios"]}
-          id="four"
         >
           <p class="mb-4">
             At my internship for Rialto I created an iOS app from scratch in{
@@ -121,7 +139,6 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
           img={logoCarlier}
           logoWidth={100}
           tags={["react-native", "react"]}
-          id="five"
         >
           <p class="mb-4">
             While working at Happs Development I also created a mobile
@@ -145,7 +162,6 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
           img={logoAchterderegenboog}
           logoWidth={150}
           tags={["wordpress", "html", "css"]}
-          id="six"
         >
           <p class="mb-4">
             In my free time I like to experiment with other frameworks and
@@ -167,7 +183,6 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
           img={logoDuckduckgo}
           logoWidth={100}
           tags={["open source", "hacktoberfest", "stencil", "typescript"]}
-          id="seven"
         >
           <p class="mb-4">
             In 2020 I participated in <b>Hacktoberfest</b> for the first time ever.
@@ -184,7 +199,6 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
           url="https://www.psychotherapiepraktijkkortrijk.be"
           logoAlt="Psychotherapiepraktijk Kortrijk"
           tags={["squarespace"]}
-          id="eight"
         >
           <p>
             For a family member of mine who started a psychotherapy practice, I
@@ -198,7 +212,6 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
           url="/"
           logoAlt="thomas ledoux"
           tags={["astro", "typescript", "tailwind"]}
-          id="nine"
         >
           <p class="mb-4">
             I like to use my personal website as a playground for new ideas and
@@ -220,61 +233,57 @@ import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
       >
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="one"
           class="indicator"
           aria-label="Scroll to slide 1"></button>
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="two"
           class="indicator"
           aria-label="Scroll to slide 2"></button>
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="three"
           class="indicator"
           aria-label="Scroll to slide 3"></button>
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="four"
           class="indicator"
           aria-label="Scroll to slide 4"></button>
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="five"
           class="indicator"
           aria-label="Scroll to slide 5"></button>
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="six"
           class="indicator"
           aria-label="Scroll to slide 6"></button>
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="seven"
           class="indicator"
           aria-label="Scroll to slide 7"></button>
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="eight"
           class="indicator"
           aria-label="Scroll to slide 8"></button>
         <button
           class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          data-slide="nine"
           class="indicator"
           aria-label="Scroll to slide 9"></button>
+        <button
+          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
+          class="indicator"
+          aria-label="Scroll to slide 10"></button>
       </div>
     </div>
   </section>
   <script>
     const INDICATORS = document.querySelectorAll(".indicator");
-    INDICATORS.forEach((indicator) => {
-      indicator.addEventListener("click", (e) => {
-        if (e.target instanceof HTMLElement && e.target?.dataset.slide) {
-          document.getElementById(e.target?.dataset.slide)?.scrollIntoView({
-            behavior: "smooth",
-          });
-        }
+    const SLIDES = document.querySelectorAll(".carousel>li");
+    console.log(SLIDES);
+    INDICATORS.forEach((indicator, i) => {
+      indicator.addEventListener("click", () => {
+        const slide = SLIDES[i];
+        slide?.scrollIntoView({
+          behavior: "smooth",
+        });
       });
     });
   </script>
