@@ -275,12 +275,11 @@ import logoMaatwerk from "../assets/logomaatwerk.png";
     </div>
   </section>
   <script>
-    const INDICATORS = document.querySelectorAll(".indicator");
-    const SLIDES = document.querySelectorAll(".carousel>li");
-    console.log(SLIDES);
-    INDICATORS.forEach((indicator, i) => {
+    const indicators = document.querySelectorAll(".indicator");
+    const slides = document.querySelectorAll(".carousel>li");
+    indicators.forEach((indicator, i) => {
       indicator.addEventListener("click", () => {
-        const slide = SLIDES[i];
+        const slide = slides[i];
         slide?.scrollIntoView({
           behavior: "smooth",
         });
