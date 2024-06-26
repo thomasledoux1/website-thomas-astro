@@ -18,6 +18,7 @@ import Layout from "~/layouts/Layout.astro";
       });
       const el = document.querySelector(".pagefind-ui");
       const input = el?.querySelector<HTMLInputElement>(`input[type="text"]`);
+      const clearButton = el?.querySelector(".pagefind-ui__search-clear");
       // Check if the current URL has any query params
       const url = new URL(window.location.href);
       const params = new URLSearchParams(url.search);
@@ -34,6 +35,12 @@ import Layout from "~/layouts/Layout.astro";
         const params = new URLSearchParams(url.search);
         params.set("q", input.value);
         window.history.replaceState({}, "", `${url.pathname}?${params}`);
+      });
+      clearButton?.addEventListener("click", () => {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        params.delete("q");
+        window.history.replaceState({}, "", `${url.pathname}`);
       });
     });
   </script>
