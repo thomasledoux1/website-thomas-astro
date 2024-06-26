@@ -103,6 +103,7 @@ const latestBlogs = await Promise.all(
     Did you like this post? Check out my latest blog posts:
   </h2>
   <div
+    data-pagefind-ignore="all"
     class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center auto-rows-min"
   >
     {latestBlogs.map((post, i) => <PostPreview index={i} post={post} />)}

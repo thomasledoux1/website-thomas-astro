@@ -1,5 +1,5 @@
 ---
-import Tag from './Tag.astro';
+import Tag from "./Tag.astro";
 interface Props {
   tags: { [key: string]: number };
   slug?: string;
@@ -8,7 +8,7 @@ const { tags, slug } = Astro.props;
 const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
 ---
 
-<div class="flex gap-3 flex-wrap">
+<div class="flex gap-3 flex-wrap" data-pagefind-ignore="all">
   {
     sortedTags
       .slice(0, 5)
@@ -40,15 +40,15 @@ const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
 }
 
 <script>
-  document.getElementById('load-more-tags')?.addEventListener('click', () => {
-    if (document.getElementById('more-tags')?.classList.contains('hidden')) {
-      document.getElementById('load-more-tags')!.innerText = '- Less tags';
-      document.getElementById('more-tags')?.classList.remove('hidden');
-      document.getElementById('more-tags')?.classList.add('contents');
+  document.getElementById("load-more-tags")?.addEventListener("click", () => {
+    if (document.getElementById("more-tags")?.classList.contains("hidden")) {
+      document.getElementById("load-more-tags")!.innerText = "- Less tags";
+      document.getElementById("more-tags")?.classList.remove("hidden");
+      document.getElementById("more-tags")?.classList.add("contents");
     } else {
-      document.getElementById('load-more-tags')!.innerText = '+ More tags';
-      document.getElementById('more-tags')?.classList.add('hidden');
-      document.getElementById('more-tags')?.classList.remove('contents');
+      document.getElementById("load-more-tags")!.innerText = "+ More tags";
+      document.getElementById("more-tags")?.classList.add("hidden");
+      document.getElementById("more-tags")?.classList.remove("contents");
     }
   });
 </script>

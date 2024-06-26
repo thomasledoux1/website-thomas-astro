@@ -6,6 +6,7 @@ import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
 import react from "@astrojs/react";
 import db from "@astrojs/db";
 import sitemap from "@astrojs/sitemap";
+import pagefind from "astro-pagefind";
 
 import expressiveCode from "astro-expressive-code";
 
@@ -24,6 +25,7 @@ export default defineConfig({
     mdx(),
     db(),
     sitemap(),
+    pagefind(),
   ],
   prefetch: {
     prefetchAll: true,
