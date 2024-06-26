@@ -35,7 +35,6 @@ const UrlChart = ({ data }: UrlChartProps) => {
         <XAxis type="number" hide />
         <Tooltip
           wrapperStyle={{ maxWidth: "300px" }}
-          // @ts-expect-error
           labelStyle={{ textWrap: "balance" }}
         />
         <Bar
