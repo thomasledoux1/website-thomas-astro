@@ -80,6 +80,12 @@ import "../../styles/global.css";
         : "https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"}
       property="og:image"
     />
+    <meta
+      content={frontmatter?.title
+        ? `https://thomasledoux.be${frontmatter.url}/og-image.png`
+        : "https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"}
+      property="twitter:image"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SpeedInsights />
   </head>
