@@ -1,13 +1,13 @@
 ---
 import FooterLink from "./FooterLink.astro";
 import {
-  GithubLogo,
   LinkedInLogo,
   BlogLogo,
   ContactLogo,
   HomeLogo,
   PersonalLogo,
   PortfolioLogo,
+  SearchLogo,
 } from "./Logos/index.astro";
 ---
 
@@ -25,6 +25,7 @@ import {
         ><PortfolioLogo /></FooterLink
       >
       <FooterLink label="Blog" href="/blog"><BlogLogo /></FooterLink>
+      <FooterLink label="Search" href="/search"><SearchLogo /></FooterLink>
       <li class="bg-secondary h-[1.82rem] w-[2px] mx-2"></li>
       <FooterLink label="Contact" href="mailto:hello@thomasledoux.be"
         ><ContactLogo /></FooterLink
@@ -33,9 +34,6 @@ import {
         label="LinkedIn"
         href="https://www.linkedin.com/in/thomasledoux91"
         ><LinkedInLogo /></FooterLink
-      >
-      <FooterLink label="GitHub" href="https://github.com/thomasledoux1"
-        ><GithubLogo /></FooterLink
       >
     </ul>
   </nav>

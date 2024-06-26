@@ -1,0 +1,17 @@
+---
+import Layout from "~/layouts/Layout.astro";
+---
+
+<Layout>
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+
+  <div id="search"></div>
+  <script>
+    // @ts-expect-error
+    import { PagefindUI } from "@pagefind/default-ui";
+    window.addEventListener("DOMContentLoaded", () => {
+      new PagefindUI({ element: "#search", showSubResults: true });
+    });
+  </script>
+</Layout>
