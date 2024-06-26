@@ -11,7 +11,30 @@ import Layout from "~/layouts/Layout.astro";
     // @ts-expect-error
     import { PagefindUI } from "@pagefind/default-ui";
     window.addEventListener("DOMContentLoaded", () => {
-      new PagefindUI({ element: "#search", showSubResults: true });
+      new PagefindUI({
+        element: "#search",
+        showSubResults: true,
+        autofocus: true,
+      });
+      const el = document.querySelector(".pagefind-ui");
+      const input = el?.querySelector<HTMLInputElement>(`input[type="text"]`);
+      // Check if the current URL has any query params
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
+      const query = params.get("q");
+
+      // If query exists on page load
+      if (query && input) {
+        input.value = query;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      input?.addEventListener("input", (e) => {
+        const input = e.target as HTMLInputElement;
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        params.set("q", input.value);
+        window.history.replaceState({}, "", `${url.pathname}?${params}`);
+      });
     });
   </script>
 </Layout>
