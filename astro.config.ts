@@ -38,6 +38,7 @@ export default defineConfig({
   }),
   experimental: {
     actions: true,
+    serverIslands: true,
   },
   markdown: {
     remarkPlugins: [remarkReadingTime],
