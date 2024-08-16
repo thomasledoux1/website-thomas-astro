@@ -29,11 +29,11 @@ export const server = {
         });
       }
       try {
-        const res = await db.insert(PageView).values({
+        await db.insert(PageView).values({
           url: url,
           date: new Date(),
         });
-        return res.toJSON();
+        return {};
       } catch (e) {
         console.error(e);
         throw new ActionError({
