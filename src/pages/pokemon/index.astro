@@ -1,0 +1,18 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "~/layouts/Layout.astro";
+
+const collection = await getCollection("pokemon");
+---
+
+<Layout>
+  <div class="flex flex-col gap-y-2">
+    {
+      collection.map((pokemon) => (
+        <a class="underline" href={`/pokemon/${pokemon.id}`}>
+          {pokemon.id}
+        </a>
+      ))
+    }
+  </div>
+</Layout>

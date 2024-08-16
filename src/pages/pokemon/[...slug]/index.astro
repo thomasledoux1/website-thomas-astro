@@ -1,0 +1,37 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "~/layouts/Layout.astro";
+interface Props {
+  entry: {
+    name: string;
+    sprites: {
+      front_default: string;
+    };
+  };
+}
+export async function getStaticPaths() {
+  const pokemon = await getCollection("pokemon");
+  const pokemonWithDetails = await Promise.all(
+    pokemon.map(
+      async (poke) => await fetch(poke.data.url).then((res) => res.json()),
+    ),
+  );
+
+  return pokemonWithDetails.map((poke) => {
+    console.log(poke.name);
+    return {
+      params: { slug: poke.name },
+      props: { entry: poke },
+    };
+  });
+}
+
+const { entry } = Astro.props;
+console.log("entry", entry);
+---
+
+<Layout
+  ><img width={100} src={entry.sprites.front_default} /><div>
+    {entry.name}
+  </div></Layout
+>

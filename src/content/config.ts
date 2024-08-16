@@ -15,6 +15,29 @@ const blog = defineCollection({
     }),
 });
 
+const pokemon = defineCollection({
+  loader: async () => {
+    const response = await fetch(
+      "https://pokeapi.co/api/v2/pokemon?limit=100",
+    ).catch(() => {
+      throw new Error();
+    });
+    const json = await response.json().catch(() => {
+      throw new Error();
+    });
+
+    return (
+      json.results as Array<{
+        name: string;
+      }>
+    ).map((pokemon) => ({
+      id: pokemon.name,
+      ...pokemon,
+    }));
+  },
+});
+
 export const collections = {
   blog,
+  pokemon,
 };
