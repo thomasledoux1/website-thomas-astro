@@ -93,7 +93,7 @@ const latestBlogs = await Promise.all(
     </div>
     <div class="mb-4 flex gap-x-2 items-center">
       View count:{" "}
-      <ViewCount server:defer url={`/blog/${frontmatter.slug}`}
+      <ViewCount server:defer url={`/blog/${frontmatter.id}`}
         ><div slot="fallback">
           <span class="animate-loading h-[19.5px] inline-block w-12 rounded-sm"
           ></span>
