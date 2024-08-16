@@ -10,7 +10,7 @@ const collection = await getCollection("pokemon");
     {
       collection.map((pokemon) => (
         <a class="underline" href={`/pokemon/${pokemon.id}`}>
-          {pokemon.id}
+          {pokemon.data.name}
         </a>
       ))
     }

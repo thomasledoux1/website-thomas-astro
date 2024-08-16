@@ -35,6 +35,11 @@ const pokemon = defineCollection({
       ...pokemon,
     }));
   },
+  schema: () =>
+    z.object({
+      name: z.string(),
+      url: z.string(),
+    }),
 });
 
 export const collections = {
