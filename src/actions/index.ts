@@ -33,7 +33,7 @@ export const server = {
           url: url,
           date: new Date(),
         });
-        return res;
+        return res.toJSON();
       } catch (e) {
         console.error(e);
         throw new ActionError({
