@@ -1,5 +1,14 @@
 ---
 import FooterLink from "./FooterLink.astro";
+import {
+  LinkedInLogo,
+  BlogLogo,
+  ContactLogo,
+  HomeLogo,
+  PersonalLogo,
+  PortfolioLogo,
+  SearchLogo,
+} from "./Logos/index.astro";
 ---
 
 <footer
@@ -9,17 +18,23 @@ import FooterLink from "./FooterLink.astro";
     class="bg-primary rounded-2xl flex items-center px-3 lg:px-4 py-4 lg:py-6"
   >
     <ul class="flex">
-      <FooterLink label="Home" href="/" />
-      <FooterLink label="Personal" href="/personal" />
-      <FooterLink label="Portfolio" href="/portfolio" />
-      <FooterLink label="Blog" href="/blog" />
+      <FooterLink label="Home" href="/"><HomeLogo /></FooterLink>
+      <FooterLink label="Personal" href="/personal"><PersonalLogo /></FooterLink
+      >
+      <FooterLink label="Portfolio" href="/portfolio"
+        ><PortfolioLogo /></FooterLink
+      >
+      <FooterLink label="Blog" href="/blog"><BlogLogo /></FooterLink>
+      <FooterLink label="Search" href="/search"><SearchLogo /></FooterLink>
       <li class="bg-secondary h-[1.82rem] w-[2px] mx-2"></li>
-      <FooterLink label="Contact" href="mailto:hello@thomasledoux.be" />
+      <FooterLink label="Contact" href="mailto:hello@thomasledoux.be"
+        ><ContactLogo /></FooterLink
+      >
       <FooterLink
         label="LinkedIn"
         href="https://www.linkedin.com/in/thomasledoux91"
-      />
-      <FooterLink label="GitHub" href="https://github.com/thomasledoux1" />
+        ><LinkedInLogo /></FooterLink
+      >
     </ul>
   </nav>
 </footer>

@@ -1,0 +1,163 @@
+---
+title: "Adding search to static Astro sites"
+tags: ["astro", "pagefind"]
+date: "2024-06-26T15:14:39.004Z"
+image: "./search-static-astro-website.jpg"
+imageAlt: "Binoculars"
+---
+
+import { Image } from "astro:assets";
+import screenshot from "../../assets/screenshot-pagefind.png";
+
+## Why add a search page?
+
+I always like it when a website includes a search page, it makes it easy to find the relevant content you're looking for.
+This is especially useful when your website starts growing, and you've written a whole bunch of blog posts for example (it's me 😅).
+At my agency job I create websites for large corporations with large budgets, and we usually go for Algolia there, since it's quite easy to use and it has some out of the box React components etc.
+But Algolia gets quite pricy quite fast, so I wanted to look into something self hosted for my website.
+I looked into what the Astro team is doing on their Starlight website, and found out they use [Pagefind](https://pagefind.app), "A fully static search library that aims to perform well on large sites, while using as little of your users’ bandwidth as possible, and without hosting any infrastructure".
+Sounds good to me, let's start using it!
+
+## Setting up the Astro integration
+
+This part is **very** easy.
+First we install `astro-pagefind` and `pagefind`
+
+```bash
+npm install astro-pagefind pagefind
+```
+
+Then we include it into our Astro config
+
+```ts title="astro.config.ts"
+import pagefind from "astro-pagefind";
+import { defineConfig } from "astro/config";
+
+export default defineConfig({
+  integrations: [pagefind()],
+});
+```
+
+Make sure to att the `pagefind` integration as the last element in the index, to make sure it runs **after** the other integrations.
+By adding the integration, Pagefind will run as the last part of your build process, and index all the content from your static output.
+You'll see something like this at the end of the build process:
+
+```
+Running Pagefind v1.1.0 (Extended)
+Running from: "/Users/thomasledoux/Documents/website-thomas-astro"
+Source:       ".vercel/output/static"
+Output:       ".vercel/output/static/pagefind"
+
+[Walking source directory]
+Found 58 files matching **/*.{html}
+
+[Parsing files]
+Did not find a data-pagefind-body element on the site.
+↳ Indexing all <body> elements on the site.
+1 page found without an <html> element.
+Pages without an outer <html> element will not be processed by default.
+If adding this element is not possible, use the root selector config to target a different root element.
+
+[Reading languages]
+Discovered 1 language: en
+
+[Building search indexes]
+Total:
+  Indexed 1 language
+  Indexed 56 pages
+  Indexed 3345 words
+  Indexed 0 filters
+  Indexed 0 sorts
+
+Finished in 0.197 seconds
+```
+
+## Creating the search UI
+
+For the search UI I opted to create a separate search page for now, mainly because I didn't want to bother with modals for the search etc.
+Pagefind provides default CSS and JS for the search element, so you can get up and running in minutes.
+
+So I created a page under `pages/search.astro`
+
+```astro title="/pages/search.astro"
+---
+import Layout from "~/layouts/Layout.astro";
+---
+
+<Layout>
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+
+  <div id="search"></div>
+  <script>
+    // @ts-expect-error
+    import { PagefindUI } from "@pagefind/default-ui";
+    window.addEventListener("DOMContentLoaded", () => {
+      new PagefindUI({
+        element: "#search",
+        showSubResults: true,
+        autofocus: true,
+      });
+      const el = document.querySelector(".pagefind-ui");
+      const input = el?.querySelector<HTMLInputElement>(`input[type="text"]`);
+      const clearButton = el?.querySelector(".pagefind-ui__search-clear");
+      // Check if the current URL has any query params
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
+      const query = params.get("q");
+
+      // If query exists on page load
+      if (query && input) {
+        input.value = query;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      input?.addEventListener("input", (e) => {
+        const input = e.target as HTMLInputElement;
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        params.set("q", input.value);
+        window.history.replaceState({}, "", `${url.pathname}?${params}`);
+      });
+      clearButton?.addEventListener("click", () => {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        params.delete("q");
+        window.history.replaceState({}, "", `${url.pathname}`);
+      });
+    });
+  </script>
+</Layout>
+```
+
+As you can see, just calling the `new PagefindUI()` constructor with the correct element referenced is all you need to do to get the basics done.
+The only extra code I added is code to handle query params, both reading from the query params and inputting that into the search element on page load and writing to the query params when searching.
+I also added a click listener on the default `clear` button which pops up the moment you entered something into the search input, just to make sure the query params are also cleared.
+
+The result after executing a search will look like this:
+
+<Image
+  src={screenshot}
+  alt="Screenshot of the output of a search"
+  width={1200}
+/>
+
+You get things like syntax highlighting, image detection and subsections for your headings out of the box!
+
+## Configuring the indexing
+
+After executing a search on the keyword `remix`, which I use on my website a few times, I noticed that some results were being returned that I did not expect to be returned.
+I saw all my automatically generated [tag pages](https://www.thomasledoux.be/blog/auto-tag-pages-astro-mdx) were being returned as results for this search term.
+This was caused by my tags section at the top of the page, which always includes all the tags used on my blog.
+So I should somehow make sure this content does not get indexed.
+Luckily Pagefind provides something for this out of the box, you can use the `data-pagefind-ignore="all"` attribute on the HTML tag which you don't want to have indexed. It will also ignore all the children underneath it.
+
+With this set up, I now have a simple search purely based on my static content, no need to set up a SaaS product for this and completely free!
+
+## Conclusion
+
+For a website with almost completely static content like mine, Pagefind was the ideal solution to integrate search into my website. The fact that it's free, and doesn't require setting up a complex indexing mechanism is great.
+
+This blog post was inspired by Alex Trost's [blog post](https://trost.codes/posts/adding-simple-search-to-an-astro-blog/).
+
+Want to see it in action? Find it on [my site](https://thomasledoux.be/search).
+The diff of the code I needed to add for this can be found on [my GitHub](https://github.com/thomasledoux1/website-thomas-astro/pull/22/files)

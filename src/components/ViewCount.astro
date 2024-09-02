@@ -1,0 +1,11 @@
+---
+import { PageView, count, db, eq } from "astro:db";
+const { url } = Astro.props;
+
+const viewCount = await db
+  .select({ value: count() })
+  .from(PageView)
+  .where(eq(PageView.url, url));
+---
+
+<span class="font-bold">{viewCount[0]?.value}</span>

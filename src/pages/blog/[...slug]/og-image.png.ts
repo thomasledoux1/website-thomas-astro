@@ -1,4 +1,4 @@
-import { getCollection, getEntryBySlug } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import fs from "fs/promises";
 import satori from "satori";
 import sharp from "sharp";
@@ -7,13 +7,13 @@ import type { APIRoute } from "astro";
 export async function getStaticPaths() {
   const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
   return blogs.map((blog) => ({
-    params: { slug: blog.slug },
+    params: { slug: blog.id },
     props: { entry: blog },
   }));
 }
 
 export const GET: APIRoute = async function get({ params }) {
-  const page = await getEntryBySlug("blog", params.slug!);
+  const page = await getEntry("blog", params.slug!);
   const title = page?.data.title
     ? page?.data.title.slice(0, 200)
     : "My default title";

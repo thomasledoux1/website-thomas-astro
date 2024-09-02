@@ -1,38 +1,28 @@
 ---
-import clsx from 'clsx';
+import clsx from "clsx";
 export interface Props {
   label: string;
-  href: string;
+  href?: string;
 }
 const { label, href } = Astro.props;
 const url = Astro.request.url;
 const parsedUrl = new URL(url);
-import {
-  GithubLogo,
-  LinkedInLogo,
-  BlogLogo,
-  ContactLogo,
-  DevLogo,
-  HomeLogo,
-  PersonalLogo,
-  PortfolioLogo,
-} from './Logos/index.astro';
 ---
 
 <li
   class={clsx(
-    'px-[6px] cursor-pointer xs:px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 flex relative outline-none',
+    "px-[6px] cursor-pointer xs:px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 flex relative outline-none",
     {
-      'hover:mr-2': label.toLowerCase() === 'home',
-      'hover:ml-2': label.toLowerCase() === 'github',
-      'hover:mx-2':
-        label.toLowerCase() !== 'home' && label.toLowerCase() !== 'github',
-    }
+      "hover:mr-2": label.toLowerCase() === "home",
+      "hover:ml-2": label.toLowerCase() === "github",
+      "hover:mx-2":
+        label.toLowerCase() !== "home" && label.toLowerCase() !== "github",
+    },
   )}
 >
   <a
-    target={href.startsWith('http') ? '_blank' : undefined}
-    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+    target={href?.startsWith("http") ? "_blank" : undefined}
+    rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
     aria-label={label}
     href={href}
     title={label}
@@ -43,17 +33,12 @@ import {
       {label}
     </div>
     <div class="w-[1.5rem] h-[1.5rem] xs:w-[1.77rem] xs:h-[1.77rem]">
-      {label.toLowerCase() === 'linkedin' ? <LinkedInLogo /> : null}
-      {label.toLowerCase() === 'github' ? <GithubLogo /> : null}
-      {label.toLowerCase() === 'dev' ? <DevLogo /> : null}
-      {label.toLowerCase() === 'personal' ? <PersonalLogo /> : null}
-      {label.toLowerCase() === 'portfolio' ? <PortfolioLogo /> : null}
-      {label.toLowerCase() === 'blog' ? <BlogLogo /> : null}
-      {label.toLowerCase() === 'contact' ? <ContactLogo /> : null}
-      {label.toLowerCase() === 'home' ? <HomeLogo /> : null}
+      <slot />
     </div>
     {
-      parsedUrl.pathname === href || parsedUrl.pathname === `${href}/` ? (
+      parsedUrl.pathname === href ||
+      parsedUrl.pathname === `${href}/` ||
+      (parsedUrl.pathname.startsWith("/blog") && href === "/blog") ? (
         <span class="w-1 h-1 bg-secondary absolute rounded-full left-1/2 -translate-x-1/2 -bottom-2" />
       ) : null
     }

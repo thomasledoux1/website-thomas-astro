@@ -1,5 +1,4 @@
 ---
-import { ViewTransitions } from "astro:transitions";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import Footer from "../components/Footer.astro";
 
@@ -17,8 +16,12 @@ import "../../styles/global.css";
 ---
 
 <html lang="en" class="scroll-smooth">
-  <head>
-    <ViewTransitions />
+  <head
+    ><style>
+      @view-transition {
+        navigation: auto; /* enabled! */
+      }
+    </style>
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
@@ -77,6 +80,12 @@ import "../../styles/global.css";
         : "https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"}
       property="og:image"
     />
+    <meta
+      content={frontmatter?.title
+        ? `https://thomasledoux.be${frontmatter.url}/og-image.png`
+        : "https://res.cloudinary.com/dzrea5zhv/image/upload/v1583171588/me_qvrwky.jpg"}
+      property="twitter:image"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SpeedInsights />
   </head>
@@ -86,17 +95,8 @@ import "../../styles/global.css";
     </main>
     <Footer />
     <script>
-      document.addEventListener("astro:page-load", () => {
-        fetch("/api/update-view", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            url: window.location.pathname,
-          }),
-        });
-      });
+      import { actions } from "astro:actions";
+      actions.pageView({ url: window.location.pathname });
     </script>
   </body>
 </html>

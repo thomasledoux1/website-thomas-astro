@@ -61,16 +61,6 @@ export const GET: APIRoute = async ({ request }) => {
     const whereClause = dateGreaterThan
       ? `WHERE date >= '${dateGreaterThan.toISOString()}'`
       : "";
-    console.log(`SELECT
-      strftime('%Y-%m-%d', date) AS day,
-          COUNT(*) AS page_views_count
-    FROM
-      PageView
-    ${whereClause}
-    GROUP BY
-      day
-    ORDER BY
-      day ASC;`);
     const pageViewsQuery = db.run(
       sql.raw(`SELECT
     strftime('%Y-%m-%d', date) AS day,
@@ -122,7 +112,7 @@ export const GET: APIRoute = async ({ request }) => {
     ]);
     totalViews = totalViewsRes[0]?.totalCount ?? 0;
     totalUniqueURLs = totalViewsRes[0]?.totalUniqueURLs ?? 0;
-    totalPages = Math.ceil(totalUniqueURLs / pageSize);
+    totalPages = Math.ceil((totalUniqueURLs ?? 0) / pageSize);
   }
 
   const end = performance.now();

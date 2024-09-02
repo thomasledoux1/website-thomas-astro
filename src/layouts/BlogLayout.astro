@@ -3,7 +3,7 @@ import Layout from "./Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import PostPreview from "../components/PostPreview.astro";
 import Comments from "../components/Comments";
-import ViewCount from "../components/ViewCount";
+import ViewCount from "../components/ViewCount.astro";
 import { Image } from "astro:assets";
 const { frontmatter } = Astro.props;
 interface Props {
@@ -91,11 +91,15 @@ const latestBlogs = await Promise.all(
         }
       </div>
     </div>
-    <ViewCount
-      className="mb-4 flex gap-x-2 items-center"
-      url={`/blog/${frontmatter.slug}`}
-      client:idle
-    />
+    <div class="mb-4 flex gap-x-2 items-center">
+      View count:{" "}
+      <ViewCount server:defer url={`/blog/${frontmatter.id}`}
+        ><div slot="fallback">
+          <span class="animate-loading h-[19.5px] inline-block w-12 rounded-sm"
+          ></span>
+        </div></ViewCount
+      >
+    </div>
     <slot />
   </article>
   <Comments client:idle />
@@ -103,6 +107,7 @@ const latestBlogs = await Promise.all(
     Did you like this post? Check out my latest blog posts:
   </h2>
   <div
+    data-pagefind-ignore="all"
     class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center auto-rows-min"
   >
     {latestBlogs.map((post, i) => <PostPreview index={i} post={post} />)}
