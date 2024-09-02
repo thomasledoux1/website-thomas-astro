@@ -18,10 +18,10 @@ Now we know what feature flags are, let's see how to implement them in an Astro 
 
 ## Adding the Vercel Toolbar locally
 
-We start by adding the `@vercel/toolbar` dependency.
+We start by adding the `@vercel/toolbar` & `@vercel/flags` dependencies.
 
 ```bash title="terminal"
-npm i @vercel/toolbar
+npm i @vercel/toolbar @vercel/flags
 ```
 
 The use the `vercel CLI` to link your local project to your Vercel project
@@ -89,11 +89,14 @@ Let's implement this into an API route in our Astro codebase:
 ```ts title="src/pages/.well-known/vercel/flags/index.ts"
 export const prerender = false;
 
-import { verifyAccess } from "../../../../lib/vercel-flags-port.mjs";
+import { verifyAccess } from "@vercel/flags";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ request }) => {
-  const access = await verifyAccess(request.headers.get("Authorization"));
+  const access = await verifyAccess(
+    request.headers.get("Authorization"),
+    import.meta.env.FLAGS_SECRET,
+  );
   if (!access) {
     return new Response(null, { status: 401 });
   }
@@ -115,9 +118,7 @@ export const GET: APIRoute = async ({ request }) => {
 ```
 
 Note that I added `export const prerender = false` at the top of the file, because I'm using [hybrid](https://docs.astro.build/en/guides/server-side-rendering/#configure-server-or-hybrid) rendering, it's necessary to flag non-static routes.
-You can also see I import `verifyAccess` from a local file, this is done because I could not get the `@vercel/flags` package to work with Astro, because the `@vercel/flags` package checks for an environment variable on `process.env`, but Astro (actually Vite) uses environment variables on the `import.meta.env` property.
-Because of this, the package thinks the environment variable is not defined, and throws errors.
-Therefore, I ported the file over to my own codebase, and replace `process.env` mentions with `import.meta.env`, and it works!
+You can also see I pass a second argument to the `verifyAccess` (and the `decrypt` later) function, which is the `FLAGS_SECRET` environment variable we set earlier coming from `import.meta.env`, since Vite-based frameworks like Astro don't use `process.env`, and therefore the FLAGS_SECRET is not read from the environment by the @vercel/flags package automatically.
 
 The `verifyAccess` token will make sure the request to our API route is actually coming from the Vercel Toolbar.
 
@@ -135,7 +136,7 @@ In the middleware, we can read the cookies of the incoming request, and execute 
 
 ```ts title="src/middleware.ts"
 import { defineMiddleware } from "astro:middleware";
-import { decrypt } from "./lib/vercel-flags-port.mjs";
+import { decrypt } from "@vercel/flags";
 
 // `context` and `next` are automatically typed
 export const onRequest = defineMiddleware(async (context, next) => {
@@ -144,7 +145,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
     "vercel-flag-overrides",
   )?.value;
   if (featureFlagOverrideCookie && context.url.pathname === "/") {
-    const decryptedFlags = (await decrypt(featureFlagOverrideCookie)) as {
+    const decryptedFlags = (await decrypt(featureFlagOverrideCookie),
+    import.meta.env.FLAGS_SECRET) as {
       newFeature: boolean;
     };
     if (decryptedFlags.newFeature) {
