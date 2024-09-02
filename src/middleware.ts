@@ -1,5 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
-import { decrypt } from "./lib/vercel-flags-port.mjs";
+import { decrypt } from "@vercel/flags";
 
 // `context` and `next` are automatically typed
 export const onRequest = defineMiddleware(async (context, next) => {
@@ -13,7 +13,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.url.pathname === "/",
   );
   if (featureFlagOverrideCookie && context.url.pathname === "/") {
-    const decryptedFlags = (await decrypt(featureFlagOverrideCookie)) as {
+    const decryptedFlags = (await decrypt(
+      featureFlagOverrideCookie,
+      import.meta.env.FLAGS_SECRET,
+    )) as {
       newFeature: boolean;
     };
     console.log("decryptedFlags", decryptedFlags);

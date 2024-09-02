@@ -37,6 +37,7 @@
     "@giscus/react": "^3.0.0",
     "@neondatabase/serverless": "^0.9.1",
     "@tanstack/react-query": "^5.35.1",
+    "@vercel/flags": "^2.6.0",
     "@vercel/postgres": "^0.8.0",
     "@vercel/speed-insights": "^1.0.10",
     "@vercel/toolbar": "^0.1.14",

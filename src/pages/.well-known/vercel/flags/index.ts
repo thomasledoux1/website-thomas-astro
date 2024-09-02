@@ -1,10 +1,14 @@
 export const prerender = false;
 
-import { verifyAccess } from "../../../../lib/vercel-flags-port.mjs";
+import { verifyAccess } from "@vercel/flags";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ request }) => {
-  const access = await verifyAccess(request.headers.get("Authorization"));
+  const access = await verifyAccess(
+    request.headers.get("Authorization"),
+    // @ts-expect-error
+    import.meta.env.FLAGS_SECRET,
+  );
   if (!access) {
     return new Response(null, { status: 401 });
   }
