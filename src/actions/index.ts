@@ -1,4 +1,5 @@
-import { ActionError, defineAction, z } from "astro:actions";
+import { ActionError, defineAction } from "astro:actions";
+import { z } from "astro:schema";
 import { PageView, db } from "astro:db";
 import { isbot } from "isbot";
 

@@ -354,3 +354,7 @@ figcaption ~ .copy-button-wrapper .copy-button-tooltip {
 .vertical-text {
   writing-mode: vertical-rl;
 }
+
+.expressive-code {
+  margin-bottom: 1rem;
+}

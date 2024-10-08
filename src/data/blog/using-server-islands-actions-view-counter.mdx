@@ -1,0 +1,143 @@
+---
+title: "Building a view counter with Astro's Server Islands and Actions"
+tags: ["astro", "javascript"]
+date: "2024-10-08T15:14:39.004Z"
+image: "./using-server-islands-actions-view-counter.jpg"
+imageAlt: "Director using a clapperboard"
+---
+
+I was looking for a use case to start using Actions and Server Islands, two new utilities that were added to Astro (experimentally) in version 4.
+Luckily, I always have my personal blog as a playground to test new features.
+
+## What are Actions and Server Islands?
+
+### Server Islands
+
+Server Islands make it possible to defer a component so it renders asynchronolously after the page has rendered.
+This is particulary useful when you want to render a page statically to an HTML file containing a placeholder.
+This placeholder will then be replaced by the **dynamic** content coming in from your server.
+
+This allows for the HTML to be cached by a CDN, improving overall performance.
+By using Server Islands you can run code in a secure environment on your server where you can connect to all sorts of things: databases, API's..
+
+### Actions
+
+Actions make it possible to call a function on your backend, without needing to create an API route for this.
+An extra benefit is that you benefit from full type-safety, so you know which parameters are expected, and what will be returned.
+More things are included:
+
+- Automatically validate JSON and form data inputs using Zod validation.
+- Generate type-safe functions to call your backend from the client and even from HTML form actions. No need for manual fetch() calls.
+- Standardize backend errors with the ActionError object.
+
+## Using the Action on every page view
+
+### Creating the action
+
+Let's define the action in code, under `/actions/index.ts`.
+
+```ts title="src/actions/index.ts"
+import { ActionError, defineAction } from "astro:actions";
+import { z } from "astro:schema";
+import { PageView, db } from "astro:db";
+import { isbot } from "isbot";
+
+export const server = {
+  pageView: defineAction({
+    input: z.object({
+      url: z.string(),
+    }),
+    handler: async ({ url }, context) => {
+      const { request } = context;
+
+      if (isbot(request.headers.get("user-agent"))) {
+        throw new ActionError({
+          code: "FORBIDDEN",
+          message: "This endpoint is not available for bots",
+        });
+      }
+      if (url === "/page-views") {
+        throw new ActionError({
+          code: "BAD_REQUEST",
+          message: "This url is not tracked",
+        });
+      }
+      try {
+        await db.insert(PageView).values({
+          url: url,
+          date: new Date(),
+        });
+        return {};
+      } catch (e) {
+        console.error(e);
+        throw new ActionError({
+          code: "BAD_REQUEST",
+          message: "Error updating views",
+        });
+      }
+    },
+  }),
+};
+```
+
+The input gets validated through the Zod schema, and in the handler we use the `isbot` package to verify the request is not coming from a bot, since we don't want to track those in the page views.
+
+I also want to ignore the `/page-views` url, since this is the URL for my dashboard where I visualize the page views.
+Once all these checks passed, we can insert the page view into the database ([read about my move to Astro DB here](/blog/astro-db-migrating-analytics-postgres)).
+
+If an error would occur during this insertion, we'll also throw an `AstroError`.
+
+### Calling the action
+
+I call the action in my shared layout through a `<script>` tag.
+
+```html
+<script>
+  import { actions } from "astro:actions";
+  actions.pageView({ url: window.location.pathname });
+</script>
+```
+
+Since I'm not using the `View Transitions` [router](https://docs.astro.build/en/guides/view-transitions/#script-behavior-with-view-transitions), this script will get executed on every page, since it's running in a normal MPA mode.
+
+## Using Server Islands to show the view count on blog posts
+
+I used to have quite some React code in place to show the view count on my blog, where I'd first render a placeholder.
+With `@tanstack/react-query` I'd fetch the view count from the database through an `API route`, and then render this instead of the placeholder.
+This of course added some extra complexity and setup, and I didn't have type-safety on the API route.
+
+Now I was able to replace all this React code with a few lines of Astro code:
+
+```astro title="src/layouts/BlogLayout.astro"
+View count:
+<ViewCount server:defer url={`/blog/${frontmatter.id}`}
+  ><div slot="fallback">
+    <span class="animate-loading h-[19.5px] inline-block w-12 rounded-sm"
+    ></span>
+  </div></ViewCount
+>
+```
+
+By adding the `server:defer` directive, I tell Astro to create a Server Island for this component.
+It will use the fallback content for the initial render, and then render the `<ViewCount>` when it's doing fetching the data inside of the component.
+The component's code:
+
+```astro title="src/components/ViewCount.astro"
+---
+import { PageView, count, db, eq } from "astro:db";
+const { url } = Astro.props;
+
+const viewCount = await db
+  .select({ value: count() })
+  .from(PageView)
+  .where(eq(PageView.url, url));
+---
+
+<span class="font-bold">{viewCount[0]?.value}</span>
+```
+
+This enables me to write very little code, with type-safety and the ability to run server-side code in my component, without having to opt in to `on-demand server rendering` on the full page.
+
+I hope you liked the explanation, let me know in the comments below if you have any questions or remarks!
+
+The code is running live on [my blog](/blog), and the code can be found on my [GitHub](https://github.com/thomasledoux1/website-thomas-astro).
