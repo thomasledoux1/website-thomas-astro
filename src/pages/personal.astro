@@ -1,6 +1,6 @@
 ---
 import "../../styles/global.css";
-import personalSvg from "./../assets/personal.svg";
+import PersonalSvg from "./../assets/personal.svg";
 import Layout from "../layouts/Layout.astro";
 const age = Math.floor(
   (new Date().getTime() - new Date("1991-07-11").getTime()) / 3.15576e10,
@@ -15,13 +15,7 @@ const age = Math.floor(
     <div
       class="flex flex-col gap-y-8 md:grid md:grid-cols-2 md:gap-8 items-center content-center"
     >
-      <img
-        width={personalSvg.width}
-        height={personalSvg.height}
-        class="w-[66.66%] mx-auto"
-        alt="Illustration of me working on laptop"
-        src={personalSvg.src}
-      />
+      <PersonalSvg class="w-[66.66%] mx-auto" />
       <div class="bg-secondary text-white rounded-lg p-6">
         <div class="flex flex-col gap-y-4">
           <h1 class="text-2xl lg:text-4xl font-bold">Who am I?</h1>

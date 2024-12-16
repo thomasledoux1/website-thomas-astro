@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
-import vercel from "@astrojs/vercel/serverless";
+import vercel from "@astrojs/vercel";
 import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
 import react from "@astrojs/react";
 import db from "@astrojs/db";
@@ -30,15 +30,10 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
   },
-  output: "hybrid",
-  adapter: vercel({
-    speedInsights: {
-      enabled: false,
-    },
-  }),
+  adapter: vercel(),
   experimental: {
-    serverIslands: true,
-    contentLayer: true,
+    responsiveImages: true,
+    svg: true,
   },
   markdown: {
     remarkPlugins: [remarkReadingTime],
