@@ -31,7 +31,7 @@ const loading = index > 3 ? "lazy" : "eager";
       sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
     />
 
-    <div class="flex px-6 py-4 flex-grow flex-col">
+    <div class="flex px-6 py-4 grow flex-col">
       <date class="text-sm"
         >{
           new Date(post.data.date).toLocaleDateString("en-BE", {
@@ -42,7 +42,7 @@ const loading = index > 3 ? "lazy" : "eager";
         }</date
       >
       <div
-        class="flex lg:items-center w-full flex-col gap-y-2 justify-between flex-grow"
+        class="flex lg:items-center w-full flex-col gap-y-2 justify-between grow"
       >
         <div>
           <h2 class="text-xl font-bold transition-colors">

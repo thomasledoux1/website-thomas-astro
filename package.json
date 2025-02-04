@@ -11,17 +11,18 @@
     "astro": "astro",
     "prettier": "prettier --write .",
     "db-login": "astro db login",
-    "db-push": "astro db execute db/seed.ts --remote"
+    "db-push": "astro db execute db/seed.ts --remote",
+    "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^5.1.3",
+    "@astrojs/tailwind": "^6.0.0",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
     "astro": "^5.0.5",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
     "sharp": "^0.33.5",
-    "tailwindcss": "^3.4.16",
+    "tailwindcss": "^4.0.3",
     "typescript": "^5.7.2"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/vercel": "^8.0.1",
     "@giscus/react": "^3.1.0",
+    "@tailwindcss/vite": "^4.0.3",
     "@tanstack/react-query": "^5.62.7",
     "@vercel/speed-insights": "^1.1.0",
     "astro-capo": "^0.0.1",

@@ -8,9 +8,6 @@ module.exports = {
     "./src/layouts/**/*.{js,ts,jsx,tsx,astro}",
     "./src/components/**/*.{js,ts,jsx,tsx,astro}",
   ],
-  future: {
-    hoverOnlyWhenSupported: true,
-  },
   theme: {
     container: {
       padding: {

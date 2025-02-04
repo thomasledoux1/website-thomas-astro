@@ -95,7 +95,7 @@ const latestBlogs = await Promise.all(
       View count:{" "}
       <ViewCount server:defer url={`/blog/${frontmatter.id}`}
         ><div slot="fallback">
-          <span class="animate-loading h-[19.5px] inline-block w-12 rounded-sm"
+          <span class="animate-loading h-[19.5px] inline-block w-12 rounded-xs"
           ></span>
         </div></ViewCount
       >

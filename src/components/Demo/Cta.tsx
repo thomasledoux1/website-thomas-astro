@@ -11,7 +11,7 @@ const Cta = ({
     <div
       className={clsx(
         {
-          '[--cta-bg:var(--secondary)] [--cta-text:white] [--cta-link-text:yellow] [--cta-bullet-color:yellow] [&_a]:!decoration-yellow-200 [&_a]:text-[var(--cta-link-text)] [&_li]:marker:text-[var(--cta-bullet-color)]':
+          '[--cta-bg:var(--secondary)] [--cta-text:white] [--cta-link-text:yellow] [--cta-bullet-color:yellow] [&_a]:decoration-yellow-200! [&_a]:text-[var(--cta-link-text)] [&_li]:marker:text-[var(--cta-bullet-color)]':
             variant === 'highlighted',
         },
         'bg-[var(--cta-bg)] text-[var(--cta-text)] h-40 p-8 flex justify-center items-center'
