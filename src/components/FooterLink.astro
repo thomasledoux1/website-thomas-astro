@@ -11,7 +11,7 @@ const parsedUrl = new URL(url);
 
 <li
   class={clsx(
-    "px-[6px] cursor-pointer xs:px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 flex relative outline-hidden",
+    "px-[6px] cursor-pointer flex items-center xs:px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 relative outline-hidden",
     {
       "hover:mr-2": label.toLowerCase() === "home",
       "hover:ml-2": label.toLowerCase() === "github",
@@ -26,6 +26,7 @@ const parsedUrl = new URL(url);
     aria-label={label}
     href={href}
     title={label}
+    class="my-auto"
   >
     <div
       class="absolute -top-10 left-1/2 rounded-md text-[10px] -translate-x-1/2 hidden group-focus:inline-block group-hover:inline-block px-3 py-1 bg-gray-100 after:border-l-transparent after:border-l-[10px] after:border-r-transparent after:border-r-[10px] backdrop-blur-sm after:border-t-gray-100 after:border-t-[10px] after:-bottom-2 after:left-1/2 after:-translate-x-1/2 after:absolute"
