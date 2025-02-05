@@ -251,61 +251,69 @@ import logoWoosh from "../assets/logowoosh.png";
       </ul>
       <div
         class="track__indicators h-6 absolute -bottom-12 left-1/2 -translate-x-1/2 flex"
-        aria-hidden="true"
       >
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 1"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 2"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 3"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 4"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 5"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 6"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 7"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 8"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 9"></button>
-        <button
-          class="indicator bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative"
-          class="indicator"
-          aria-label="Scroll to slide 10"></button>
+        {
+          Array.from({ length: 11 }, (_, index) => (
+            <button
+              class={`indicator p-2 transition-transform bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative ${index === 0 ? "active" : ""}`}
+              class="indicator"
+              aria-label={`Scroll to slide ${index + 1}`}
+            />
+          ))
+        }
       </div>
     </div>
   </section>
   <script>
+    const innerDimensions = (node: Element) => {
+      var computedStyle = getComputedStyle(node);
+
+      let width = node.clientWidth; // width with padding
+      width -=
+        parseFloat(computedStyle.paddingLeft) +
+        parseFloat(computedStyle.paddingRight);
+      return { width };
+    };
+
+    function updateActiveIndicator(currentSlide: number) {
+      indicators.forEach((indicator, index) => {
+        if (index === currentSlide) {
+          indicator.classList.add("active");
+        } else {
+          indicator.classList.remove("active");
+        }
+      });
+    }
+
+    function handleSlideChange(index: number) {
+      updateActiveIndicator(index);
+    }
     const indicators = document.querySelectorAll(".indicator");
-    const slides = document.querySelectorAll(".carousel>li");
+    const carousel = document.querySelector(".carousel");
+    const slides = carousel?.querySelectorAll(":scope > li");
     indicators.forEach((indicator, i) => {
       indicator.addEventListener("click", () => {
-        const slide = slides[i];
+        const slide = slides?.[i];
         slide?.scrollIntoView({
           behavior: "smooth",
         });
       });
+    });
+    function debounce(method, delay) {
+      clearTimeout(method._tId);
+      method._tId = setTimeout(function () {
+        method();
+      }, delay);
+    }
+    carousel?.addEventListener("scroll", () => {
+      debounce(() => {
+        const carouselInnerDimensions = innerDimensions(carousel);
+        console.log(carousel.scrollLeft);
+        const slideIndex = Math.round(
+          carousel.scrollLeft / carouselInnerDimensions.width,
+        );
+        handleSlideChange(slideIndex);
+      }, 200);
     });
   </script>
 </Layout>
