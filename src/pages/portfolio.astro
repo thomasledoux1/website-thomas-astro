@@ -311,7 +311,6 @@ import logoWoosh from "../assets/logowoosh.png";
     carousel?.addEventListener("scroll", () => {
       debounce(() => {
         const carouselInnerDimensions = innerDimensions(carousel);
-        console.log(carousel.scrollLeft);
         const slideIndex = Math.round(
           carousel.scrollLeft / carouselInnerDimensions.width,
         );
