@@ -299,7 +299,10 @@ import logoWoosh from "../assets/logowoosh.png";
         });
       });
     });
-    function debounce(method, delay) {
+    function debounce(
+      method: { (): void; (): void; (): void; _tId?: any },
+      delay: number | undefined,
+    ) {
       clearTimeout(method._tId);
       method._tId = setTimeout(function () {
         method();
