@@ -38,7 +38,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "astro-capo": "^0.0.1",
     "astro-expressive-code": "^0.40.2",
-    "astro-pagefind": "^1.8.0",
+    "astro-pagefind": "^1.8.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.39.3",
     "isbot": "^5.1.22",
