@@ -37,5 +37,8 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkReadingTime],
   },
+  build: {
+    format: "file",
+  },
   site: "https://www.thomasledoux.be",
 });
