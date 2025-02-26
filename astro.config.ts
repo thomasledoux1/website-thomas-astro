@@ -18,9 +18,9 @@ export default defineConfig({
         showCopyToClipboardButton: true,
       },
     }),
-    mdx(),
     db(),
     sitemap(),
+    mdx(),
     pagefind(),
   ],
   prefetch: {
