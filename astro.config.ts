@@ -41,4 +41,5 @@ export default defineConfig({
     format: "file",
   },
   site: "https://www.thomasledoux.be",
+  base: "/",
 });
