@@ -4,7 +4,6 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import PostPreview from "../components/PostPreview.astro";
 import Comments from "../components/Comments";
 import ViewCount from "../components/ViewCount.astro";
-import { Image } from "astro:assets";
 const { frontmatter } = Astro.props;
 interface Props {
   frontmatter: CollectionEntry<"blog"> & {
@@ -61,16 +60,6 @@ const latestBlogs = await Promise.all(
     <h1 transition:name={`blog-title-${frontmatter.id}`}>
       {frontmatter.data.title}
     </h1>
-    <Image
-      loading="eager"
-      decoding="sync"
-      class="lg:w-[45vw] lg:max-w-full mb-6"
-      src={frontmatter.data.image}
-      alt={frontmatter.data.imageAlt}
-      widths={[360, 540, 720, frontmatter.data.image.width]}
-      transition:name={`blog-image-${frontmatter.id}`}
-      sizes="(min-width: 1024px) 45vw, (min-width: 1536px) 1152px, 100vw"
-    />
     <div class="flex flex-col lg:flex-row gap-4 lg:items-center mb-4">
       <div class="flex gap-x-4">
         <time class="text-gray-500">{convertedDate}</time>

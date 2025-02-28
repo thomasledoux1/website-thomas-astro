@@ -1,36 +1,21 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
-import { Image } from "astro:assets";
 
 interface Props {
   post: CollectionEntry<"blog">;
   index: number;
 }
-const { post, index } = Astro.props;
+const { post } = Astro.props;
 const { remarkPluginFrontmatter } = await render(Astro.props.post);
 const { minutesRead } = remarkPluginFrontmatter;
-const loading = index > 3 ? "lazy" : "eager";
 ---
 
 <a
-  class="transform lg:text-center rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
+  class="transform rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
   href={`/blog/${post.id}`}
 >
   <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
-    <Image
-      loading={loading}
-      decoding={loading === "lazy" ? "async" : "sync"}
-      class={`rounded-t-xl aspect-[1.33] ${
-        post.data.containImage ? "object-contain" : "object-cover"
-      }`}
-      src={post.data.image}
-      alt={post.data.imageAlt}
-      widths={[360, 640, 768, 1024, 1280, 1568]}
-      transition:name={`blog-image-${post.id}`}
-      sizes="(min-width: 640px) 50vw, (min-width: 1024px) 33vw, 100vw"
-    />
-
     <div class="flex px-6 py-4 grow flex-col">
       <date class="text-sm"
         >{
@@ -41,16 +26,17 @@ const loading = index > 3 ? "lazy" : "eager";
           })
         }</date
       >
-      <div
-        class="flex lg:items-center w-full flex-col gap-y-2 justify-between grow"
-      >
+      <div class="flex w-full flex-col gap-y-2 justify-between grow">
         <div>
-          <h2 class="text-xl font-bold transition-colors">
+          <h2
+            class="text-xl font-bold transition-colors"
+            transition:name={`blog-title-${post.id}`}
+          >
             {post.data.title}
           </h2>
           {minutesRead ? <p>{minutesRead}ing time</p> : null}
         </div>
-        <ul class="flex flex-wrap lg:justify-center w-full">
+        <ul class="flex flex-wrap w-full">
           {
             post.data.tags?.map((tag: string) => {
               return (
