@@ -11,6 +11,7 @@ import expressiveCode from "astro-expressive-code";
 
 // https://astro.build/config
 export default defineConfig({
+  adapter: vercel(),
   integrations: [
     react(),
     expressiveCode({
@@ -26,7 +27,6 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
   },
-  adapter: vercel(),
   experimental: {
     responsiveImages: true,
     svg: true,
