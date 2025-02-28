@@ -5,7 +5,7 @@ import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
 import react from "@astrojs/react";
 import db from "@astrojs/db";
 import sitemap from "@astrojs/sitemap";
-import pagefind from "astro-pagefind";
+import pagefind from "./integration";
 import tailwindcss from "@tailwindcss/vite";
 import expressiveCode from "astro-expressive-code";
 
