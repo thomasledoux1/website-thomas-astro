@@ -8,6 +8,7 @@ import sitemap from "@astrojs/sitemap";
 import pagefind from "./integration";
 import tailwindcss from "@tailwindcss/vite";
 import expressiveCode from "astro-expressive-code";
+import algolia from "./algolia-integration";
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,6 +24,7 @@ export default defineConfig({
     sitemap(),
     mdx(),
     pagefind(),
+    algolia(),
   ],
   prefetch: {
     prefetchAll: true,
