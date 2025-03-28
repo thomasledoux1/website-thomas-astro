@@ -2,10 +2,12 @@
   "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
     "skipLibCheck": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": [
+        "src/*"
+      ]
     }
   }
 }

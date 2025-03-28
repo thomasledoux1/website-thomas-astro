@@ -5,27 +5,13 @@ import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
 import react from "@astrojs/react";
 import db from "@astrojs/db";
 import sitemap from "@astrojs/sitemap";
-import pagefind from "./integration";
 import tailwindcss from "@tailwindcss/vite";
-import expressiveCode from "astro-expressive-code";
+// import expressiveCode from "astro-expressive-code";
 import algolia from "./algolia-integration";
-
 // https://astro.build/config
 export default defineConfig({
   adapter: vercel(),
-  integrations: [
-    react(),
-    expressiveCode({
-      frames: {
-        showCopyToClipboardButton: true,
-      },
-    }),
-    db(),
-    sitemap(),
-    mdx(),
-    pagefind(),
-    algolia(),
-  ],
+  integrations: [react(), db(), sitemap(), mdx(), algolia()],
   prefetch: {
     prefetchAll: true,
   },

@@ -1,5 +1,8 @@
 ---
-import SearchComponent from "astro-pagefind/components/Search";
+import Layout from "~/layouts/Layout.astro";
+import SearchComponent from "../components/Search.tsx";
 ---
 
-<SearchComponent id="search" className="pagefind-ui" />
+<Layout title="Search">
+  <SearchComponent client:load />
+</Layout>

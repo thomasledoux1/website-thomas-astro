@@ -1,0 +1,197 @@
+---
+title: "Writing my first Astro Integration for Algolia indexing"
+tags: ["react", "typescript", "astro", "algolia", "search"]
+date: "2025-03-28T16:14:39.004Z"
+---
+
+import { Image } from "astro:assets";
+import screenshot from "../../assets/screenshot-algolia.png";
+
+## Why Algolia?
+
+At my job we use Algolia all the time, it's got good out of the box React components and hooks which make it super easy to create search experiences.
+They have a generous [free tier](https://www.algolia.com/pricing) with 10k search requests per month and up to 1M records.
+In one of my [previous blog posts](https://www.thomasledoux.be/blog/search-static-astro-website) I wrote about using the `astro-pagefind` integration to index my website fully static (the index is stored in your build output).
+I was curious as to how it worked to plug pagefind into the Astro build process, so I dug into the source code.
+
+## How I implemented it
+
+Setting up the [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) was very easy: create a TypeScript file (calling mine `algolia-integration.ts`) and export a function adhering to the `AstroIntegration` type.
+You'll give the integration a name, and you specify which integration hooks you want to use.
+In this case we only need the `astro:build:done` hook, since we want to process the HTML after the build was done by Astro.
+
+Loading environment variables inside the integration is done through the `loadEnv()` function from Vite.
+Once we have the environment variables available, we instantiate the `algoliasearch` client with the App ID and API key from Algolia (can be found on your Algolia dashboard).
+
+Then we read all the HTML files from the build output folder using `glob`, and I added 2 files to `ignore`, since I don't want them to be indexed.
+With this glob result we can start looping over the HTML files, parse them and send them to Algolia.
+
+For the parsing part I used `cheerio`, which provides a jQuery-like API to do different operations on the HTML.
+In the integration I used it to read the HTML and to remove some HTML tags and all the content in between the tags to limit the size of my output.
+
+To trim down the size of the records even further I decided to use the `stopword` package, which uses a dictionary of common stop words, and contains a function `removeStopwords()` to remove them from your content.
+
+With my content prepared for indexing, I can then index the records to Algolia using the `partialUpdateObject()` function, allowing me to update the records if they exist, or creating a new record if there's none in Algolia yet.
+
+```ts
+import type { AstroIntegration } from "astro";
+import { algoliasearch } from "algoliasearch";
+import { loadEnv } from "vite";
+import { glob } from "glob";
+import { fileURLToPath } from "node:url";
+import fs from "fs/promises";
+import path from "node:path";
+import * as cheerio from "cheerio";
+import stopword from "stopword";
+
+export default function pagefind(): AstroIntegration {
+  return {
+    name: "algolia",
+    hooks: {
+      "astro:build:done": async ({ logger, dir }) => {
+        const {
+          PUBLIC_ALGOLIA_APP_ID,
+          ALGOLIA_WRITE_API_KEY,
+          PUBLIC_ALGOLIA_INDEX_NAME,
+        } = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), "");
+        const search = algoliasearch(
+          PUBLIC_ALGOLIA_APP_ID ?? "",
+          ALGOLIA_WRITE_API_KEY ?? "",
+        );
+        const pathToRead = fileURLToPath(dir);
+        const globResult = await glob("**/*.html", {
+          cwd: pathToRead,
+          ignore: ["page-views/**", "search/**"],
+        });
+
+        for (const file of globResult) {
+          const filePath = path.join(pathToRead, file);
+          const fileContent = await fs.readFile(filePath, "utf-8");
+
+          // Parse HTML
+          const $ = cheerio.load(fileContent);
+          const title = $("h1").text().replace(/\s+/g, " ").trim();
+
+          // Remove <script>, <footer> and <style> content
+          $("script, style, footer, pre, [data-pagefind-ignore]").remove();
+
+          // Extract text and clean up whitespace
+          let text = $("body").text();
+          // Normalize whitespace: replace multiple spaces, newlines, and tabs with a single space
+          text = text.replace(/\s+/g, " ").trim();
+          let words = text.split(/\s+/);
+
+          // Remove stopwords to avoid hitting record size limits
+          words = stopword.removeStopwords(words);
+
+          // Convert back to a string
+          const content = words.join(" ");
+
+          try {
+            await search.partialUpdateObject({
+              createIfNotExists: true,
+              objectID:
+                file === "index.html"
+                  ? "home"
+                  : file.replace("/index.html", ""),
+              attributesToUpdate: {
+                content,
+                title: file === "index.html" ? "Homepage" : title,
+              },
+              indexName: PUBLIC_ALGOLIA_INDEX_NAME ?? "",
+            });
+          } catch (e) {
+            logger.error("Error updating Algolia index for file: " + file);
+          }
+        }
+      },
+    },
+  };
+}
+```
+
+## Activating the integration
+
+Once the integration is finished, activating it is as easy as importing the integration we created and adding it to the `integrations` array in the `astro.config.ts` file.
+Since I use astro with almost exclusively static pages, every page will have an HTML output (even my blog articles written in MDX), so I can index everything.
+
+```ts
+import { defineConfig } from "astro/config";
+
+import algolia from "./algolia-integration";
+
+export default defineConfig({
+  integrations: [algolia()],
+});
+```
+
+## Quering Algolia
+
+Since I'm used to using Algolia combined with React at my job, I decided to also use it that way on my website.
+Just know that you could just write an API route or Astro Action which queries Algolia serverside, or using the JS SDK client side, or using the [Vue components](https://www.algolia.com/doc/guides/building-search-ui/what-is-instantsearch/vue/) from Algolia.. There's plenty of ways to consume the data, in the end it's just an API being exposed.
+So I created my `pages/search.astro` which just loads my [Client Island](https://docs.astro.build/en/concepts/islands/#client-islands).
+
+```astro
+---
+import Layout from "~/layouts/Layout.astro";
+import SearchComponent from "../components/Search.tsx";
+---
+
+<Layout title="Search">
+  <SearchComponent client:load />
+</Layout>
+```
+
+In my SearchComponent I import the CSS from Algolia since I'm too lazy to write my own CSS 😅.
+You can see I use the `algoliasearch/lite` package, which is a lighter version of the package with the limitation that you can not use the package to index records.
+I use the out of the box components from `react-instantsearch` (the React component library from Algolia) to have a search box available, the hits displayed for my search query and the `Snippet` which provides a handy snippet with highlighting of the search result.
+
+```tsx
+import React from "react";
+import "instantsearch.css/themes/satellite.css";
+
+import { liteClient as algoliasearch, type Hit } from "algoliasearch/lite";
+import { InstantSearch, SearchBox, Hits, Snippet } from "react-instantsearch";
+
+const searchClient = algoliasearch(
+  import.meta.env.PUBLIC_ALGOLIA_APP_ID,
+  import.meta.env.PUBLIC_ALGOLIA_SEARCH_KEY,
+);
+
+function Hit({ hit }: { hit: Hit }) {
+  return (
+    <a href={`/${hit.objectID}`} className="hit">
+      <h3>{hit.title as string}</h3>
+      {/* @ts-expect-error Algolia types seem incorrect */}
+      <Snippet attribute="content" hit={hit} />
+    </a>
+  );
+}
+
+export default function AlgoliaSearch() {
+  return (
+    <InstantSearch
+      searchClient={searchClient}
+      indexName={import.meta.env.PUBLIC_ALGOLIA_INDEX_NAME}
+    >
+      <SearchBox placeholder="Search through my site" />
+      <Hits hitComponent={Hit} />
+    </InstantSearch>
+  );
+}
+```
+
+The end result looks like this:
+
+<Image
+  src={screenshot}
+  alt="Search results being shown for the query `React`"
+/>
+
+## Conclusion
+
+The integration was very easy to set up, certainly with great examples being available on the [integrations overview](https://astro.build/integrations/) and good documentation as usual.
+The only thing I bumped into was the [size limit](https://support.algolia.com/hc/en-us/articles/4406981897617-Is-there-a-size-limit-for-my-index-records) of the records, which is limited to 10KB for the free plan, which was not enough for my initial attempts without trimming, removing stopwords and unneeded HTML.
+But in the end using the tricks shown above I was able to stay under the limit, and have my whole website indexed in Algolia! Yay!
+
+Source code can be found on my [GitHub](https://github.com/thomasledoux1/website-thomas-astro), the result can be found on my [search page](https://www.thomasledoux.be/search).

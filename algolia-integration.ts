@@ -1,5 +1,6 @@
 import type { AstroIntegration } from "astro";
 import { algoliasearch } from "algoliasearch";
+import { loadEnv } from "vite";
 import { glob } from "glob";
 import { fileURLToPath } from "node:url";
 import fs from "fs/promises";
@@ -12,9 +13,14 @@ export default function pagefind(): AstroIntegration {
     name: "algolia",
     hooks: {
       "astro:build:done": async ({ logger, dir }) => {
+        const {
+          PUBLIC_ALGOLIA_APP_ID,
+          ALGOLIA_WRITE_API_KEY,
+          PUBLIC_ALGOLIA_INDEX_NAME,
+        } = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), "");
         const search = algoliasearch(
-          import.meta.env.ALGOLIA_APP_ID,
-          import.meta.env.ALGOLIA_WRITE_API_KEY,
+          PUBLIC_ALGOLIA_APP_ID ?? "",
+          ALGOLIA_WRITE_API_KEY ?? "",
         );
         const pathToRead = fileURLToPath(dir);
         const globResult = await glob("**/*.html", {
@@ -28,13 +34,13 @@ export default function pagefind(): AstroIntegration {
 
           // Parse HTML
           const $ = cheerio.load(fileContent);
+          const title = $("h1").text().replace(/\s+/g, " ").trim();
 
           // Remove <script>, <footer> and <style> content
-          $("script, style, footer").remove();
+          $("script, style, footer, pre, [data-pagefind-ignore]").remove();
 
           // Extract text and clean up whitespace
           let text = $("body").text();
-
           // Normalize whitespace: replace multiple spaces, newlines, and tabs with a single space
           text = text.replace(/\s+/g, " ").trim();
           let words = text.split(/\s+/);
@@ -43,7 +49,7 @@ export default function pagefind(): AstroIntegration {
           words = stopword.removeStopwords(words);
 
           // Convert back to a string
-          let cleanedText = words.join(" ");
+          const content = words.join(" ");
 
           try {
             await search.partialUpdateObject({
@@ -53,12 +59,13 @@ export default function pagefind(): AstroIntegration {
                   ? "home"
                   : file.replace("/index.html", ""),
               attributesToUpdate: {
-                content: cleanedText,
+                content,
+                title: file === "index.html" ? "Homepage" : title,
               },
-              indexName: import.meta.env.ALGOLIA_INDEX_NAME,
+              indexName: PUBLIC_ALGOLIA_INDEX_NAME ?? "",
             });
           } catch (e) {
-            logger.error("Error updating Algolia index for file" + file);
+            logger.error("Error updating Algolia index for file: " + file);
           }
         }
       },

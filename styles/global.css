@@ -247,3 +247,15 @@
 .indicator.active {
   @apply border-primary;
 }
+
+pre {
+  @apply p-4;
+}
+
+.mdx code:not(pre code) {
+  @apply bg-primary mx-1 px-1 py-[0.125rem] rounded-[0.25rem];
+}
+
+.mdx pre {
+  @apply mb-4;
+}
