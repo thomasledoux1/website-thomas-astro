@@ -194,4 +194,6 @@ The integration was very easy to set up, certainly with great examples being ava
 The only thing I bumped into was the [size limit](https://support.algolia.com/hc/en-us/articles/4406981897617-Is-there-a-size-limit-for-my-index-records) of the records, which is limited to 10KB for the free plan, which was not enough for my initial attempts without trimming, removing stopwords and unneeded HTML.
 But in the end using the tricks shown above I was able to stay under the limit, and have my whole website indexed in Algolia! Yay!
 
+Do note that this indexing technique is quite naive, you would need some more scrubbing of the HTML to make sure you don't index any information you wouldn't want to, and you'd probably want to do some additional checks in the integration to make sure you only send the data to Algolia on your production builds, not on preview builds etc.
+
 Source code can be found on my [GitHub](https://github.com/thomasledoux1/website-thomas-astro), the result can be found on my [search page](https://www.thomasledoux.be/search).
