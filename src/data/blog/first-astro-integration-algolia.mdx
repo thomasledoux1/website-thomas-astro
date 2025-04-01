@@ -7,12 +7,22 @@ date: "2025-03-28T16:14:39.004Z"
 import { Image } from "astro:assets";
 import screenshot from "../../assets/screenshot-algolia.png";
 
-## Why Algolia?
+## What's Algolia?
+
+Algolia is a Search As A Service platform, which provides a REST API which can be used to retrieve search results, but also to add records to the search index.
+
+## What's Astro?
+
+Astro is a JavaScript web framework optimized for building fast, content-driven websites.
+It uses Vite under the hood, and is very customizable. For example: you can choose to write your client side components in React, Svelte, Vue, SolidJS, Preact or Alpine.JS 🤯
+
+## Why write this integration?
 
 At my job we use Algolia all the time, it's got good out of the box React components and hooks which make it super easy to create search experiences.
 They have a generous [free tier](https://www.algolia.com/pricing) with 10k search requests per month and up to 1M records.
 In one of my [previous blog posts](https://www.thomasledoux.be/blog/search-static-astro-website) I wrote about using the `astro-pagefind` integration to index my website fully static (the index is stored in your build output).
 I was curious as to how it worked to plug pagefind into the Astro build process, so I dug into the source code.
+The main advantage of using this integration is that I don't have to worry anymore about pushing my data to the Algolia API myself anymore, it's done automatically everytime I do a production deploy!
 
 ## How I implemented it
 
