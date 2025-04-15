@@ -1,6 +1,7 @@
 ---
 import SpeedInsights from "@vercel/speed-insights/astro";
 import Footer from "../components/Footer.astro";
+import { Font } from "astro:assets";
 
 interface Props {
   title?: string;
@@ -23,6 +24,9 @@ import { Head } from "astro-capo";
         navigation: auto; /* enabled! */
       }
     </style>
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-calsans" preload />
+
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
@@ -54,27 +58,6 @@ import { Head } from "astro-capo";
         </>
       )
     }
-    <link
-      as="font"
-      crossorigin="anonymous"
-      href="/fonts/inter-v12-latin-700.woff2"
-      rel="preload"
-      type="font/woff2"
-    />
-    <link
-      as="font"
-      crossorigin="anonymous"
-      href="/fonts/inter-v12-latin-regular.woff2"
-      rel="preload"
-      type="font/woff2"
-    />
-    <link
-      as="font"
-      crossorigin="anonymous"
-      href="/fonts/CalSans-SemiBold.woff2"
-      rel="preload"
-      type="font/woff2"
-    />
     <meta
       content={frontmatter?.title
         ? `https://thomasledoux.be${frontmatter.url}/og-image.png`

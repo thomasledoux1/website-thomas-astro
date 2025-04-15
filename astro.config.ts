@@ -1,4 +1,4 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
 import vercel from "@astrojs/vercel";
 import { remarkReadingTime } from "./src/utils/calculate-reading-time.js";
@@ -17,7 +17,25 @@ export default defineConfig({
   },
   experimental: {
     responsiveImages: true,
-    svg: true,
+    fonts: [
+      {
+        provider: fontProviders.google(),
+        name: "Inter",
+        cssVariable: "--font-inter",
+      },
+      {
+        provider: "local",
+        name: "CalSans",
+        cssVariable: "--font-calsans",
+        variants: [
+          {
+            weight: 600,
+            style: "normal",
+            src: ["./src/assets/fonts/CalSans-SemiBold.woff2"],
+          },
+        ],
+      },
+    ],
   },
   vite: {
     plugins: [tailwindcss()],

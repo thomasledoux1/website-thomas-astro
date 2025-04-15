@@ -11,8 +11,8 @@
 }
 
 @theme {
-  --font-body: "Inter", "sans-serif";
-  --font-homepage: "Cal Sans", "sans-serif";
+  --font-body: var(--font-inter), "sans-serif";
+  --font-homepage: var(--font-calsans), "sans-serif";
   --color-secondary: #2c6e49;
   --color-primary: #c6ebbe;
 }
@@ -32,31 +32,6 @@
   @media (width >= 96rem) {
     padding-inline: 12rem;
   }
-}
-
-@font-face {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/inter-v12-latin-regular.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/fonts/inter-v12-latin-700.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Cal Sans";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  unicode-range: U+000-5FF;
-  src: url("/fonts/CalSans-SemiBold.woff2") format("woff2");
 }
 
 :root {
