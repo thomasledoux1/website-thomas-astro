@@ -24,16 +24,10 @@ export default defineConfig({
         cssVariable: "--font-inter",
       },
       {
-        provider: "local",
+        provider: fontProviders.google(),
         name: "CalSans",
         cssVariable: "--font-calsans",
-        variants: [
-          {
-            weight: 600,
-            style: "normal",
-            src: ["./src/assets/fonts/CalSans-SemiBold.woff2"],
-          },
-        ],
+        weights: ["600"],
       },
     ],
   },
