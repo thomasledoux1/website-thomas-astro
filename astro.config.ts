@@ -25,7 +25,7 @@ export default defineConfig({
       },
       {
         provider: fontProviders.google(),
-        name: "CalSans",
+        name: "Cal Sans",
         cssVariable: "--font-calsans",
         weights: ["600"],
       },
