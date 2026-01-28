@@ -16,15 +16,35 @@ import logoWoosh from "../assets/logowoosh.png";
   description="Projects Thomas Ledoux worked on"
   title="Thomas Ledoux | Portfolio"
 >
+  <!-- Subtle background elements -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent"
+    >
+    </div>
+  </div>
+
   <section
-    class="my-auto lg:mt-24 lg:-mx-[calc(4rem+((100vw-1024px)/2))] xl:-mx-[calc(5rem+((100vw-1280px)/2))] 2xl:-mx-[calc(12rem+((100vw-1536px)/2))]"
+    class="my-auto lg:mt-32 lg:-mx-[calc(4rem+((100vw-1024px)/2))] xl:-mx-[calc(5rem+((100vw-1280px)/2))] 2xl:-mx-[calc(12rem+((100vw-1536px)/2))]"
   >
     <div class="relative">
-      <h1 class="text-center text-2xl lg:text-5xl mb-6 md:mb-12 font-bold">
-        My portfolio
-      </h1>
+      <!-- Editorial-style header -->
+      <div class="mb-20 lg:mb-32 text-center">
+        <h1
+          class="text-4xl lg:text-7xl xl:text-8xl font-bold mb-6 tracking-tight portfolio-title"
+        >
+          Portfolio
+        </h1>
+        <p
+          class="text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"
+        >
+          Selected projects showcasing my work across web development, mobile
+          applications, and digital experiences.
+        </p>
+      </div>
+
       <ul
-        class="flex flex-col lg:flex-row gap-y-4 lg:gap-y-0 lg:ps-[20vw] carousel my-auto lg:pe-[20vw] lg:gap-x-8 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto lg:scroll-smooth!"
+        class="flex flex-col lg:flex-row gap-y-8 lg:gap-y-0 lg:ps-[20vw] carousel my-auto lg:pe-[20vw] lg:gap-x-12 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto lg:scroll-smooth portfolio-carousel"
       >
         <Case
           url="https://woosh.be"
@@ -249,32 +269,24 @@ import logoWoosh from "../assets/logowoosh.png";
           </p>
         </Case>
       </ul>
+      <!-- Refined carousel indicators -->
       <div
-        class="track__indicators hidden h-6 absolute -bottom-12 left-1/2 -translate-x-1/2 lg:flex"
+        class="track__indicators hidden h-8 absolute -bottom-20 left-1/2 -translate-x-1/2 lg:flex gap-3 items-center"
       >
         {
           Array.from({ length: 11 }, (_, index) => (
             <button
-              class={`indicator p-2 transition-transform bg-clip-padding cursor-pointer min-w-6 flex-1 rounded-[100px] bg-secondary border-transparent border-4 relative ${index === 0 ? "active" : ""}`}
-              class="indicator"
+              class={`indicator h-2 rounded-full transition-all duration-500 ease-out cursor-pointer min-w-[2rem] flex-1 relative overflow-hidden ${index === 0 ? "active" : ""}`}
               aria-label={`Scroll to slide ${index + 1}`}
-            />
+            >
+              <span class="absolute inset-0 bg-secondary transform scale-x-0 origin-left transition-transform duration-500 ease-out" />
+            </button>
           ))
         }
       </div>
     </div>
   </section>
   <script>
-    const innerDimensions = (node: Element) => {
-      var computedStyle = getComputedStyle(node);
-
-      let width = node.clientWidth; // width with padding
-      width -=
-        parseFloat(computedStyle.paddingLeft) +
-        parseFloat(computedStyle.paddingRight);
-      return { width };
-    };
-
     function updateActiveIndicator(currentSlide: number) {
       indicators.forEach((indicator, index) => {
         if (index === currentSlide) {
@@ -308,14 +320,159 @@ import logoWoosh from "../assets/logowoosh.png";
         method();
       }, delay);
     }
+
+    function getCurrentSlideIndex() {
+      if (!carousel || !slides || slides.length === 0) return 0;
+
+      // For snap scrolling, find which slide is most visible/centered
+      const carouselRect = carousel.getBoundingClientRect();
+      const carouselCenter = carouselRect.left + carouselRect.width / 2;
+
+      let closestSlide = 0;
+      let closestDistance = Infinity;
+
+      slides.forEach((slide, index) => {
+        const slideRect = slide.getBoundingClientRect();
+        const slideCenter = slideRect.left + slideRect.width / 2;
+        const distance = Math.abs(carouselCenter - slideCenter);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSlide = index;
+        }
+      });
+
+      return closestSlide;
+    }
+
+    function updateIndicatorsOnScroll() {
+      const currentSlide = getCurrentSlideIndex();
+      handleSlideChange(currentSlide);
+    }
+
     carousel?.addEventListener("scroll", () => {
-      debounce(() => {
-        const carouselInnerDimensions = innerDimensions(carousel);
-        const slideIndex = Math.round(
-          carousel.scrollLeft / carouselInnerDimensions.width,
-        );
-        handleSlideChange(slideIndex);
-      }, 200);
+      debounce(updateIndicatorsOnScroll, 150);
+    });
+
+    // Initial update on page load
+    setTimeout(() => {
+      updateIndicatorsOnScroll();
+    }, 100);
+
+    // Also update when scrolling ends (for snap behavior)
+    let scrollTimeout: ReturnType<typeof setTimeout>;
+    carousel?.addEventListener("scroll", () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        updateIndicatorsOnScroll();
+      }, 150);
     });
   </script>
+
+  <style>
+    /* Editorial typography */
+    .portfolio-title {
+      font-family: var(--font-homepage);
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Smooth scroll behavior */
+    .portfolio-carousel {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Staggered fade-in for portfolio items */
+    @media (min-width: 1024px) {
+      .portfolio-carousel > li {
+        opacity: 0;
+        transform: translateY(40px);
+        animation: portfolio-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .portfolio-carousel > li:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .portfolio-carousel > li:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .portfolio-carousel > li:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .portfolio-carousel > li:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .portfolio-carousel > li:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .portfolio-carousel > li:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+      .portfolio-carousel > li:nth-child(7) {
+        animation-delay: 0.35s;
+      }
+      .portfolio-carousel > li:nth-child(8) {
+        animation-delay: 0.4s;
+      }
+      .portfolio-carousel > li:nth-child(9) {
+        animation-delay: 0.45s;
+      }
+      .portfolio-carousel > li:nth-child(10) {
+        animation-delay: 0.5s;
+      }
+      .portfolio-carousel > li:nth-child(11) {
+        animation-delay: 0.55s;
+      }
+    }
+
+    @keyframes portfolio-fade-in {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Indicator active state - using dark green (secondary color #2c6e49) */
+    .indicator {
+      background-color: rgba(229, 231, 235, 0.5); /* light gray background */
+    }
+
+    .indicator.active {
+      background-color: rgba(
+        44,
+        110,
+        73,
+        0.15
+      ); /* subtle dark green background */
+    }
+
+    .indicator.active span {
+      transform: scaleX(1) !important;
+      background-color: #2c6e49; /* solid dark green fill */
+    }
+
+    .indicator:not(.active) span {
+      transform: scaleX(0);
+    }
+
+    .indicator:hover:not(.active) span {
+      transform: scaleX(0.3);
+      background-color: #2c6e49; /* solid dark green on hover */
+    }
+
+    .indicator.active:hover span {
+      transform: scaleX(1);
+      background-color: #2c6e49; /* solid dark green */
+    }
+
+    /* Smooth transitions */
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
 </Layout>

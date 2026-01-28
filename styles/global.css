@@ -116,89 +116,26 @@
 }
 
 @media (hover: hover) {
-  .footer-item {
-    transform: scale(calc(1 + var(--lerp)));
+  /* Make SVG icon lines bolder on hover */
+  .footer-item:hover .footer-icon-wrapper svg,
+  .footer-item:focus-visible .footer-icon-wrapper svg {
+    stroke-width: 2.5;
   }
 
-  :is(.footer-item:hover, .footer-item:focus-visible) {
-    --lerp: var(--lerp-0);
-    z-index: 5;
-  }
-  .footer-item:has(+ :is(.footer-item:hover, .footer-item:focus-visible)),
-  :is(.footer-item:hover, .footer-item:focus-visible) + .footer-item,
-  .footer-item:has(+ hr + :is(.footer-item:hover, .footer-item:focus-visible)),
-  :is(.footer-item:hover, .footer-item:focus-visible) + hr + .footer-item {
-    --lerp: var(--lerp-1);
-    z-index: 4;
+  .footer-icon-wrapper.active svg path {
+    stroke-width: 2.5;
   }
 
-  .footer-item:has(
-      + .footer-item + :is(.footer-item:hover, .footer-item:focus-visible)
-    ),
-  :is(.footer-item:hover, .footer-item:focus-visible)
-    + .footer-item
-    + .footer-item,
-  .footer-item:has(
-      + hr + .footer-item + :is(.footer-item:hover, .footer-item:focus-visible)
-    ),
-  .footer-item:has(
-      + .footer-item + hr + :is(.footer-item:hover, .footer-item:focus-visible)
-    ),
-  :is(.footer-item:hover, .footer-item:focus-visible)
-    + hr
-    + .footer-item
-    + .footer-item {
-    --lerp: var(--lerp-2);
-    z-index: 3;
+  .footer-item:hover .footer-icon-wrapper svg path,
+  .footer-item:focus-visible .footer-icon-wrapper svg path {
+    stroke-width: 2.5;
   }
 
-  .footer-item:has(
-      + .footer-item
-        + .footer-item
-        + :is(.footer-item:hover, .footer-item:focus-visible)
-    ),
-  :is(.footer-item:hover, .footer-item:focus-visible)
-    + .footer-item
-    + hr
-    + .footer-item,
-  .footer-item:has(
-      + .footer-item
-        + .footer-item
-        + :is(.footer-item:hover, .footer-item:focus-visible)
-    ),
-  :is(.footer-item:hover, .footer-item:focus-visible)
-    + .footer-item
-    + hr
-    + .footer-item {
-    --lerp: var(--lerp-3);
-    z-index: 2;
-  }
-  .footer-item:has(
-      + .footer-item
-        + .footer-item
-        + .footer-item
-        + :is(.footer-item:hover, .footer-item:focus-visible)
-    ),
-  :is(.footer-item:hover, .footer-item:focus-visible)
-    + .footer-item
-    + .footer-item
-    + .footer-item
-    + .footer-item,
-  .footer-item:has(
-      + .footer-item
-        + .footer-item
-        + .footer-item
-        + hr
-        + :is(.footer-item:hover, .footer-item:focus-visible)
-    ),
-  :is(.footer-item:hover, .footer-item:focus-visible)
-    + hr
-    + .footer-item
-    + .footer-item
-    + .footer-item
-    + .footer-item {
-    --lerp: var(--lerp-4);
-    z-index: 1;
+  /* Also handle fill-based icons by making them darker */
+  .footer-item:hover .footer-icon-wrapper svg[fill],
+  .footer-item:focus-visible .footer-icon-wrapper svg[fill] {
+    opacity: 0.9;
+    filter: brightness(0.7);
   }
 }
 

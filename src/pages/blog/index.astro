@@ -21,10 +21,30 @@ const sortedPosts = allBlogPosts.sort(
 ---
 
 <Layout title="The Thomas Ledoux blog">
-  <section>
-    <h1 class="text-center text-2xl lg:text-5xl font-bold mb-6">
-      Personal blog
-    </h1>
+  <!-- Subtle background elements -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent"
+    >
+    </div>
+  </div>
+
+  <section class="my-auto lg:mt-32">
+    <!-- Editorial-style header -->
+    <div class="mb-20 lg:mb-32 text-center">
+      <h1
+        class="text-4xl lg:text-7xl xl:text-8xl font-bold mb-6 tracking-tight blog-title"
+      >
+        Blog
+      </h1>
+      <p
+        class="text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"
+      >
+        Thoughts, tutorials, and insights on web development, frameworks, and
+        the latest technologies.
+      </p>
+    </div>
+
     <div class="flex flex-col lg:grid grid-cols-4 gap-6">
       <div
         data-pagefind-ignore="all"
@@ -38,4 +58,16 @@ const sortedPosts = allBlogPosts.sort(
       </div>
     </div>
   </section>
+
+  <style>
+    /* Editorial typography */
+    .blog-title {
+      font-family: var(--font-homepage);
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
 </Layout>

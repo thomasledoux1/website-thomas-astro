@@ -23,40 +23,45 @@ const {
 ---
 
 <li
-  class="transform lg:h-[40vh] case border-2 border-primary p-4 lg:p-6 lg:snap-center lg:min-w-[60vw] lg:max-w-[60vw] flex rounded-xl shadow-lg"
+  class="case lg:h-[45vh] lg:snap-center lg:min-w-[60vw] lg:max-w-[60vw] flex flex-col group portfolio-item"
 >
   <a
     target="_blank"
     rel="noopener noreferrer"
     href={url}
-    class="grid lg:grid-cols-7 gap-x-6"
+    class="h-full bg-white rounded-2xl border border-gray-200/80 p-8 lg:p-10 flex flex-col lg:grid lg:grid-cols-7 gap-8 lg:gap-12 transition-all duration-700 ease-out hover:border-gray-300 hover:shadow-2xl hover:shadow-gray-200/50 hover:-translate-y-1"
   >
-    <div class="lg:col-span-2 flex flex-col items-center justify-center">
+    <!-- Logo and tags section -->
+    <div
+      class="lg:col-span-2 flex flex-col items-center justify-center space-y-6"
+    >
       <div
-        class={`max-h-[150px] lg:mx-0 max-w-[80%] lg:max-w-full flex ${hasBlackBackground ? "bg-black p-2" : ""}`}
+        class={`max-h-[140px] lg:mx-0 max-w-[80%] lg:max-w-full flex items-center justify-center transition-all duration-700 ease-out group-hover:scale-105 group-hover:opacity-90 ${hasBlackBackground ? "bg-black p-4 rounded-lg" : ""}`}
       >
         {
           img && logoWidth ? (
             <Image
               width={logoWidth}
-              height={150}
+              height={140}
               alt={`Logo ${logoAlt}`}
               src={img}
-              class="inline-block"
+              class="inline-block object-contain"
               loading={eager ? "eager" : "lazy"}
             />
           ) : (
-            <span class="text-2xl text-center break-all">{logoAlt}</span>
+            <span class="text-2xl lg:text-3xl text-center break-all font-bold text-gray-900 group-hover:text-secondary transition-colors duration-500">
+              {logoAlt}
+            </span>
           )
         }
       </div>
-      <ul
-        class="flex lg:order-1 justify-center flex-wrap my-4 gap-2 lg:mb-0 w-full"
-      >
+
+      <!-- Tags -->
+      <ul class="flex justify-center flex-wrap gap-2 w-full">
         {
           tags.map((tag) => {
             return (
-              <li class="bg-secondary text-white text-sm py-1 px-4 rounded-md">
+              <li class="bg-gray-100 text-gray-700 text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
                 {tag}
               </li>
             );
@@ -64,8 +69,33 @@ const {
         }
       </ul>
     </div>
-    <div class="lg:p-4 lg:col-span-5 grow justify-center flex flex-col">
-      <slot />
+
+    <!-- Content section -->
+    <div class="lg:col-span-5 flex flex-col justify-center">
+      <div
+        class="text-gray-600 text-base lg:text-lg leading-relaxed space-y-6 group-hover:text-gray-800 transition-colors duration-500"
+      >
+        <slot />
+      </div>
+
+      <!-- Subtle arrow indicator -->
+      <div
+        class="mt-6 flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+      >
+        <span class="text-sm font-medium mr-2">View project</span>
+        <svg
+          class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
+        </svg>
+      </div>
     </div>
   </a>
 </li>

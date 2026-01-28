@@ -1,5 +1,4 @@
 ---
-import clsx from "clsx";
 export interface Props {
   label: string;
   href?: string;
@@ -10,15 +9,7 @@ const parsedUrl = new URL(url);
 ---
 
 <li
-  class={clsx(
-    "px-[6px] cursor-pointer flex items-center xs:px-2 footer-item group transition-[margin,transform] origin-[50%_100%] z-40 relative outline-hidden",
-    {
-      "hover:mr-2": label.toLowerCase() === "home",
-      "hover:ml-2": label.toLowerCase() === "github",
-      "hover:mx-2":
-        label.toLowerCase() !== "home" && label.toLowerCase() !== "github",
-    },
-  )}
+  class="py-[6px] cursor-pointer flex items-center xs:py-2 footer-item group z-40 relative outline-hidden"
 >
   <a
     target={href?.startsWith("http") ? "_blank" : undefined}
@@ -29,18 +20,26 @@ const parsedUrl = new URL(url);
     class="my-auto"
   >
     <div
-      class="absolute -top-10 left-1/2 rounded-md text-[10px] -translate-x-1/2 hidden group-focus:inline-block group-hover:inline-block px-3 py-1 bg-gray-100 after:border-l-transparent after:border-l-[10px] after:border-r-transparent after:border-r-[10px] backdrop-blur-sm after:border-t-gray-100 after:border-t-[10px] after:-bottom-2 after:left-1/2 after:-translate-x-1/2 after:absolute"
+      class={`absolute left-12 top-1/2 -translate-y-1/2 rounded-md text-[10px] hidden group-focus:inline-block group-hover:inline-block px-3 py-1 bg-gray-100 backdrop-blur-sm after:border-t-transparent after:border-t-[10px] after:border-b-transparent after:border-b-[10px] after:border-r-gray-100 after:border-r-[10px] after:-left-2 after:top-1/2 after:-translate-y-1/2 after:absolute whitespace-nowrap`}
     >
       {label}
     </div>
-    <div class="w-[1.5rem] h-[1.5rem] xs:w-[1.77rem] xs:h-[1.77rem]">
+    <div
+      class={`w-[1.5rem] h-[1.5rem] xs:w-[1.77rem] xs:h-[1.77rem] footer-icon-wrapper ${
+        parsedUrl.pathname === href ||
+        parsedUrl.pathname === `${href}/` ||
+        (parsedUrl.pathname.startsWith("/blog") && href === "/blog")
+          ? "active"
+          : ""
+      }`}
+    >
       <slot />
     </div>
     {
       parsedUrl.pathname === href ||
       parsedUrl.pathname === `${href}/` ||
       (parsedUrl.pathname.startsWith("/blog") && href === "/blog") ? (
-        <span class="w-1 h-1 bg-secondary absolute rounded-full left-1/2 -translate-x-1/2 -bottom-2" />
+        <span class="w-1 h-1 bg-secondary absolute rounded-full top-1/2 -translate-y-1/2 -right-2" />
       ) : null
     }
   </a>

@@ -1,6 +1,6 @@
 ---
 import { Image, getImage } from "astro:assets";
-import profilePicture from "./../assets/1685639156921_x0ltzi.jpg";
+import profilePicture from "./../assets/me.png";
 const mobileProfilePicture = await getImage({
   src: profilePicture,
   width: 320,
@@ -22,33 +22,72 @@ const latestBlog = blogs.sort(
   description="Thomas Ledoux' personal website. Writes about Javascript/React/Next.js/Remix/Astro. Always looking to learn about the newest frameworks and features."
   title="Thomas Ledoux - Home"
 >
+  <!-- Animated background gradient -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 animate-gradient-shift"
+    >
+    </div>
+    <div
+      class="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float"
+    >
+    </div>
+    <div
+      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float-delayed"
+    >
+    </div>
+  </div>
+
   <section class="relative lg:pt-0 items-center flex flex-wrap h-full my-auto">
     <div
       class="gap-12 w-full flex flex-col lg:flex-row items-center justify-between h-full"
     >
       <h1
-        class="lg:text-6xl font-homepage text-border-black xl:text-7xl 2xl:text-[5.25rem] grow font-bold text-4xl sm:text-6xl text-center lg:text-left md:leading-[1.1] flex flex-col items-center lg:items-start"
+        class="lg:text-6xl font-homepage text-border-black xl:text-7xl 2xl:text-[5.25rem] grow font-bold text-4xl sm:text-6xl text-center lg:text-left md:leading-[1.1] flex flex-col items-center lg:items-start gap-2 lg:gap-3"
       >
-        <span>Thomas Ledoux.</span><span>Developer.</span><span
-          >Badminton player.</span
-        ><span>Travel lover.</span>
+        <span
+          class="homepage-text animate-fade-in-up"
+          style="animation-delay: 0.1s">Thomas Ledoux.</span
+        >
+        <span
+          class="homepage-text animate-fade-in-up hover-scale"
+          style="animation-delay: 0.2s">Developer.</span
+        >
+        <span
+          class="homepage-text animate-fade-in-up hover-scale"
+          style="animation-delay: 0.3s">Badminton player.</span
+        >
+        <span
+          class="homepage-text animate-fade-in-up hover-scale"
+          style="animation-delay: 0.4s">Travel lover.</span
+        >
       </h1>
-      <div class="w-[15rem] lg:w-[20rem]">
-        <Image
-          src={profilePicture}
-          class="rounded-full mx-auto md:ml-auto lg:mr-0 aspect-square max-w-[15rem] lg:max-w-[20rem] max-h-[15rem] lg:max-h-[20rem] w-full"
-          alt="Thomas Ledoux profile"
-          loading="eager"
-          decoding="sync"
-          widths={[360, 640, 768, 1024, 1280, 1568]}
-          sizes="(max-width: 1023px) 240px, 320px"
-          srcset={`${mobileProfilePicture.src} 240w, ${desktopProfilePicture.src}`}
-        />
+      <div
+        class="w-[15rem] lg:w-[20rem] animate-fade-in-scale"
+        style="animation-delay: 0.5s"
+      >
+        <div class="relative group">
+          <div
+            class="absolute inset-0 rounded-full bg-gradient-to-r from-secondary to-primary opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500"
+          >
+          </div>
+          <Image
+            src={profilePicture}
+            class="relative rounded-full mx-auto md:ml-auto lg:mr-0 aspect-square max-w-[15rem] lg:max-w-[20rem] max-h-[15rem] lg:max-h-[20rem] w-full transition-transform duration-500 group-hover:scale-105 shadow-2xl"
+            alt="Thomas Ledoux profile"
+            loading="eager"
+            decoding="sync"
+            widths={[360, 640, 768, 1024, 1280, 1568]}
+            sizes="(max-width: 1023px) 240px, 320px"
+            srcset={`${mobileProfilePicture.src} 240w, ${desktopProfilePicture.src}`}
+          />
+        </div>
       </div>
       <a
         href={`/blog/${latestBlog?.id}`}
         aria-label="Latest blog post"
-        class="fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-transform lg:translate-x-[calc(100%-5rem)] lg:hover:translate-x-0"
+        class="fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-all duration-300 lg:translate-x-[calc(100%-5rem)] lg:hover:translate-x-0 hover:shadow-xl hover:shadow-secondary/50 animate-slide-in-right"
+        style="animation-delay: 0.6s"
       >
         <div class="relative flex items-center justify-center gap-x-8">
           <span class="relative flex h-6 w-6">
@@ -87,4 +126,115 @@ const latestBlog = blogs.sort(
       </a>
     </div>
   </section>
+
+  <style>
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fade-in-scale {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slide-in-right {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes gradient-shift {
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(20px, -20px) scale(1.1);
+      }
+    }
+
+    @keyframes float-delayed {
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(-20px, 20px) scale(1.1);
+      }
+    }
+
+    .animate-fade-in-up {
+      animation: fade-in-up 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .animate-fade-in-scale {
+      animation: fade-in-scale 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .animate-slide-in-right {
+      animation: slide-in-right 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .animate-gradient-shift {
+      background-size: 200% 200%;
+      animation: gradient-shift 15s ease infinite;
+    }
+
+    .animate-float {
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .animate-float-delayed {
+      animation: float-delayed 25s ease-in-out infinite;
+    }
+
+    .hover-scale {
+      transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
+      display: inline-block;
+    }
+
+    @media (hover: hover) {
+      .hover-scale:hover {
+        transform: scale(1.05) translateY(-2px);
+        filter: drop-shadow(0 4px 8px rgba(44, 110, 73, 0.3));
+      }
+    }
+
+    .homepage-text {
+      will-change: transform, opacity;
+    }
+  </style>
 </Layout>
