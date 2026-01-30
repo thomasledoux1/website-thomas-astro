@@ -39,14 +39,21 @@ const latestBlogs = await Promise.all(
     title: frontmatter.data.title,
   }}
 >
-  <a href="/blog" class="flex items-center gap-x-2 lg:mb-4">
+  <a
+    href="/blog"
+    class="flex items-center gap-x-2 lg:mb-4"
+    transition:name="blog-back-link"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
+      width="24"
+      height="24"
       stroke-width={1.5}
       stroke="currentColor"
-      class="w-6 h-6"
+      class="size-6 shrink-0"
+      aria-hidden="true"
     >
       <path
         stroke-linecap="round"
