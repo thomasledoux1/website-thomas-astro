@@ -1,14 +1,14 @@
 ---
-import { getCollection } from "astro:content";
-import PostPreview from "../../components/PostPreview.astro";
-import Tags from "../../components/Tags.astro";
+import { getCollection } from 'astro:content';
+import PostPreview from '../../components/PostPreview.astro';
+import Tags from '../../components/Tags.astro';
 const allBlogPosts = await getCollection(
-  "blog",
-  (blog) => blog.data.draft !== true,
+  'blog',
+  blog => blog.data.draft !== true
 );
-import Layout from "../../layouts/Layout.astro";
+import Layout from '../../layouts/Layout.astro';
 const tags = allBlogPosts
-  .map((blog) => blog.data.tags)
+  .map(blog => blog.data.tags)
   .flat()
   .reduce<{ [key: string]: number }>(function (result, c) {
     var count = result[c] || 0;
@@ -16,7 +16,7 @@ const tags = allBlogPosts
     return result;
   }, {});
 const sortedPosts = allBlogPosts.sort(
-  (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
+  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
 );
 ---
 
@@ -29,45 +29,30 @@ const sortedPosts = allBlogPosts.sort(
     </div>
   </div>
 
-  <section class="my-auto lg:mt-32">
-    <!-- Editorial-style header -->
-    <div class="mb-20 lg:mb-32 text-center">
-      <h1
-        class="text-4xl lg:text-7xl xl:text-8xl font-bold mb-6 tracking-tight blog-title"
-      >
-        Blog
-      </h1>
-      <p
-        class="text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"
-      >
-        Thoughts, tutorials, and insights on web development, frameworks, and
-        the latest technologies.
-      </p>
-    </div>
-
-    <div class="flex flex-col lg:grid grid-cols-4 gap-6">
-      <div
-        data-pagefind-ignore="all"
-        class="flex flex-col order-2 lg:order-1 gap-6 lg:gap-9 col-span-3"
-      >
-        {sortedPosts.map((post, i) => <PostPreview {post} index={i} />)}
+  <section class="my-auto lg:mt-8">
+    <div class="relative">
+      <div class="mb-10 text-center">
+        <h1
+          class="text-4xl lg:text-7xl xl:text-8xl font-bold mb-6 tracking-tight font-title"
+        >
+          Blog
+        </h1>
+        <p
+          class="text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"
+        >
+          Thoughts, tutorials, and insights on web development, frameworks, and
+          the latest technologies.
+        </p>
       </div>
-      <div class="lg:top-4 lg:sticky order-1 lg:order-2 lg:h-screen">
-        <h2 class="text-2xl mb-4">Tags</h2>
+
+      <div class="mb-10" data-pagefind-ignore="all">
+        <h2 class="text-2xl font-bold mb-4 text-gray-900">Tags</h2>
         <Tags tags={tags} />
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        {sortedPosts.map((post, i) => <PostPreview {post} index={i} />)}
       </div>
     </div>
   </section>
-
-  <style>
-    /* Editorial typography */
-    .blog-title {
-      font-family: var(--font-homepage);
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-  </style>
 </Layout>

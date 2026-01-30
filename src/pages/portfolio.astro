@@ -1,15 +1,15 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Case from "../components/Case.astro";
-import logoKaraton from "../assets/logokaraton.png";
-import logoRialto from "../assets/logorialto.png";
-import logoCarlier from "../assets/logocarlier.png";
-import logoAchterderegenboog from "../assets/logoachterderegenboog.png";
-import logoDuckduckgo from "../assets/logoduckduckgo.png";
-import logoMartino from "../assets/logomartino.png";
-import logoBorluutJoggers from "../assets/logoborluutjoggers.png";
-import logoMaatwerk from "../assets/logomaatwerk.png";
-import logoWoosh from "../assets/logowoosh.png";
+import Layout from '../layouts/Layout.astro';
+import Case from '../components/Case.astro';
+import logoKaraton from '../assets/logokaraton.png';
+import logoRialto from '../assets/logorialto.png';
+import logoCarlier from '../assets/logocarlier.png';
+import logoAchterderegenboog from '../assets/logoachterderegenboog.png';
+import logoDuckduckgo from '../assets/logoduckduckgo.png';
+import logoMartino from '../assets/logomartino.png';
+import logoBorluutJoggers from '../assets/logoborluutjoggers.png';
+import logoMaatwerk from '../assets/logomaatwerk.png';
+import logoWoosh from '../assets/logowoosh.png';
 ---
 
 <Layout
@@ -25,13 +25,12 @@ import logoWoosh from "../assets/logowoosh.png";
   </div>
 
   <section
-    class="my-auto lg:mt-32 lg:-mx-[calc(4rem+((100vw-1024px)/2))] xl:-mx-[calc(5rem+((100vw-1280px)/2))] 2xl:-mx-[calc(12rem+((100vw-1536px)/2))]"
+    class="my-auto lg:mt-8 lg:-mx-[calc(4rem+((100vw-1024px)/2))] xl:-mx-[calc(5rem+((100vw-1280px)/2))] 2xl:-mx-[calc(12rem+((100vw-1536px)/2))]"
   >
     <div class="relative">
-      <!-- Editorial-style header -->
-      <div class="mb-20 lg:mb-32 text-center">
+      <div class="mb-20 text-center">
         <h1
-          class="text-4xl lg:text-7xl xl:text-8xl font-bold mb-6 tracking-tight portfolio-title"
+          class="text-4xl lg:text-7xl xl:text-8xl font-bold mb-6 tracking-tight font-title"
         >
           Portfolio
         </h1>
@@ -49,7 +48,7 @@ import logoWoosh from "../assets/logowoosh.png";
         <Case
           url="https://woosh.be"
           logoAlt="Woosh"
-          tags={["wordpress", "woocommerce"]}
+          tags={['wordpress', 'woocommerce']}
           img={logoWoosh}
           logoWidth={150}
         >
@@ -70,7 +69,7 @@ import logoWoosh from "../assets/logowoosh.png";
         <Case
           url="https://maat-werk.be"
           logoAlt="Maat.Werk"
-          tags={["wordpress"]}
+          tags={['wordpress']}
           img={logoMaatwerk}
           logoWidth={150}
           hasBlackBackground
@@ -91,7 +90,7 @@ import logoWoosh from "../assets/logowoosh.png";
         <Case
           url="https://snackbarmartino.be"
           logoAlt="Snackbar Martino"
-          tags={["wordpress"]}
+          tags={['wordpress']}
           img={logoMartino}
           logoWidth={150}
         >
@@ -110,7 +109,7 @@ import logoWoosh from "../assets/logowoosh.png";
         <Case
           url="https://borluutjoggers.be"
           logoAlt="Borluut Joggers"
-          tags={["wordpress"]}
+          tags={['wordpress']}
           img={logoBorluutJoggers}
           logoWidth={150}
         >
@@ -132,11 +131,11 @@ import logoWoosh from "../assets/logowoosh.png";
           logoAlt="Karaton"
           img={logoKaraton}
           logoWidth={218}
-          tags={["mongodb", "expressjs", "angular", "nodejs"]}
+          tags={['mongodb', 'expressjs', 'angular', 'nodejs']}
         >
           <p class="mb-4">
             For Happs Development I created and maintained the <b>Angular</b>{
-              " "
+              ' '
             }
             website for Karaton where speech therapists and parents of dyslexic could
             follow up on the progress their children/patients are making in the Karaton
@@ -157,11 +156,11 @@ import logoWoosh from "../assets/logowoosh.png";
           logoAlt="Rialto"
           img={logoRialto}
           logoWidth={321}
-          tags={["swift", "ios"]}
+          tags={['swift', 'ios']}
         >
           <p class="mb-4">
             At my internship for Rialto I created an iOS app from scratch in{
-              " "
+              ' '
             }
             <b>Swift</b> where real estate companies could easily manage their listings.
           </p>
@@ -180,7 +179,7 @@ import logoWoosh from "../assets/logowoosh.png";
           logoAlt="Carlier Rekenen"
           img={logoCarlier}
           logoWidth={100}
-          tags={["react-native", "react"]}
+          tags={['react-native', 'react']}
         >
           <p class="mb-4">
             While working at Happs Development I also created a mobile
@@ -203,11 +202,11 @@ import logoWoosh from "../assets/logowoosh.png";
           logoAlt="Achter De Regenboog"
           img={logoAchterderegenboog}
           logoWidth={150}
-          tags={["wordpress", "html", "css"]}
+          tags={['wordpress', 'html', 'css']}
         >
           <p class="mb-4">
             In my free time I like to experiment with other frameworks and
-            technologies too, this is why I made a website using{" "}
+            technologies too, this is why I made a website using{' '}
             <b>Wordpress</b> for a friend of mine who started a psychologists practice.
           </p>
           <p class="mb-4">
@@ -224,7 +223,7 @@ import logoWoosh from "../assets/logowoosh.png";
           logoAlt="DeckDeckGo"
           img={logoDuckduckgo}
           logoWidth={100}
-          tags={["open source", "hacktoberfest", "stencil", "typescript"]}
+          tags={['open source', 'hacktoberfest', 'stencil', 'typescript']}
         >
           <p class="mb-4">
             In 2020 I participated in <b>Hacktoberfest</b> for the first time ever.
@@ -232,7 +231,7 @@ import logoWoosh from "../assets/logowoosh.png";
             to, and landed on DeckDeckGo.
           </p>
           <p>
-            It was a lot of fun to coloborate with other <b>open source</b>{" "}
+            It was a lot of fun to coloborate with other <b>open source</b>{' '}
             contributors, and to work in a new technological stack. I&apos;m definitely
             going to continue contributing to open source in the future!
           </p>
@@ -240,7 +239,7 @@ import logoWoosh from "../assets/logowoosh.png";
         <Case
           url="https://www.psychotherapiepraktijkkortrijk.be"
           logoAlt="Psychotherapiepraktijk Kortrijk"
-          tags={["squarespace"]}
+          tags={['squarespace']}
         >
           <p>
             For a family member of mine who started a psychotherapy practice, I
@@ -253,7 +252,7 @@ import logoWoosh from "../assets/logowoosh.png";
         <Case
           url="/"
           logoAlt="thomas ledoux"
-          tags={["astro", "typescript", "tailwind"]}
+          tags={['astro', 'typescript', 'tailwind']}
         >
           <p class="mb-4">
             I like to use my personal website as a playground for new ideas and
@@ -276,7 +275,7 @@ import logoWoosh from "../assets/logowoosh.png";
         {
           Array.from({ length: 11 }, (_, index) => (
             <button
-              class={`indicator h-2 rounded-full transition-all duration-500 ease-out cursor-pointer min-w-[2rem] flex-1 relative overflow-hidden ${index === 0 ? "active" : ""}`}
+              class={`indicator h-2 rounded-full transition-all duration-500 ease-out cursor-pointer min-w-[2rem] flex-1 relative overflow-hidden ${index === 0 ? 'active' : ''}`}
               aria-label={`Scroll to slide ${index + 1}`}
             >
               <span class="absolute inset-0 bg-secondary transform scale-x-0 origin-left transition-transform duration-500 ease-out" />
@@ -290,9 +289,9 @@ import logoWoosh from "../assets/logowoosh.png";
     function updateActiveIndicator(currentSlide: number) {
       indicators.forEach((indicator, index) => {
         if (index === currentSlide) {
-          indicator.classList.add("active");
+          indicator.classList.add('active');
         } else {
-          indicator.classList.remove("active");
+          indicator.classList.remove('active');
         }
       });
     }
@@ -300,20 +299,20 @@ import logoWoosh from "../assets/logowoosh.png";
     function handleSlideChange(index: number) {
       updateActiveIndicator(index);
     }
-    const indicators = document.querySelectorAll(".indicator");
-    const carousel = document.querySelector(".carousel");
-    const slides = carousel?.querySelectorAll(":scope > li");
+    const indicators = document.querySelectorAll('.indicator');
+    const carousel = document.querySelector('.carousel');
+    const slides = carousel?.querySelectorAll(':scope > li');
     indicators.forEach((indicator, i) => {
-      indicator.addEventListener("click", () => {
+      indicator.addEventListener('click', () => {
         const slide = slides?.[i];
         slide?.scrollIntoView({
-          behavior: "smooth",
+          behavior: 'smooth',
         });
       });
     });
     function debounce(
       method: { (): void; (): void; (): void; _tId?: any },
-      delay: number | undefined,
+      delay: number | undefined
     ) {
       clearTimeout(method._tId);
       method._tId = setTimeout(function () {
@@ -350,7 +349,7 @@ import logoWoosh from "../assets/logowoosh.png";
       handleSlideChange(currentSlide);
     }
 
-    carousel?.addEventListener("scroll", () => {
+    carousel?.addEventListener('scroll', () => {
       debounce(updateIndicatorsOnScroll, 150);
     });
 
@@ -361,118 +360,11 @@ import logoWoosh from "../assets/logowoosh.png";
 
     // Also update when scrolling ends (for snap behavior)
     let scrollTimeout: ReturnType<typeof setTimeout>;
-    carousel?.addEventListener("scroll", () => {
+    carousel?.addEventListener('scroll', () => {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         updateIndicatorsOnScroll();
       }, 150);
     });
   </script>
-
-  <style>
-    /* Editorial typography */
-    .portfolio-title {
-      font-family: var(--font-homepage);
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Smooth scroll behavior */
-    .portfolio-carousel {
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* Staggered fade-in for portfolio items */
-    @media (min-width: 1024px) {
-      .portfolio-carousel > li {
-        opacity: 0;
-        transform: translateY(40px);
-        animation: portfolio-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      }
-
-      .portfolio-carousel > li:nth-child(1) {
-        animation-delay: 0.05s;
-      }
-      .portfolio-carousel > li:nth-child(2) {
-        animation-delay: 0.1s;
-      }
-      .portfolio-carousel > li:nth-child(3) {
-        animation-delay: 0.15s;
-      }
-      .portfolio-carousel > li:nth-child(4) {
-        animation-delay: 0.2s;
-      }
-      .portfolio-carousel > li:nth-child(5) {
-        animation-delay: 0.25s;
-      }
-      .portfolio-carousel > li:nth-child(6) {
-        animation-delay: 0.3s;
-      }
-      .portfolio-carousel > li:nth-child(7) {
-        animation-delay: 0.35s;
-      }
-      .portfolio-carousel > li:nth-child(8) {
-        animation-delay: 0.4s;
-      }
-      .portfolio-carousel > li:nth-child(9) {
-        animation-delay: 0.45s;
-      }
-      .portfolio-carousel > li:nth-child(10) {
-        animation-delay: 0.5s;
-      }
-      .portfolio-carousel > li:nth-child(11) {
-        animation-delay: 0.55s;
-      }
-    }
-
-    @keyframes portfolio-fade-in {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Indicator active state - using dark green (secondary color #2c6e49) */
-    .indicator {
-      background-color: rgba(229, 231, 235, 0.5); /* light gray background */
-    }
-
-    .indicator.active {
-      background-color: rgba(
-        44,
-        110,
-        73,
-        0.15
-      ); /* subtle dark green background */
-    }
-
-    .indicator.active span {
-      transform: scaleX(1) !important;
-      background-color: #2c6e49; /* solid dark green fill */
-    }
-
-    .indicator:not(.active) span {
-      transform: scaleX(0);
-    }
-
-    .indicator:hover:not(.active) span {
-      transform: scaleX(0.3);
-      background-color: #2c6e49; /* solid dark green on hover */
-    }
-
-    .indicator.active:hover span {
-      transform: scaleX(1);
-      background-color: #2c6e49; /* solid dark green */
-    }
-
-    /* Smooth transitions */
-    * {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-  </style>
 </Layout>

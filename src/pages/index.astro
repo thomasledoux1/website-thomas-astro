@@ -1,6 +1,6 @@
 ---
-import { Image, getImage } from "astro:assets";
-import profilePicture from "./../assets/me.png";
+import { Image, getImage } from 'astro:assets';
+import profilePicture from './../assets/me.png';
 const mobileProfilePicture = await getImage({
   src: profilePicture,
   width: 320,
@@ -9,12 +9,12 @@ const desktopProfilePicture = await getImage({
   src: profilePicture,
   width: 480,
 });
-import { getCollection } from "astro:content";
-import "../../styles/global.css";
-import Layout from "../layouts/Layout.astro";
-const blogs = await getCollection("blog", (blog) => blog.data.draft !== true);
+import { getCollection } from 'astro:content';
+import '../../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+const blogs = await getCollection('blog', blog => blog.data.draft !== true);
 const latestBlog = blogs.sort(
-  (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
+  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
 )[0];
 ---
 
@@ -43,28 +43,27 @@ const latestBlog = blogs.sort(
       class="gap-12 w-full flex flex-col lg:flex-row items-center justify-between h-full"
     >
       <h1
-        class="lg:text-6xl font-homepage text-border-black xl:text-7xl 2xl:text-[5.25rem] grow font-bold text-4xl sm:text-6xl text-center lg:text-left md:leading-[1.1] flex flex-col items-center lg:items-start gap-2 lg:gap-3"
+        class="font-title grow font-bold text-center lg:text-left md:leading-[1.1] flex flex-col items-center lg:items-start gap-2 lg:gap-3"
       >
         <span
-          class="homepage-text animate-fade-in-up"
-          style="animation-delay: 0.1s">Thomas Ledoux.</span
+          class="will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] animate-fade-in-up hover-scale [animation-delay:0.1s]"
+          >Thomas Ledoux.</span
         >
         <span
-          class="homepage-text animate-fade-in-up hover-scale"
-          style="animation-delay: 0.2s">Developer.</span
+          class="will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] animate-fade-in-up hover-scale [animation-delay:0.2s]"
+          >Developer.</span
         >
         <span
-          class="homepage-text animate-fade-in-up hover-scale"
-          style="animation-delay: 0.3s">Badminton player.</span
+          class="will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] animate-fade-in-up hover-scale [animation-delay:0.3s]"
+          >Badminton player.</span
         >
         <span
-          class="homepage-text animate-fade-in-up hover-scale"
-          style="animation-delay: 0.4s">Travel lover.</span
+          class="will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] animate-fade-in-up hover-scale [animation-delay:0.4s]"
+          >Travel lover.</span
         >
       </h1>
       <div
-        class="w-[15rem] lg:w-[20rem] animate-fade-in-scale"
-        style="animation-delay: 0.5s"
+        class="w-[15rem] lg:w-[20rem] animate-fade-in-scale [animation-delay:0.5s]"
       >
         <div class="relative group">
           <div
@@ -86,8 +85,7 @@ const latestBlog = blogs.sort(
       <a
         href={`/blog/${latestBlog?.id}`}
         aria-label="Latest blog post"
-        class="fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-all duration-300 lg:translate-x-[calc(100%-5rem)] lg:hover:translate-x-0 hover:shadow-xl hover:shadow-secondary/50 animate-slide-in-right"
-        style="animation-delay: 0.6s"
+        class="fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-all duration-300 lg:translate-x-[calc(100%-5rem)] lg:hover:translate-x-0 hover:shadow-xl hover:shadow-secondary/50 animate-slide-in-right [animation-delay:0.6s]"
       >
         <div class="relative flex items-center justify-center gap-x-8">
           <span class="relative flex h-6 w-6">
@@ -118,7 +116,7 @@ const latestBlog = blogs.sort(
             <h2 class="font-bold">Latest blog post</h2>
             {latestBlog?.data.title.substring(0, 60)}{
               latestBlog?.data.title && latestBlog?.data.title.length > 60
-                ? "..."
+                ? '...'
                 : null
             }
           </div>
@@ -126,115 +124,4 @@ const latestBlog = blogs.sort(
       </a>
     </div>
   </section>
-
-  <style>
-    @keyframes fade-in-up {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fade-in-scale {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes slide-in-right {
-      from {
-        opacity: 0;
-        transform: translateX(100px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes gradient-shift {
-      0%,
-      100% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-    }
-
-    @keyframes float {
-      0%,
-      100% {
-        transform: translate(0, 0) scale(1);
-      }
-      50% {
-        transform: translate(20px, -20px) scale(1.1);
-      }
-    }
-
-    @keyframes float-delayed {
-      0%,
-      100% {
-        transform: translate(0, 0) scale(1);
-      }
-      50% {
-        transform: translate(-20px, 20px) scale(1.1);
-      }
-    }
-
-    .animate-fade-in-up {
-      animation: fade-in-up 0.8s ease-out forwards;
-      opacity: 0;
-    }
-
-    .animate-fade-in-scale {
-      animation: fade-in-scale 0.8s ease-out forwards;
-      opacity: 0;
-    }
-
-    .animate-slide-in-right {
-      animation: slide-in-right 0.8s ease-out forwards;
-      opacity: 0;
-    }
-
-    .animate-gradient-shift {
-      background-size: 200% 200%;
-      animation: gradient-shift 15s ease infinite;
-    }
-
-    .animate-float {
-      animation: float 20s ease-in-out infinite;
-    }
-
-    .animate-float-delayed {
-      animation: float-delayed 25s ease-in-out infinite;
-    }
-
-    .hover-scale {
-      transition:
-        transform 0.3s ease,
-        filter 0.3s ease;
-      display: inline-block;
-    }
-
-    @media (hover: hover) {
-      .hover-scale:hover {
-        transform: scale(1.05) translateY(-2px);
-        filter: drop-shadow(0 4px 8px rgba(44, 110, 73, 0.3));
-      }
-    }
-
-    .homepage-text {
-      will-change: transform, opacity;
-    }
-  </style>
 </Layout>

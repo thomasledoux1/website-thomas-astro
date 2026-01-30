@@ -1,20 +1,23 @@
 ---
-import FooterLink from "./FooterLink.astro";
-import HomeLogo from "../assets/HomeLogo.svg";
-import PersonalLogo from "../assets/PersonalLogo.svg";
-import PortfolioLogo from "../assets/PortfolioLogo.svg";
+import FooterLink from './FooterLink.astro';
+import HomeLogo from '../assets/HomeLogo.svg';
+import PersonalLogo from '../assets/PersonalLogo.svg';
+import PortfolioLogo from '../assets/PortfolioLogo.svg';
 // import SearchLogo from "../assets/SearchLogo.svg";
-import BlogLogo from "../assets/BlogLogo.svg";
-import ContactLogo from "../assets/ContactLogo.svg";
-import LinkedInLogo from "../assets/LinkedInLogo.svg";
-import BlueSkyLogo from "../assets/BlueSkyLogo.svg";
+import BlogLogo from '../assets/BlogLogo.svg';
+import ContactLogo from '../assets/ContactLogo.svg';
+import LinkedInLogo from '../assets/LinkedInLogo.svg';
 ---
 
-<footer class="fixed left-4 top-1/2 -translate-y-1/2 z-30 pt-14 px-2 lg:px-4">
+<footer
+  class="fixed z-30
+  left-1/2 bottom-4 -translate-x-1/2 translate-y-0
+  sm:left-4 sm:top-1/2 sm:bottom-auto sm:-translate-x-0 sm:-translate-y-1/2"
+>
   <nav
     class="bg-primary rounded-2xl flex items-center px-3 lg:px-4 py-4 lg:py-6"
   >
-    <ul class="flex flex-col gap-3">
+    <ul class="flex sm:flex-col gap-3">
       <FooterLink label="Home" href="/"><HomeLogo /></FooterLink>
       <FooterLink label="Personal" href="/personal"><PersonalLogo /></FooterLink
       >
@@ -23,7 +26,8 @@ import BlueSkyLogo from "../assets/BlueSkyLogo.svg";
       >
       <FooterLink label="Blog" href="/blog"><BlogLogo /></FooterLink>
       <!-- <FooterLink label="Search" href="/search"><SearchLogo /></FooterLink> -->
-      <li class="bg-secondary h-[2px] w-[1.82rem] my-2"></li>
+      <li class="bg-secondary min-h-full sm:h-[2px] w-px sm:w-[1.82rem] my-2">
+      </li>
       <FooterLink label="Contact" href="mailto:hello@thomasledoux.be"
         ><ContactLogo /></FooterLink
       >
@@ -31,11 +35,6 @@ import BlueSkyLogo from "../assets/BlueSkyLogo.svg";
         label="LinkedIn"
         href="https://www.linkedin.com/in/thomasledoux91"
         ><LinkedInLogo /></FooterLink
-      >
-      <FooterLink
-        label="BlueSky"
-        href="https://bsky.app/profile/thomasledoux.be"
-        ><BlueSkyLogo /></FooterLink
       >
     </ul>
   </nav>

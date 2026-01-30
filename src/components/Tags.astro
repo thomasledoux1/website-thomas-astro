@@ -1,5 +1,5 @@
 ---
-import Tag from "./Tag.astro";
+import Tag from './Tag.astro';
 interface Props {
   tags: { [key: string]: number };
   slug?: string;
@@ -8,7 +8,7 @@ const { tags, slug } = Astro.props;
 const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
 ---
 
-<div class="flex gap-3 flex-wrap" data-pagefind-ignore="all">
+<div class="flex gap-3 flex-wrap items-center" data-pagefind-ignore="all">
   {
     sortedTags
       .slice(0, 5)
@@ -18,37 +18,33 @@ const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
   }
   {
     sortedTags.length > 5 ? (
-      <>
-        <div id="more-tags" class="hidden md:contents">
+      
+        <div id="more-tags" class="hidden">
           {sortedTags.slice(5).map(([tag, number]) => (
             <Tag tag={tag} number={number} isActive={tag === slug} />
           ))}
         </div>
-      </>
+        <button
+        id="load-more-tags"
+        class="py-1 px-4 border cursor-pointer border-secondary text-sm rounded-md bg-secondary text-white inline-flex items-center hover:scale-[1.02] transition-transform"
+      >
+        + More tags
+      </button>
+      
     ) : null
   }
 </div>
-{
-  sortedTags.length > 5 ? (
-    <button
-      id="load-more-tags"
-      class="md:hidden px-4 mt-4 py-2 bg-secondary text-white rounded-lg lg:hover:scale-[1.04] transition-transform"
-    >
-      + More tags
-    </button>
-  ) : null
-}
 
 <script>
-  document.getElementById("load-more-tags")?.addEventListener("click", () => {
-    if (document.getElementById("more-tags")?.classList.contains("hidden")) {
-      document.getElementById("load-more-tags")!.innerText = "- Less tags";
-      document.getElementById("more-tags")?.classList.remove("hidden");
-      document.getElementById("more-tags")?.classList.add("contents");
+  document.getElementById('load-more-tags')?.addEventListener('click', () => {
+    if (document.getElementById('more-tags')?.classList.contains('hidden')) {
+      document.getElementById('load-more-tags')!.innerText = '- Less tags';
+      document.getElementById('more-tags')?.classList.remove('hidden');
+      document.getElementById('more-tags')?.classList.add('contents');
     } else {
-      document.getElementById("load-more-tags")!.innerText = "+ More tags";
-      document.getElementById("more-tags")?.classList.add("hidden");
-      document.getElementById("more-tags")?.classList.remove("contents");
+      document.getElementById('load-more-tags')!.innerText = '+ More tags';
+      document.getElementById('more-tags')?.classList.add('hidden');
+      document.getElementById('more-tags')?.classList.remove('contents');
     }
   });
 </script>

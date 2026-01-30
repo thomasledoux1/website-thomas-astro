@@ -59,13 +59,11 @@ const {
       <!-- Tags -->
       <ul class="flex justify-center flex-wrap gap-2 w-full">
         {
-          tags.map((tag) => {
-            return (
-              <li class="bg-gray-100 text-gray-700 text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
-                {tag}
-              </li>
-            );
-          })
+          tags.map((tag) => (
+            <li class="bg-gray-100 text-gray-700 text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
+              {tag}
+            </li>
+          ))
         }
       </ul>
     </div>
@@ -78,9 +76,9 @@ const {
         <slot />
       </div>
 
-      <!-- Subtle arrow indicator -->
+      <!-- Subtle arrow indicator (hidden on mobile; hover-only on desktop) -->
       <div
-        class="mt-6 flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        class="mt-6 hidden lg:flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-500"
       >
         <span class="text-sm font-medium mr-2">View project</span>
         <svg
@@ -93,7 +91,8 @@ const {
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M9 5l7 7-7 7"></path>
+            d="M9 5l7 7-7 7"
+          />
         </svg>
       </div>
     </div>

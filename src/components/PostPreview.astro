@@ -1,9 +1,9 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { render } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
 
 interface Props {
-  post: CollectionEntry<"blog">;
+  post: CollectionEntry<'blog'>;
   index: number;
 }
 const { post } = Astro.props;
@@ -12,42 +12,53 @@ const { minutesRead } = remarkPluginFrontmatter;
 ---
 
 <a
-  class="transform rounded-xl transition-transform lg:hover:scale-[1.04] shadow-lg h-full"
   href={`/blog/${post.id}`}
+  class="group h-full bg-white rounded-2xl border border-gray-200/80 p-8 lg:p-10 flex flex-col transition-all duration-700 ease-out hover:border-gray-300 hover:shadow-2xl hover:shadow-gray-200/50 hover:-translate-y-1"
+  transition:name={`blog-card-${post.id}`}
 >
-  <article class="relative rounded-lg sm:mx-0 h-full flex flex-col">
-    <div class="flex px-6 py-4 grow flex-col">
-      <date class="text-sm"
-        >{
-          new Date(post.data.date).toLocaleDateString("en-BE", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })
-        }</date
+  <article class="flex flex-col grow">
+    <date class="text-sm text-gray-500 mb-4">
+      {
+        new Date(post.data.date).toLocaleDateString('en-BE', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        })
+      }
+    </date>
+    <div class="flex flex-col gap-y-4 grow">
+      <h2
+        class="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-secondary transition-colors duration-500"
       >
-      <div class="flex w-full flex-col gap-y-2 justify-between grow">
-        <div>
-          <h2
-            class="text-xl font-bold transition-colors"
-            transition:name={`blog-title-${post.id}`}
-          >
-            {post.data.title}
-          </h2>
-          {minutesRead ? <p>{minutesRead}ing time</p> : null}
-        </div>
-        <ul class="flex flex-wrap w-full">
-          {
-            post.data.tags?.map((tag: string) => {
-              return (
-                <li class="bg-secondary text-white text-sm my-1 py-1 px-4 mr-2 rounded-md">
-                  {tag}
-                </li>
-              );
-            })
-          }
-        </ul>
-      </div>
+        {post.data.title}
+      </h2>
+      {minutesRead ? <p class="text-gray-500 text-sm">{minutesRead}</p> : null}
+      <ul class="flex flex-wrap gap-2 mt-auto">
+        {
+          post.data.tags?.map((tag: string) => (
+            <li class="bg-gray-100 text-gray-700 text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
+              {tag}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div
+      class="mt-6 hidden md:flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+    >
+      <span class="text-sm font-medium mr-2">Read post</span>
+      <svg
+        class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"></path>
+      </svg>
     </div>
   </article>
 </a>

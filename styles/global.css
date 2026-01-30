@@ -8,11 +8,15 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-}
 
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
 @theme {
   --font-body: var(--font-inter), "sans-serif";
-  --font-homepage: var(--font-calsans), "sans-serif";
+  --font-title: var(--font-montserrat), "sans-serif";
   --color-secondary: #2c6e49;
   --color-primary: #c6ebbe;
 }
@@ -24,10 +28,10 @@
     padding-inline: 3rem;
   }
   @media (width >= 64rem) {
-    padding-inline: 4rem;
+    padding-inline: 5rem;
   }
   @media (width >= 80rem) {
-    padding-inline: 5rem;
+    padding-inline: 6rem;
   }
   @media (width >= 96rem) {
     padding-inline: 12rem;
@@ -56,7 +60,7 @@
   }
 }
 
-:is(h1, h2, h3, h4):not(.font-homepage) {
+:is(h1, h2, h3, h4):not(.font-title) {
   @apply font-body font-semibold;
 }
 
@@ -119,23 +123,25 @@
   /* Make SVG icon lines bolder on hover */
   .footer-item:hover .footer-icon-wrapper svg,
   .footer-item:focus-visible .footer-icon-wrapper svg {
-    stroke-width: 2.5;
+    stroke-width: 2;
   }
 
   .footer-icon-wrapper.active svg path {
-    stroke-width: 2.5;
+    stroke-width: 2;
   }
 
   .footer-item:hover .footer-icon-wrapper svg path,
   .footer-item:focus-visible .footer-icon-wrapper svg path {
-    stroke-width: 2.5;
+    stroke-width: 2;
   }
 
-  /* Also handle fill-based icons by making them darker */
+  /* Also handle fill-based icons (e.g. LinkedIn) – fill is on path, not svg */
   .footer-item:hover .footer-icon-wrapper svg[fill],
-  .footer-item:focus-visible .footer-icon-wrapper svg[fill] {
-    opacity: 0.9;
-    filter: brightness(0.7);
+  .footer-item:focus-visible .footer-icon-wrapper svg[fill],
+  .footer-item:hover .footer-icon-wrapper svg path[fill],
+  .footer-item:focus-visible .footer-icon-wrapper svg path[fill] {
+    filter: brightness(0.85);
+    transition: filter 0.2s ease;
   }
 }
 
@@ -156,10 +162,6 @@
   margin-bottom: 1rem;
 }
 
-.indicator.active {
-  @apply border-primary;
-}
-
 pre {
   @apply p-4;
 }
@@ -170,4 +172,193 @@ pre {
 
 .mdx pre {
   @apply mb-4;
+}
+
+/* Homepage animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -20px) scale(1.1);
+  }
+}
+
+@keyframes float-delayed {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(1.1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-scale {
+  animation: fade-in-scale 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+.animate-float {
+  animation: float 20s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 25s ease-in-out infinite;
+}
+
+.hover-scale {
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+  display: inline-block;
+}
+
+@media (hover: hover) {
+  .hover-scale:hover {
+    transform: scale(1.05) translateY(-2px);
+    filter: drop-shadow(0 4px 8px rgba(44, 110, 73, 0.3));
+  }
+}
+
+/* Portfolio carousel */
+.portfolio-carousel {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 1024px) {
+  .portfolio-carousel > li {
+    opacity: 0;
+    transform: translateY(40px);
+    animation: portfolio-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .portfolio-carousel > li:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .portfolio-carousel > li:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .portfolio-carousel > li:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+  .portfolio-carousel > li:nth-child(4) {
+    animation-delay: 0.2s;
+  }
+  .portfolio-carousel > li:nth-child(5) {
+    animation-delay: 0.25s;
+  }
+  .portfolio-carousel > li:nth-child(6) {
+    animation-delay: 0.3s;
+  }
+  .portfolio-carousel > li:nth-child(7) {
+    animation-delay: 0.35s;
+  }
+  .portfolio-carousel > li:nth-child(8) {
+    animation-delay: 0.4s;
+  }
+  .portfolio-carousel > li:nth-child(9) {
+    animation-delay: 0.45s;
+  }
+  .portfolio-carousel > li:nth-child(10) {
+    animation-delay: 0.5s;
+  }
+  .portfolio-carousel > li:nth-child(11) {
+    animation-delay: 0.55s;
+  }
+}
+
+@keyframes portfolio-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Portfolio carousel indicators */
+.indicator {
+  background-color: rgba(229, 231, 235, 0.5);
+}
+
+.indicator.active {
+  background-color: var(--color-secondary);
+}
+
+.indicator.active span {
+  transform: scaleX(1) !important;
+  background-color: #2c6e49;
+}
+
+.indicator:not(.active) span {
+  transform: scaleX(0);
+}
+
+.indicator:hover:not(.active) span {
+  transform: scaleX(0.3);
+  background-color: #2c6e49;
+}
+
+.indicator.active:hover span {
+  transform: scaleX(1);
+  background-color: #2c6e49;
 }

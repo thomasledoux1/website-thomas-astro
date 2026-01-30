@@ -15,8 +15,10 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
   },
+  image: {
+    responsiveStyles: true,
+  },
   experimental: {
-    responsiveImages: true,
     fonts: [
       {
         provider: fontProviders.google(),
@@ -25,8 +27,8 @@ export default defineConfig({
       },
       {
         provider: fontProviders.google(),
-        name: "Cal Sans",
-        cssVariable: "--font-calsans",
+        name: "Montserrat",
+        cssVariable: "--font-montserrat",
         weights: ["600"],
       },
     ],

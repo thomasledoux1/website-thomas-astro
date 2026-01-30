@@ -1,0 +1,9 @@
+---
+// Calculated at request time when this server island is fetched
+const birthDate = new Date("1991-07-11");
+const age = Math.floor(
+  (new Date().getTime() - birthDate.getTime()) / 3.15576e10,
+);
+---
+
+<span class="age-display inline-block tabular-nums" data-age={age}>00</span>

@@ -1,61 +1,108 @@
 ---
-import "../../styles/global.css";
-import PersonalSvg from "./../assets/personal.svg";
-import Layout from "../layouts/Layout.astro";
-const age = Math.floor(
-  (new Date().getTime() - new Date("1991-07-11").getTime()) / 3.15576e10,
-);
+import '../../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+import Age from '../components/Age.astro';
 ---
 
 <Layout
   description="Personal information about Thomas Ledoux"
   title="Thomas Ledoux | Personal"
 >
-  <section class="my-auto">
+  <!-- Subtle background elements -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
     <div
-      class="flex flex-col gap-y-8 md:grid md:grid-cols-2 md:gap-8 items-center content-center"
+      class="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent"
     >
-      <PersonalSvg class="w-[66.66%] mx-auto" />
-      <div class="bg-secondary text-white rounded-lg p-6">
-        <div class="flex flex-col gap-y-4">
-          <h1 class="text-2xl lg:text-4xl font-bold">Personal information</h1>
-          <p>
-            Hi, I&apos;m Thomas. I&apos;m {age} years old, living in Ghent.
-            <br />
-            I&apos;m a professional <b>Frontend Developer</b>, currently working
-            at The Reference and 1 day a week as a self employed developer. I'm
-            always looking for new opportunities to work on for my side
-            activity, so feel free to <a
-              class="underline"
-              href="mailto:hello@thomasledoux.be">contact me</a
-            >!
-          </p>
+    </div>
+  </div>
 
-          <div>
-            <p>
-              In general I really love to travel. My favourite kind of holiday
-              is a roadtrip with a campervan, doing lots of hikes in nature and
-              going for a swim in the sea at the end of the day!
-              <br />
-              When I&apos;m not traveling I like to sport a lot. I play badminton,
-              cycle a lot, and I go for the occasional run.
-            </p>
-            <p>
-              I studied Applied Computer Sciences at Hogeschool Gent. I chose
-              the Mobile Development track, and went on Erasmus to Barcelona to
-              learn more about Swift and Java. <br />
-              After graduating I worked for the startup Happs as a full-stack developer,
-              where I created and maintained the website. <br />I also created
-              an app for a client in React Native during this period.
-            </p>
-            <p>
-              You can read more about my work in the{" "}
-              <a class="underline" href="/portfolio">portfolio</a>{" "}
-              section .
-            </p>
-          </div>
-        </div>
+  <section class="my-auto lg:mt-8">
+    <div class="relative">
+      <div class="mb-10 text-center">
+        <h1
+          class="text-4xl lg:text-7xl xl:text-8xl font-bold mb-6 tracking-tight font-title"
+        >
+          Personal
+        </h1>
+        <p
+          class="text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"
+        >
+          A bit about who I am, what I do, and what I enjoy outside of work.
+        </p>
       </div>
+
+      <article class="border-l-4 border-primary pl-8 py-2 space-y-6">
+        <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">About me</h2>
+        <p class="text-gray-700 leading-relaxed text-base lg:text-lg">
+          Hi, I&apos;m Thomas. I&apos;m <Age server:defer
+            ><span slot="fallback" class="inline-block tabular-nums">00</span
+            ></Age
+          > years old, living in Ghent. I&apos;m a professional <strong
+            >Frontend Developer</strong
+          >, currently working at The Reference and 1 day a week as a self
+          employed developer. I'm always looking for new opportunities to work
+          on for my side activity, so feel free to <a
+            class="text-secondary font-medium underline decoration-secondary"
+            href="mailto:hello@thomasledoux.be">contact me</a
+          >!
+        </p>
+
+        <p class="text-gray-700 leading-relaxed text-base lg:text-lg">
+          In general I really love to travel. My favourite kind of holiday is a
+          roadtrip with a campervan, doing lots of hikes in nature and going for
+          a swim in the sea at the end of the day! When I&apos;m not traveling I
+          like to sport a lot. I play badminton, cycle a lot, and I go for the
+          occasional run.
+        </p>
+        <p class="text-gray-700 leading-relaxed text-base lg:text-lg">
+          I studied Applied Computer Sciences at Hogeschool Gent. I chose the
+          Mobile Development track, and went on Erasmus to Barcelona to learn
+          more about Swift and Java. After graduating I worked for the startup
+          Happs as a full-stack developer, where I created and maintained the
+          website. I also created an app for a client in React Native during
+          this period.
+        </p>
+        <p class="text-gray-700 leading-relaxed text-base lg:text-lg">
+          You can read more about my work in the{' '}
+          <a
+            class="text-secondary font-medium underline decoration-secondary"
+            href="/portfolio">portfolio</a
+          > section.
+        </p>
+      </article>
     </div>
   </section>
+  <script>
+    const AGE_DURATION = 600;
+
+    function animateAge(el: HTMLElement) {
+      const target = parseInt(el.getAttribute('data-age') ?? '0', 10);
+      if (target === 0 || el.hasAttribute('data-age-animated')) return;
+      el.setAttribute('data-age-animated', 'true');
+      let current = 0;
+      const start = performance.now();
+      function step(now: number) {
+        const t = Math.min((now - start) / AGE_DURATION, 1);
+        current = Math.round(target * t);
+        el.textContent = String(current).padStart(2, '0');
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function runAgeAnimations() {
+      document
+        .querySelectorAll<HTMLElement>(
+          '.age-display[data-age]:not([data-age-animated])'
+        )
+        .forEach(animateAge);
+    }
+
+    const article = document.querySelector('article');
+    if (article) {
+      runAgeAnimations();
+      const observer = new MutationObserver(() => runAgeAnimations());
+      observer.observe(article, { childList: true, subtree: true });
+    }
+  </script>
 </Layout>
