@@ -18,33 +18,98 @@ const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
   }
   {
     sortedTags.length > 5 ? (
-      
-        <div id="more-tags" class="hidden">
+      <>
+        <div
+          id="tags-more-wrapper"
+          class="hidden"
+          aria-hidden="true"
+        >
           {sortedTags.slice(5).map(([tag, number]) => (
-            <Tag tag={tag} number={number} isActive={tag === slug} />
+            <span class="tag-stagger opacity-0">
+              <Tag tag={tag} number={number} isActive={tag === slug} />
+            </span>
           ))}
         </div>
         <button
-        id="load-more-tags"
-        class="py-1 px-4 border cursor-pointer border-secondary text-sm rounded-md bg-secondary text-white inline-flex items-center hover:scale-[1.02] transition-transform"
-      >
-        + More tags
-      </button>
-      
+          id="load-more-tags"
+          class="py-1 px-4 border cursor-pointer border-secondary text-sm rounded-md bg-secondary text-white inline-flex items-center hover:scale-[1.02] transition-transform"
+          aria-expanded="false"
+          aria-controls="tags-more-wrapper"
+        >
+          + More tags
+        </button>
+      </>
     ) : null
   }
 </div>
 
 <script>
-  document.getElementById('load-more-tags')?.addEventListener('click', () => {
-    if (document.getElementById('more-tags')?.classList.contains('hidden')) {
-      document.getElementById('load-more-tags')!.innerText = '- Less tags';
-      document.getElementById('more-tags')?.classList.remove('hidden');
-      document.getElementById('more-tags')?.classList.add('contents');
-    } else {
-      document.getElementById('load-more-tags')!.innerText = '+ More tags';
-      document.getElementById('more-tags')?.classList.add('hidden');
-      document.getElementById('more-tags')?.classList.remove('contents');
-    }
-  });
+  const wrapper = document.getElementById('tags-more-wrapper');
+  const button = document.getElementById('load-more-tags');
+
+  const STAGGER_MS = 50;
+  const FADE_MS = 200;
+
+  if (wrapper && button) {
+    button.addEventListener('click', async () => {
+      const isExpanded = !wrapper.classList.contains('hidden');
+      const tags = Array.from(wrapper.querySelectorAll<HTMLElement>('.tag-stagger'));
+      const count = tags.length;
+
+      // Hide button until animation finishes
+      button.classList.add('invisible', 'pointer-events-none');
+
+      if (isExpanded) {
+        // Collapse: WAAPI fade out each tag in reverse order, then hide wrapper
+        const fadeOut: Keyframe[] = [{ opacity: 1 }, { opacity: 0 }];
+        const options: KeyframeAnimationOptions = {
+          duration: FADE_MS,
+          fill: 'forwards',
+          easing: 'ease',
+        };
+
+        const animations = tags.map((el, i) =>
+          el.animate(fadeOut, {
+            ...options,
+            delay: (count - 1 - i) * STAGGER_MS,
+          })
+        );
+
+        if (animations[0]) await animations[0].finished;
+
+        wrapper.classList.add('hidden');
+        wrapper.style.display = '';
+        wrapper.setAttribute('aria-hidden', 'true');
+        tags.forEach((el) => {
+          el.getAnimations().forEach((a) => a.cancel());
+          el.style.opacity = '0';
+        });
+        button.innerText = '+ More tags';
+        button.setAttribute('aria-expanded', 'false');
+      } else {
+        // Expand: show wrapper, WAAPI fade in each tag with stagger
+        wrapper.classList.remove('hidden');
+        wrapper.style.display = 'contents';
+        wrapper.setAttribute('aria-hidden', 'false');
+
+        const fadeIn: Keyframe[] = [{ opacity: 0 }, { opacity: 1 }];
+        const animations = tags.map((el, i) =>
+          el.animate(fadeIn, {
+            duration: FADE_MS,
+            delay: i * STAGGER_MS,
+            fill: 'forwards',
+            easing: 'ease',
+          })
+        );
+
+        const lastAnim = animations[animations.length - 1];
+        if (lastAnim) await lastAnim.finished;
+
+        button.innerText = '- Less tags';
+        button.setAttribute('aria-expanded', 'true');
+      }
+
+      button.classList.remove('invisible', 'pointer-events-none');
+    });
+  }
 </script>

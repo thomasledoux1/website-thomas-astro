@@ -28,6 +28,7 @@ const { minutesRead } = remarkPluginFrontmatter;
     </date>
     <div class="flex flex-col gap-y-4 grow">
       <h2
+        transition:name={`blog-title-${post.id}`}
         class="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-secondary transition-colors duration-500"
       >
         {post.data.title}

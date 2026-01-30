@@ -1,34 +1,33 @@
 ---
-import Layout from "./Layout.astro";
-import { getCollection, type CollectionEntry } from "astro:content";
-import PostPreview from "../components/PostPreview.astro";
-import Comments from "../components/Comments";
-import ViewCount from "../components/ViewCount.astro";
+import Layout from './Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PostPreview from '../components/PostPreview.astro';
+import Comments from '../components/Comments';
+import ViewCount from '../components/ViewCount.astro';
 const { frontmatter } = Astro.props;
 interface Props {
-  frontmatter: CollectionEntry<"blog"> & {
+  frontmatter: CollectionEntry<'blog'> & {
     minutesRead: string;
     title: string;
     url: string;
   };
 }
 const convertedDate = new Date(frontmatter.data.date).toLocaleDateString(
-  "en-BE",
+  'en-BE',
   {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  },
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }
 );
 const blogs = await getCollection(
-  "blog",
-  (blog) =>
-    blog.data.title !== frontmatter.data.title && blog.data.draft !== true,
+  'blog',
+  blog => blog.data.title !== frontmatter.data.title && blog.data.draft !== true
 );
 const latestBlogs = await Promise.all(
   blogs
     .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date))
-    .slice(0, 3),
+    .slice(0, 3)
 );
 ---
 
@@ -69,7 +68,7 @@ const latestBlogs = await Promise.all(
       <span class="text-gray-500 hidden lg:inline-block">|</span>
       <div class="flex gap-x-2 flex-wrap gap-y-2">
         {
-          frontmatter.data.tags.map((tag) => (
+          frontmatter.data.tags.map(tag => (
             <a
               class="border-secondary border-2 text-secondary text-sm py-1 px-4 rounded-md tag font-semibold"
               href={`/blog/tags/${tag}`}
@@ -81,7 +80,7 @@ const latestBlogs = await Promise.all(
       </div>
     </div>
     <div class="mb-4 flex gap-x-2 items-center">
-      View count:{" "}
+      View count:{' '}
       <ViewCount server:defer url={`/blog/${frontmatter.id}`}
         ><div slot="fallback">
           <span class="animate-loading h-[19.5px] inline-block w-12 rounded-xs"

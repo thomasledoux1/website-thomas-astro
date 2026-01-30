@@ -120,12 +120,6 @@
 }
 
 @media (hover: hover) {
-  /* Make SVG icon lines bolder on hover */
-  .footer-item:hover .footer-icon-wrapper svg,
-  .footer-item:focus-visible .footer-icon-wrapper svg {
-    stroke-width: 2;
-  }
-
   .footer-icon-wrapper.active svg path {
     stroke-width: 2;
   }
@@ -292,40 +286,11 @@ pre {
     transform: translateY(40px);
     animation: portfolio-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-
-  .portfolio-carousel > li:nth-child(1) {
-    animation-delay: 0.05s;
-  }
-  .portfolio-carousel > li:nth-child(2) {
-    animation-delay: 0.1s;
-  }
-  .portfolio-carousel > li:nth-child(3) {
-    animation-delay: 0.15s;
-  }
-  .portfolio-carousel > li:nth-child(4) {
-    animation-delay: 0.2s;
-  }
-  .portfolio-carousel > li:nth-child(5) {
-    animation-delay: 0.25s;
-  }
-  .portfolio-carousel > li:nth-child(6) {
-    animation-delay: 0.3s;
-  }
-  .portfolio-carousel > li:nth-child(7) {
-    animation-delay: 0.35s;
-  }
-  .portfolio-carousel > li:nth-child(8) {
-    animation-delay: 0.4s;
-  }
-  .portfolio-carousel > li:nth-child(9) {
-    animation-delay: 0.45s;
-  }
-  .portfolio-carousel > li:nth-child(10) {
-    animation-delay: 0.5s;
-  }
-  .portfolio-carousel > li:nth-child(11) {
-    animation-delay: 0.55s;
-  }
+  /* 
+    Set the custom property --li-index on each <li> (starting from 1) server/client side 
+    e.g. <li style="--li-index:1"> ... <li style="--li-index:2"> ... or set it with JavaScript.
+    This avoids writing nth-child selectors and greatly improves performance as the selector list grows.
+  */
 }
 
 @keyframes portfolio-fade-in {
