@@ -19,6 +19,17 @@
   --font-title: var(--font-montserrat), "sans-serif";
   --color-secondary: #2c6e49;
   --color-primary: #c6ebbe;
+  /* Custom animations → `animate-*` utilities */
+  --animate-fade-in-up: fade-in-up 520ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  --animate-fade-in-scale: fade-in-scale 520ms cubic-bezier(0.23, 1, 0.32, 1)
+    forwards;
+  --animate-slide-in-right: slide-in-right 520ms cubic-bezier(0.23, 1, 0.32, 1)
+    forwards;
+  --animate-gradient-shift: gradient-shift 15s ease infinite;
+  --animate-float: float 20s ease-in-out infinite;
+  --animate-float-delayed: float-delayed 25s ease-in-out infinite;
+  --animate-portfolio-fade-in: portfolio-fade-in 550ms
+    cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 @utility container {
@@ -48,16 +59,6 @@
   --cta-text: black;
   --cta-link-text: black;
   --cta-bullet-color: black;
-}
-
-@keyframes bounce {
-  50% {
-    top: -5px;
-  }
-
-  100% {
-    top: 0;
-  }
 }
 
 :is(h1, h2, h3, h4):not(.font-title) {
@@ -97,63 +98,8 @@
   @apply mb-4;
 }
 
-.text-border-black > span:first-child {
-  text-shadow: 0 2px 0 var(--color-primary);
-}
-
-.text-border-black > span:not(:first-child) {
-  --text-border-width: 2px;
-  letter-spacing: 0.11rem;
-  -webkit-text-fill-color: #fff;
-  -webkit-text-stroke-width: var(--text-border-width);
-  -webkit-text-stroke-color: black;
-  text-shadow: 0 1px 0 var(--color-secondary);
-}
-
-@media screen and (min-width: 768px) {
-  .text-border-black > span:first-child {
-    text-shadow: 0 3px 0 var(--color-primary);
-  }
-  .text-border-black > span:not(:first-child) {
-    text-shadow: 0 3px 0 var(--color-secondary);
-  }
-}
-
-@media (hover: hover) {
-  .footer-icon-wrapper.active svg path {
-    stroke-width: 2;
-  }
-
-  .footer-item:hover .footer-icon-wrapper svg path,
-  .footer-item:focus-visible .footer-icon-wrapper svg path {
-    stroke-width: 2;
-  }
-
-  /* Also handle fill-based icons (e.g. LinkedIn) – fill is on path, not svg */
-  .footer-item:hover .footer-icon-wrapper svg[fill],
-  .footer-item:focus-visible .footer-icon-wrapper svg[fill],
-  .footer-item:hover .footer-icon-wrapper svg path[fill],
-  .footer-item:focus-visible .footer-icon-wrapper svg path[fill] {
-    filter: brightness(0.85);
-    transition: filter 0.2s ease;
-  }
-}
-
 .mdx ul {
   @apply list-disc list-inside mb-3 marker:text-secondary;
-}
-
-.carousel {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.carousel::-webkit-scrollbar {
-  display: none;
-}
-
-.expressive-code {
-  margin-bottom: 1rem;
 }
 
 pre {
@@ -168,11 +114,11 @@ pre {
   @apply mb-4;
 }
 
-/* Homepage animations */
+/* @keyframes referenced by @theme --animate-* utilities */
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -194,7 +140,7 @@ pre {
 @keyframes slide-in-right {
   from {
     opacity: 0;
-    transform: translateX(100px);
+    transform: translateX(28px);
   }
   to {
     opacity: 1;
@@ -232,98 +178,11 @@ pre {
   }
 }
 
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-fade-in-scale {
-  animation: fade-in-scale 0.8s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.8s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-gradient-shift {
-  background-size: 200% 200%;
-  animation: gradient-shift 15s ease infinite;
-}
-
-.animate-float {
-  animation: float 20s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float-delayed 25s ease-in-out infinite;
-}
-
-.hover-scale {
-  transition:
-    transform 0.3s ease,
-    filter 0.3s ease;
-  display: inline-block;
-}
-
-@media (hover: hover) {
-  .hover-scale:hover {
-    transform: scale(1.05) translateY(-2px);
-    filter: drop-shadow(0 4px 8px rgba(44, 110, 73, 0.3));
-  }
-}
-
-/* Portfolio carousel */
-.portfolio-carousel {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-@media (min-width: 1024px) {
-  .portfolio-carousel > li {
-    opacity: 0;
-    transform: translateY(40px);
-    animation: portfolio-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  /* 
-    Set the custom property --li-index on each <li> (starting from 1) server/client side 
-    e.g. <li style="--li-index:1"> ... <li style="--li-index:2"> ... or set it with JavaScript.
-    This avoids writing nth-child selectors and greatly improves performance as the selector list grows.
-  */
-}
-
 @keyframes portfolio-fade-in {
+  from {
+    opacity: 0;
+  }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
-}
-
-/* Portfolio carousel indicators */
-.indicator {
-  background-color: rgba(229, 231, 235, 0.5);
-}
-
-.indicator.active {
-  background-color: var(--color-secondary);
-}
-
-.indicator.active span {
-  transform: scaleX(1) !important;
-  background-color: #2c6e49;
-}
-
-.indicator:not(.active) span {
-  transform: scaleX(0);
-}
-
-.indicator:hover:not(.active) span {
-  transform: scaleX(0.3);
-  background-color: #2c6e49;
-}
-
-.indicator.active:hover span {
-  transform: scaleX(1);
-  background-color: #2c6e49;
 }

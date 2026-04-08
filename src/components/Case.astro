@@ -1,6 +1,7 @@
 ---
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
+import { portfolioCaseLogo, portfolioCard, portfolioSlide } from "../lib/ui-classes";
 
 interface Props {
   img?: ImageMetadata;
@@ -23,20 +24,23 @@ const {
 ---
 
 <li
-  class="case lg:h-[45vh] lg:snap-center lg:min-w-[60vw] lg:max-w-[60vw] flex flex-col group portfolio-item"
+  class:list={[
+    'case lg:min-h-[45vh] lg:h-auto lg:snap-center lg:min-w-[60vw] lg:max-w-[60vw] flex flex-col group lg:shrink-0',
+    portfolioSlide,
+  ]}
 >
   <a
     target="_blank"
     rel="noopener noreferrer"
     href={url}
-    class="h-full bg-white rounded-2xl border border-gray-200/80 p-8 lg:p-10 flex flex-col lg:grid lg:grid-cols-7 gap-8 lg:gap-12 transition-all duration-700 ease-out hover:border-gray-300 hover:shadow-2xl hover:shadow-gray-200/50 hover:-translate-y-1"
+    class:list={[portfolioCard, 'min-h-0 h-full bg-white rounded-2xl border border-gray-200/80 p-8 lg:p-10 flex flex-col lg:grid lg:grid-cols-7 gap-8 lg:gap-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]']}
   >
     <!-- Logo and tags section -->
     <div
       class="lg:col-span-2 flex flex-col items-center justify-center space-y-6"
     >
       <div
-        class={`max-h-[140px] lg:mx-0 max-w-[80%] lg:max-w-full flex items-center justify-center transition-all duration-700 ease-out group-hover:scale-105 group-hover:opacity-90 ${hasBlackBackground ? "bg-black p-4 rounded-lg" : ""}`}
+        class:list={[portfolioCaseLogo, 'max-h-[140px] lg:mx-0 max-w-[80%] lg:max-w-full flex items-center justify-center', hasBlackBackground && 'bg-black p-4 rounded-lg']}
       >
         {
           img && logoWidth ? (
@@ -49,7 +53,7 @@ const {
               loading={eager ? "eager" : "lazy"}
             />
           ) : (
-            <span class="text-2xl lg:text-3xl text-center break-all font-bold text-gray-900 group-hover:text-secondary transition-colors duration-500">
+            <span class="text-2xl lg:text-3xl text-center break-all font-bold text-gray-900 group-hover:text-secondary transition-colors duration-200 ease-out">
               {logoAlt}
             </span>
           )
@@ -71,18 +75,18 @@ const {
     <!-- Content section -->
     <div class="lg:col-span-5 flex flex-col justify-center">
       <div
-        class="text-gray-600 text-base lg:text-lg leading-relaxed space-y-6 group-hover:text-gray-800 transition-colors duration-500"
+        class="text-gray-600 text-base lg:text-lg leading-relaxed space-y-6 group-hover:text-gray-800 transition-colors duration-200 ease-out"
       >
         <slot />
       </div>
 
       <!-- Subtle arrow indicator (hidden on mobile; hover-only on desktop) -->
       <div
-        class="mt-6 hidden lg:flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        class="mt-6 hidden lg:flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out"
       >
         <span class="text-sm font-medium mr-2">View project</span>
         <svg
-          class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+          class="w-4 h-4 transition-[filter] duration-200 ease-out [@media(hover:hover)_and_(pointer:fine)]:group-hover:brightness-110"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

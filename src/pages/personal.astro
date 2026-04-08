@@ -92,7 +92,7 @@ import Age from '../components/Age.astro';
     function runAgeAnimations() {
       document
         .querySelectorAll<HTMLElement>(
-          '.age-display[data-age]:not([data-age-animated])'
+          '.age-display[data-age]:not([data-age-animated])',
         )
         .forEach(animateAge);
     }

@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Case from '../components/Case.astro';
+import PortfolioCarouselIndicator from '../components/ui/PortfolioCarouselIndicator.astro';
+import { carouselScrollChrome } from '../lib/ui-classes';
 import logoKaraton from '../assets/logokaraton.png';
 import logoRialto from '../assets/logorialto.png';
 import logoCarlier from '../assets/logocarlier.png';
@@ -28,7 +30,7 @@ import logoWoosh from '../assets/logowoosh.png';
     class="my-auto lg:mt-8 lg:-mx-[calc(4rem+((100vw-1024px)/2))] xl:-mx-[calc(5rem+((100vw-1280px)/2))] 2xl:-mx-[calc(12rem+((100vw-1536px)/2))]"
   >
     <div class="relative">
-      <div class="mb-20 text-center">
+      <div class="mb-12 text-center">
         <h1
           class="text-4xl lg:text-7xl xl:text-8xl font-bold mb-6 tracking-tight font-title"
         >
@@ -43,7 +45,11 @@ import logoWoosh from '../assets/logowoosh.png';
       </div>
 
       <ul
-        class="flex flex-col lg:flex-row gap-y-8 lg:gap-y-0 lg:ps-[20vw] carousel my-auto lg:pe-[20vw] lg:gap-x-12 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto lg:scroll-smooth portfolio-carousel"
+        data-portfolio-carousel
+        class:list={[
+          'flex flex-col lg:flex-row gap-y-8 lg:gap-y-0 lg:ps-[20vw] my-auto lg:pe-[20vw] lg:gap-x-12 lg:snap-mandatory lg:snap-x lg:scroll-px-[20vw] lg:overflow-auto scroll-smooth motion-reduce:scroll-auto',
+          carouselScrollChrome,
+        ]}
       >
         <Case
           url="https://woosh.be"
@@ -274,12 +280,7 @@ import logoWoosh from '../assets/logowoosh.png';
       >
         {
           Array.from({ length: 11 }, (_, index) => (
-            <button
-              class={`indicator h-2 rounded-full transition-all duration-500 ease-out cursor-pointer min-w-[2rem] flex-1 relative overflow-hidden ${index === 0 ? 'active' : ''}`}
-              aria-label={`Scroll to slide ${index + 1}`}
-            >
-              <span class="absolute inset-0 bg-secondary transform scale-x-0 origin-left transition-transform duration-500 ease-out" />
-            </button>
+            <PortfolioCarouselIndicator index={index} isActive={index === 0} />
           ))
         }
       </div>
@@ -299,21 +300,25 @@ import logoWoosh from '../assets/logowoosh.png';
     function handleSlideChange(index: number) {
       updateActiveIndicator(index);
     }
-    const indicators = document.querySelectorAll('.indicator');
-    const carousel = document.querySelector('.carousel');
+    const indicators = document.querySelectorAll('[data-carousel-dot]');
+    const carousel = document.querySelector('[data-portfolio-carousel]');
     const slides = carousel?.querySelectorAll(':scope > li');
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+
     indicators.forEach((indicator, i) => {
       indicator.addEventListener('click', () => {
         const slide = slides?.[i];
         slide?.scrollIntoView({
-          behavior: 'smooth',
+          behavior: reduceMotion ? 'auto' : 'smooth',
         });
       });
     });
 
     function debounce(
       method: { (): void; (): void; (): void; _tId?: any },
-      delay: number | undefined
+      delay: number | undefined,
     ) {
       clearTimeout(method._tId);
       method._tId = setTimeout(function () {

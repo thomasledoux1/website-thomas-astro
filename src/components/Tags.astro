@@ -1,5 +1,6 @@
 ---
 import Tag from './Tag.astro';
+import { tagMoreBtn } from '../lib/ui-classes';
 interface Props {
   tags: { [key: string]: number };
   slug?: string;
@@ -32,7 +33,8 @@ const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
         </div>
         <button
           id="load-more-tags"
-          class="py-1 px-4 border cursor-pointer border-secondary text-sm rounded-md bg-secondary text-white inline-flex items-center hover:scale-[1.02] transition-transform"
+          type="button"
+          class:list={[tagMoreBtn, 'py-1 px-4 border cursor-pointer border-secondary text-sm rounded-md bg-secondary text-white inline-flex items-center']}
           aria-expanded="false"
           aria-controls="tags-more-wrapper"
         >
@@ -49,9 +51,13 @@ const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
 
   const STAGGER_MS = 50;
   const FADE_MS = 200;
+  const EASE_UI = 'cubic-bezier(0.23, 1, 0.32, 1)';
 
   if (wrapper && button) {
     button.addEventListener('click', async () => {
+      const reduceMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
       const isExpanded = !wrapper.classList.contains('hidden');
       const tags = Array.from(wrapper.querySelectorAll<HTMLElement>('.tag-stagger'));
       const count = tags.length;
@@ -60,53 +66,71 @@ const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
       button.classList.add('invisible', 'pointer-events-none');
 
       if (isExpanded) {
-        // Collapse: WAAPI fade out each tag in reverse order, then hide wrapper
-        const fadeOut: Keyframe[] = [{ opacity: 1 }, { opacity: 0 }];
-        const options: KeyframeAnimationOptions = {
-          duration: FADE_MS,
-          fill: 'forwards',
-          easing: 'ease',
-        };
+        if (reduceMotion) {
+          tags.forEach((el) => {
+            el.style.opacity = '0';
+          });
+          wrapper.classList.add('hidden');
+          wrapper.style.display = '';
+          wrapper.setAttribute('aria-hidden', 'true');
+          button.innerText = '+ More tags';
+          button.setAttribute('aria-expanded', 'false');
+        } else {
+          // Collapse: WAAPI fade out each tag in reverse order, then hide wrapper
+          const fadeOut: Keyframe[] = [{ opacity: 1 }, { opacity: 0 }];
+          const options: KeyframeAnimationOptions = {
+            duration: FADE_MS,
+            fill: 'forwards',
+            easing: EASE_UI,
+          };
 
-        const animations = tags.map((el, i) =>
-          el.animate(fadeOut, {
-            ...options,
-            delay: (count - 1 - i) * STAGGER_MS,
-          })
-        );
+          const animations = tags.map((el, i) =>
+            el.animate(fadeOut, {
+              ...options,
+              delay: (count - 1 - i) * STAGGER_MS,
+            })
+          );
 
-        if (animations[0]) await animations[0].finished;
+          if (animations[0]) await animations[0].finished;
 
-        wrapper.classList.add('hidden');
-        wrapper.style.display = '';
-        wrapper.setAttribute('aria-hidden', 'true');
-        tags.forEach((el) => {
-          el.getAnimations().forEach((a) => a.cancel());
-          el.style.opacity = '0';
-        });
-        button.innerText = '+ More tags';
-        button.setAttribute('aria-expanded', 'false');
+          wrapper.classList.add('hidden');
+          wrapper.style.display = '';
+          wrapper.setAttribute('aria-hidden', 'true');
+          tags.forEach((el) => {
+            el.getAnimations().forEach((a) => a.cancel());
+            el.style.opacity = '0';
+          });
+          button.innerText = '+ More tags';
+          button.setAttribute('aria-expanded', 'false');
+        }
       } else {
-        // Expand: show wrapper, WAAPI fade in each tag with stagger
         wrapper.classList.remove('hidden');
         wrapper.style.display = 'contents';
         wrapper.setAttribute('aria-hidden', 'false');
 
-        const fadeIn: Keyframe[] = [{ opacity: 0 }, { opacity: 1 }];
-        const animations = tags.map((el, i) =>
-          el.animate(fadeIn, {
-            duration: FADE_MS,
-            delay: i * STAGGER_MS,
-            fill: 'forwards',
-            easing: 'ease',
-          })
-        );
+        if (reduceMotion) {
+          tags.forEach((el) => {
+            el.style.opacity = '1';
+          });
+          button.innerText = '- Less tags';
+          button.setAttribute('aria-expanded', 'true');
+        } else {
+          const fadeIn: Keyframe[] = [{ opacity: 0 }, { opacity: 1 }];
+          const animations = tags.map((el, i) =>
+            el.animate(fadeIn, {
+              duration: FADE_MS,
+              delay: i * STAGGER_MS,
+              fill: 'forwards',
+              easing: EASE_UI,
+            })
+          );
 
-        const lastAnim = animations[animations.length - 1];
-        if (lastAnim) await lastAnim.finished;
+          const lastAnim = animations[animations.length - 1];
+          if (lastAnim) await lastAnim.finished;
 
-        button.innerText = '- Less tags';
-        button.setAttribute('aria-expanded', 'true');
+          button.innerText = '- Less tags';
+          button.setAttribute('aria-expanded', 'true');
+        }
       }
 
       button.classList.remove('invisible', 'pointer-events-none');

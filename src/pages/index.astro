@@ -12,6 +12,14 @@ const desktopProfilePicture = await getImage({
 import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 import Layout from '../layouts/Layout.astro';
+import HomeProfilePhoto from '../components/ui/HomeProfilePhoto.astro';
+import {
+  homeBlogTabEnter,
+  homeHeroEnter,
+  homeHeroLine,
+  homeImageEnter,
+  profileImage,
+} from '../lib/ui-classes';
 const blogs = await getCollection('blog', blog => blog.data.draft !== true);
 const latestBlog = blogs.sort(
   (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
@@ -25,15 +33,15 @@ const latestBlog = blogs.sort(
   <!-- Animated background gradient -->
   <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
     <div
-      class="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 animate-gradient-shift"
+      class="absolute inset-0 bg-size-[200%_200%] bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 animate-gradient-shift motion-reduce:animate-none"
     >
     </div>
     <div
-      class="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float"
+      class="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float motion-reduce:animate-none"
     >
     </div>
     <div
-      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float-delayed"
+      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float-delayed motion-reduce:animate-none"
     >
     </div>
   </div>
@@ -46,33 +54,29 @@ const latestBlog = blogs.sort(
         class="font-title grow font-bold text-center lg:text-left md:leading-[1.1] flex flex-col items-center lg:items-start gap-2 lg:gap-3"
       >
         <span
-          class="will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] animate-fade-in-up hover-scale [animation-delay:0.1s]"
+          class:list={[homeHeroEnter, homeHeroLine, 'will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] [animation-delay:0.1s]']}
           >Thomas Ledoux.</span
         >
         <span
-          class="will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] animate-fade-in-up hover-scale [animation-delay:0.2s]"
+          class:list={[homeHeroEnter, homeHeroLine, 'will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.2s]']}
           >Developer.</span
         >
         <span
-          class="will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] animate-fade-in-up hover-scale [animation-delay:0.3s]"
+          class:list={[homeHeroEnter, homeHeroLine, 'will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.3s]']}
           >Badminton player.</span
         >
         <span
-          class="will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] animate-fade-in-up hover-scale [animation-delay:0.4s]"
+          class:list={[homeHeroEnter, homeHeroLine, 'will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.4s]']}
           >Travel lover.</span
         >
       </h1>
       <div
-        class="w-[15rem] lg:w-[20rem] animate-fade-in-scale [animation-delay:0.5s]"
+        class:list={[homeImageEnter, 'w-[15rem] lg:w-[20rem] [animation-delay:0.5s]']}
       >
-        <div class="relative group">
-          <div
-            class="absolute inset-0 rounded-full bg-gradient-to-r from-secondary to-primary opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500"
-          >
-          </div>
+        <HomeProfilePhoto>
           <Image
             src={profilePicture}
-            class="relative rounded-full mx-auto md:ml-auto lg:mr-0 aspect-square max-w-[15rem] lg:max-w-[20rem] max-h-[15rem] lg:max-h-[20rem] w-full transition-transform duration-500 group-hover:scale-105 shadow-2xl"
+            class:list={[profileImage, 'relative rounded-full mx-auto md:ml-auto lg:mr-0 aspect-square max-w-[15rem] lg:max-w-[20rem] max-h-[15rem] lg:max-h-[20rem] w-full shadow-2xl']}
             alt="Thomas Ledoux profile"
             loading="eager"
             decoding="sync"
@@ -80,12 +84,12 @@ const latestBlog = blogs.sort(
             sizes="(max-width: 1023px) 240px, 320px"
             srcset={`${mobileProfilePicture.src} 240w, ${desktopProfilePicture.src}`}
           />
-        </div>
+        </HomeProfilePhoto>
       </div>
       <a
         href={`/blog/${latestBlog?.id}`}
         aria-label="Latest blog post"
-        class="fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-all duration-300 lg:translate-x-[calc(100%-5rem)] lg:hover:translate-x-0 hover:shadow-xl hover:shadow-secondary/50 animate-slide-in-right [animation-delay:0.6s]"
+        class:list={[homeBlogTabEnter, 'fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-[transform,box-shadow] duration-200 ease-out lg:translate-x-[calc(100%-5rem)] lg:hover:translate-x-0 hover:shadow-xl hover:shadow-secondary/50 active:brightness-[0.95] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/90 [animation-delay:0.6s]']}
       >
         <div class="relative flex items-center justify-center gap-x-8">
           <span class="relative flex h-6 w-6">
@@ -95,7 +99,7 @@ const latestBlog = blogs.sort(
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="w-6 h-6 animate-bounce"
+              class="w-6 h-6 animate-bounce motion-reduce:animate-none"
             >
               <path
                 stroke-linecap="round"
@@ -104,7 +108,7 @@ const latestBlog = blogs.sort(
               ></path>
             </svg>
             <span
-              class="animate-ping group-hover:hidden absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+              class="animate-ping motion-reduce:animate-none group-hover:hidden absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
             >
               <span
                 class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"

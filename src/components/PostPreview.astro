@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
+import { interactiveCard } from '../lib/ui-classes';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -13,7 +14,7 @@ const { minutesRead } = remarkPluginFrontmatter;
 
 <a
   href={`/blog/${post.id}`}
-  class="group h-full bg-white rounded-2xl border border-gray-200/80 p-8 lg:p-10 flex flex-col transition-all duration-700 ease-out hover:border-gray-300 hover:shadow-2xl hover:shadow-gray-200/50 hover:-translate-y-1"
+  class:list={[interactiveCard, 'group h-full bg-white rounded-2xl border border-gray-200/80 p-8 lg:p-10 flex flex-col hover:border-gray-300 hover:shadow-2xl hover:shadow-gray-200/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]']}
   transition:name={`blog-card-${post.id}`}
 >
   <article class="flex flex-col grow">
@@ -29,7 +30,7 @@ const { minutesRead } = remarkPluginFrontmatter;
     <div class="flex flex-col gap-y-4 grow">
       <h2
         transition:name={`blog-title-${post.id}`}
-        class="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-secondary transition-colors duration-500"
+        class="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-secondary transition-colors duration-200 ease-out"
       >
         {post.data.title}
       </h2>
@@ -45,11 +46,11 @@ const { minutesRead } = remarkPluginFrontmatter;
       </ul>
     </div>
     <div
-      class="mt-6 hidden md:flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+      class="mt-6 hidden md:flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out"
     >
       <span class="text-sm font-medium mr-2">Read post</span>
       <svg
-        class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+        class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200 ease-out"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"

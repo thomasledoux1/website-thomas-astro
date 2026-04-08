@@ -12,7 +12,7 @@ const { tag, number, isActive, extraClass } = Astro.props;
 <a
   class={clsx(
     extraClass,
-    'rounded-md text-sm py-1 px-4 inline-flex items-center',
+    'rounded-md text-sm py-1 px-4 inline-flex items-center transition-colors duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary active:brightness-95',
     {
       'border-secondary border-2 text-secondary': !isActive,
       'bg-secondary text-white': isActive,

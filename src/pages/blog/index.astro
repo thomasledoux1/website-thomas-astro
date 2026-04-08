@@ -4,7 +4,7 @@ import PostPreview from '../../components/PostPreview.astro';
 import Tags from '../../components/Tags.astro';
 const allBlogPosts = await getCollection(
   'blog',
-  blog => blog.data.draft !== true
+  blog => blog.data.draft !== true,
 );
 import Layout from '../../layouts/Layout.astro';
 const tags = allBlogPosts
@@ -16,7 +16,7 @@ const tags = allBlogPosts
     return result;
   }, {});
 const sortedPosts = allBlogPosts.sort(
-  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
+  (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
 );
 ---
 
