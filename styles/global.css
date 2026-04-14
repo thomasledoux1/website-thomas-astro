@@ -62,6 +62,9 @@
     infinite;
   /* Custom animations → `animate-*` utilities */
   --animate-fade-in-up: fade-in-up 520ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  /* Homepage hero lines on narrow viewports: opacity-only — cheaper on mobile GPU */
+  --animate-home-hero-enter-mobile: fade-in-hero-mobile 400ms
+    cubic-bezier(0.23, 1, 0.32, 1) forwards;
   --animate-fade-in-scale: fade-in-scale 520ms cubic-bezier(0.23, 1, 0.32, 1)
     forwards;
   /* Homepage latest-post tab: opacity only — must not animate transform or it
@@ -125,10 +128,10 @@
   --color-link: oklch(0.72 0.11 155);
   --color-logo-well: oklch(0.1 0.022 155);
 
-  /* Footer: softer than light-mode mint (#c6ebbe) — reads as a tinted chip, not a lamp */
-  --color-footer-dock: oklch(0.27 0.034 155);
-  --color-footer-dock-fg: oklch(0.86 0.062 155);
-  --color-footer-dock-border: oklch(0.42 0.038 155);
+  /* Footer: elevated mint chip vs page bg — higher L than surface for clear separation */
+  --color-footer-dock: oklch(0.36 0.044 155);
+  --color-footer-dock-fg: oklch(0.9 0.064 155);
+  --color-footer-dock-border: oklch(0.52 0.042 155);
 
   --shadow-card: 0 25px 50px -12px oklch(0.05 0.02 155 / 0.45);
 
@@ -245,6 +248,15 @@ pre {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-hero-mobile {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

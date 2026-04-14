@@ -29,20 +29,20 @@ const latestBlog = blogs.sort(
   description="Thomas Ledoux' personal website. Writes about Javascript/React/Next.js/Remix/Astro. Always looking to learn about the newest frameworks and features."
   title="Thomas Ledoux - Home"
 >
-  <!-- Animated background gradient -->
+  <!-- Animated background gradient — infinite blur/gradient motion is costly on mobile Safari; keep it from lg up -->
   <div
-    class="fixed inset-0 -z-10 overflow-hidden pointer-events-none transition-opacity duration-300 dark:opacity-[0.55]"
+    class="fixed inset-0 -z-10 overflow-hidden pointer-events-none transition-opacity duration-300 dark:opacity-[0.55] isolate"
   >
     <div
-      class="absolute inset-0 bg-size-[200%_200%] bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 animate-gradient-shift motion-reduce:animate-none"
+      class="absolute inset-0 bg-size-[200%_200%] max-lg:bg-size-100% max-lg:bg-gradient-to-br max-lg:from-primary/15 max-lg:via-transparent max-lg:to-secondary/10 bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 animate-gradient-shift max-lg:animate-none motion-reduce:animate-none"
     >
     </div>
     <div
-      class="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float motion-reduce:animate-none"
+      class="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl max-lg:blur-2xl animate-float max-lg:animate-none motion-reduce:animate-none"
     >
     </div>
     <div
-      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float-delayed motion-reduce:animate-none"
+      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl max-lg:blur-2xl animate-float-delayed max-lg:animate-none motion-reduce:animate-none"
     >
     </div>
   </div>
@@ -55,19 +55,19 @@ const latestBlog = blogs.sort(
         class="font-title flex grow flex-col items-center gap-2 font-bold tracking-tight text-center md:leading-[1.1] lg:items-start lg:gap-3 lg:text-left"
       >
         <span
-          class:list={[homeHeroEnter, 'inline-block text-fg will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] [animation-delay:0.1s]']}
+          class:list={[homeHeroEnter, 'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] [animation-delay:0.1s]']}
           >Thomas Ledoux.</span
         >
         <span
-          class:list={[homeHeroEnter, 'inline-block text-fg will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.2s]']}
+          class:list={[homeHeroEnter, 'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.2s]']}
           >Developer.</span
         >
         <span
-          class:list={[homeHeroEnter, 'inline-block text-fg will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.3s]']}
+          class:list={[homeHeroEnter, 'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.3s]']}
           >Badminton player.</span
         >
         <span
-          class:list={[homeHeroEnter, 'inline-block text-fg will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.4s]']}
+          class:list={[homeHeroEnter, 'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.4s]']}
           >Travel lover.</span
         >
       </h1>
@@ -93,7 +93,7 @@ const latestBlog = blogs.sort(
         class:list={[
           homeBlogTabEnter,
           'home-blog-tab-slide fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-on-secondary',
-          'hover:shadow-lg hover:shadow-secondary/40 active:brightness-[0.95] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-secondary/90 [animation-delay:0.6s]',
+          'hover:shadow-lg hover:shadow-secondary/40 active:brightness-[0.95] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-secondary/90 [animation-delay:0.6s] max-lg:[animation-duration:550ms]',
         ]}
       >
         <div class="relative flex items-center justify-center gap-x-8">

@@ -52,14 +52,14 @@ export const tagMoreBtn = [
 
 export const homeHeroEnter = [
   "opacity-0",
-  "animate-fade-in-up",
+  "max-lg:animate-home-hero-enter-mobile lg:animate-fade-in-up",
   "motion-reduce:opacity-100",
   "motion-reduce:animate-none",
 ].join(" ");
 
 export const homeImageEnter = [
   "opacity-0",
-  "animate-fade-in-scale",
+  "max-lg:animate-portfolio-fade-in lg:animate-fade-in-scale",
   "motion-reduce:opacity-100",
   "motion-reduce:animate-none",
 ].join(" ");
@@ -95,7 +95,7 @@ export const carouselScrollChrome = [
 ].join(" ");
 
 /**
- * Footer dock icons — stroke emphasis + fill dim (LinkedIn), only when `hover: hover` matches.
+ * Footer dock icons — stroke emphasis + fill dim for filled glyphs, only when `hover: hover` matches.
  * `group` must live on the parent `<li>`.
  */
 export const footerIconWrapper = [
@@ -103,6 +103,9 @@ export const footerIconWrapper = [
   "[@media(hover:hover)]:[&.active]:[&_svg_path]:stroke-2",
   "[@media(hover:hover)]:group-hover:[&_svg_path]:stroke-2",
   "[@media(hover:hover)]:group-focus-within:[&_svg_path]:stroke-2",
+  "[@media(hover:hover)]:[&.active]:[&_svg_circle]:stroke-2",
+  "[@media(hover:hover)]:group-hover:[&_svg_circle]:stroke-2",
+  "[@media(hover:hover)]:group-focus-within:[&_svg_circle]:stroke-2",
   "[@media(hover:hover)]:group-hover:[&_svg[fill]]:brightness-[0.85]",
   "[@media(hover:hover)]:group-focus-within:[&_svg[fill]]:brightness-[0.85]",
   "[@media(hover:hover)]:group-hover:[&_svg[fill]]:transition-[filter]",
