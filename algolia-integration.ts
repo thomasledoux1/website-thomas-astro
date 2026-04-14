@@ -18,10 +18,24 @@ export default function pagefind(): AstroIntegration {
           ALGOLIA_WRITE_API_KEY,
           PUBLIC_ALGOLIA_INDEX_NAME,
         } = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), "");
-        const search = algoliasearch(
-          PUBLIC_ALGOLIA_APP_ID ?? "",
-          ALGOLIA_WRITE_API_KEY ?? "",
-        );
+
+        const appId = PUBLIC_ALGOLIA_APP_ID?.trim();
+        const writeKey = ALGOLIA_WRITE_API_KEY?.trim();
+        const indexName = PUBLIC_ALGOLIA_INDEX_NAME?.trim();
+
+        if (!appId || !writeKey || !indexName) {
+          const missing: string[] = [];
+          if (!appId) missing.push("PUBLIC_ALGOLIA_APP_ID");
+          if (!writeKey) missing.push("ALGOLIA_WRITE_API_KEY");
+          if (!indexName) missing.push("PUBLIC_ALGOLIA_INDEX_NAME");
+          logger.warn(
+            `[algolia] Skipping index sync — missing env: ${missing.join(", ")}. ` +
+              "Configure Algolia to push search records on build.",
+          );
+          return;
+        }
+
+        const search = algoliasearch(appId, writeKey);
         const pathToRead = fileURLToPath(dir);
         const globResult = await glob("**/*.html", {
           cwd: pathToRead,
@@ -62,7 +76,7 @@ export default function pagefind(): AstroIntegration {
                 content,
                 title: file === "index.html" ? "Homepage" : title,
               },
-              indexName: PUBLIC_ALGOLIA_INDEX_NAME ?? "",
+              indexName,
             });
           } catch (e) {
             logger.error("Error updating Algolia index for file: " + file);

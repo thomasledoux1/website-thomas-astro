@@ -48,6 +48,11 @@
   --color-on-secondary: oklch(0.99 0.002 155);
   --color-logo-well: oklch(0.13 0.025 155);
 
+  /* Floating footer dock — light: brand mint chip; dark: overridden below */
+  --color-footer-dock: var(--color-primary);
+  --color-footer-dock-fg: var(--color-secondary);
+  --color-footer-dock-border: var(--color-secondary);
+
   /* MDX inline `code`: mint chip in light; separate tokens so dark mode stays AA */
   --color-code-inline-bg: var(--color-primary);
   --color-code-inline-fg: var(--color-fg);
@@ -119,6 +124,11 @@
   --color-surface: oklch(0.21 0.022 155);
   --color-link: oklch(0.72 0.11 155);
   --color-logo-well: oklch(0.1 0.022 155);
+
+  /* Footer: softer than light-mode mint (#c6ebbe) — reads as a tinted chip, not a lamp */
+  --color-footer-dock: oklch(0.27 0.034 155);
+  --color-footer-dock-fg: oklch(0.86 0.062 155);
+  --color-footer-dock-border: oklch(0.42 0.038 155);
 
   --shadow-card: 0 25px 50px -12px oklch(0.05 0.02 155 / 0.45);
 

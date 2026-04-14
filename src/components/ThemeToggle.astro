@@ -8,10 +8,10 @@ interface Props {
 const { dock = false } = Astro.props;
 
 const btnBase = dock
-  ? 'my-auto flex shrink-0 cursor-pointer items-center justify-center rounded-md outline-none transition-transform duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary'
+  ? 'inline-flex shrink-0 cursor-pointer items-center justify-center min-h-7 min-w-7 sm:min-h-11 sm:min-w-11 rounded-md outline-none transition-transform duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-footer-dock-fg focus-visible:ring-offset-2 focus-visible:ring-offset-footer-dock'
   : 'flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-bg text-fg';
 
-const innerClass = 'inline-flex origin-center';
+const innerClass = 'inline-flex origin-center align-text-top';
 ---
 
 <button
@@ -25,36 +25,36 @@ const innerClass = 'inline-flex origin-center';
     dock ? (
       <div class:list={[footerIconWrapper]}>
         <span data-theme-toggle-inner class:list={[innerClass]}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="hidden h-5 w-5 dark:block"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-          />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="h-5 w-5 dark:hidden"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
-          />
-        </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="hidden h-5 w-5 dark:block"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+            />
+          </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-5 w-5 dark:hidden"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+            />
+          </svg>
         </span>
       </div>
     ) : (
@@ -126,27 +126,31 @@ const innerClass = 'inline-flex origin-center';
 
   syncAriaFromDom();
 
-  document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
-    const next = document.documentElement.classList.contains('dark')
-      ? 'light'
-      : 'dark';
-    const btn = document.querySelector('[data-theme-toggle]');
-    const inner = btn?.querySelector<HTMLElement>('[data-theme-toggle-inner]');
-    const reduceMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-
-    if (inner && !reduceMotion) {
-      inner.animate(
-        [
-          { transform: 'rotate(0deg) scale(1)' },
-          { transform: 'rotate(180deg) scale(1.14)' },
-          { transform: 'rotate(360deg) scale(1)' },
-        ],
-        { duration: 520, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' },
+  document
+    .querySelector('[data-theme-toggle]')
+    ?.addEventListener('click', () => {
+      const next = document.documentElement.classList.contains('dark')
+        ? 'light'
+        : 'dark';
+      const btn = document.querySelector('[data-theme-toggle]');
+      const inner = btn?.querySelector<HTMLElement>(
+        '[data-theme-toggle-inner]',
       );
-    }
+      const reduceMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches;
 
-    applyTheme(next);
-  });
+      if (inner && !reduceMotion) {
+        inner.animate(
+          [
+            { transform: 'rotate(0deg) scale(1)' },
+            { transform: 'rotate(180deg) scale(1.14)' },
+            { transform: 'rotate(360deg) scale(1)' },
+          ],
+          { duration: 520, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' },
+        );
+      }
+
+      applyTheme(next);
+    });
 </script>

@@ -16,9 +16,9 @@ import LinkedInLogo from "../assets/LinkedInLogo.svg";
   sm:left-4 sm:top-1/2 sm:bottom-auto sm:-translate-x-0 sm:-translate-y-1/2"
 >
   <nav
-    class="bg-primary text-secondary rounded-2xl flex items-center px-3 lg:px-4 py-4 lg:py-6"
+    class="bg-footer-dock text-footer-dock-fg rounded-2xl flex items-center max-w-[calc(100vw-1rem)] px-3 sm:px-3 lg:px-4 py-4 lg:py-6"
   >
-    <ul class="flex sm:flex-col gap-3 items-center">
+    <ul class="flex sm:flex-col gap-3 sm:gap-2 items-center justify-center min-w-0">
       <FooterLink label="Home" href="/"><HomeLogo /></FooterLink>
       <FooterLink label="Personal" href="/personal"><PersonalLogo /></FooterLink
       >
@@ -27,8 +27,10 @@ import LinkedInLogo from "../assets/LinkedInLogo.svg";
       >
       <FooterLink label="Blog" href="/blog"><BlogLogo /></FooterLink>
       <!-- <FooterLink label="Search" href="/search"><SearchLogo /></FooterLink> -->
-      <li class="bg-secondary min-h-full sm:h-[2px] w-px sm:w-[1.82rem] my-2">
-      </li>
+      <li
+        aria-hidden="true"
+        class="shrink-0 w-px h-7 self-center bg-footer-dock-border my-2 sm:my-1 sm:h-[2px] sm:w-[1.82rem] sm:min-h-0 sm:self-center"
+      />
       <FooterLink label="Contact" href="mailto:hello@thomasledoux.be"
         ><ContactLogo /></FooterLink
       >
@@ -38,7 +40,7 @@ import LinkedInLogo from "../assets/LinkedInLogo.svg";
         ><LinkedInLogo /></FooterLink
       >
       <li
-        class="group flex shrink-0 items-center justify-center py-[6px] xs:py-2 z-40 relative"
+        class="group flex shrink-0 items-center justify-center py-[6px] xs:py-2 sm:py-0 z-40 relative"
       >
         <ThemeToggle dock />
       </li>
