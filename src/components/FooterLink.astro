@@ -15,7 +15,7 @@ const isActive =
 ---
 
 <li
-  class="group py-[6px] cursor-pointer flex items-center xs:py-2 z-40 relative outline-hidden"
+  class="group py-[6px] cursor-pointer flex items-center xs:py-2 z-40 relative"
 >
   <a
     target={href?.startsWith('http') ? '_blank' : undefined}
@@ -23,21 +23,19 @@ const isActive =
     aria-label={label}
     href={href}
     title={label}
-    class="my-auto transition-transform duration-150 ease-out active:scale-[0.97]"
+    class="my-auto rounded-md outline-none transition-transform duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
   >
     <div
-      class="absolute left-12 top-1/2 -translate-y-1/2 rounded-md text-[10px] hidden group-hover:inline-block group-focus-within:inline-block px-3 py-1 bg-gray-100 backdrop-blur-sm after:border-t-transparent after:border-t-[10px] after:border-b-transparent after:border-b-[10px] after:border-r-gray-100 after:border-r-[10px] after:-left-2 after:top-1/2 after:-translate-y-1/2 after:absolute whitespace-nowrap"
+      class="absolute left-12 top-1/2 -translate-y-1/2 rounded-md text-[10px] hidden group-hover:inline-block group-focus-within:inline-block px-3 py-1 bg-surface-tooltip text-fg backdrop-blur-sm after:border-t-transparent after:border-t-[10px] after:border-b-transparent after:border-b-[10px] after:border-r-surface-tooltip after:border-r-[10px] after:-left-2 after:top-1/2 after:-translate-y-1/2 after:absolute whitespace-nowrap"
     >
       {label}
     </div>
-    <div
-      class:list={[footerIconWrapper, isActive && 'active']}
-    >
+    <div class:list={[footerIconWrapper, isActive && 'active']}>
       <slot />
     </div>
     {
       isActive ? (
-        <span class="w-1 h-1 bg-secondary absolute rounded-full -bottom-1 left-2 sm:top-1/2 -translate-y-1/2 sm:-right-1 sm:left-auto" />
+        <span class="w-1 h-1 bg-secondary absolute rounded-full -bottom-3 left-1/2 -translate-x-1/2 sm:bottom-auto sm:left-auto sm:translate-x-0 sm:top-1/2 sm:-translate-y-1/2 sm:-right-2" />
       ) : null
     }
   </a>

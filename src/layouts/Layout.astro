@@ -18,17 +18,25 @@ import '../../styles/global.css';
 import { Head } from 'astro-capo';
 ---
 
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
   <Head>
-    <style>
-      @view-transition {
-        navigation: auto; /* enabled! */
+    <script is:inline>
+      try {
+        if (localStorage.getItem('theme') === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+      } catch {
+        document.documentElement.classList.add('dark');
       }
-    </style>
+    </script>
     <Font cssVariable="--font-inter" preload />
     <Font cssVariable="--font-montserrat" preload />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <!-- MPA view transitions: served from /public so @view-transition isn’t dropped by CSS tooling -->
+    <link rel="stylesheet" href="/view-transitions.css" />
     <meta charset="utf-8" />
     <title>{title ?? frontmatter?.title}</title>
     <meta content={title ?? frontmatter?.title} property="og:title" />
@@ -75,16 +83,31 @@ import { Head } from 'astro-capo';
     <SpeedInsights />
     <Analytics />
   </Head>
-  <body class="flex flex-col font-body min-h-[100dvh]">
+  <body
+    class="flex flex-col font-body min-h-[100dvh] bg-bg text-fg transition-colors duration-200"
+  >
     <main
-      class={`grow flex flex-col container mx-auto h-full pt-8 pb-21 sm:pb-8`}
+      class={`grow flex flex-col container mx-auto h-full pt-8 pb-24 sm:pb-8`}
     >
       <slot />
     </main>
     <Footer />
     <script>
       import { actions } from 'astro:actions';
-      actions.pageView({ url: window.location.pathname });
+      void actions.pageView({ url: window.location.pathname });
+    </script>
+    <script is:inline>
+      try {
+        if (typeof console !== 'undefined' && console.info) {
+          console.info(
+            '%c thomasledoux.be %c Ghent · frontend — if you are peeking here, you are probably the right kind of visitor.',
+            'background:#2c6e49;color:#c6ebbe;padding:2px 8px;border-radius:4px;font-weight:600;',
+            'color:#6b9080;font-style:italic;',
+          );
+        }
+      } catch {
+        /* ignore */
+      }
     </script>
   </body>
 </html>

@@ -38,7 +38,7 @@ const sortedPosts = allBlogPosts.sort(
           Blog
         </h1>
         <p
-          class="text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"
+          class="mx-auto max-w-[52ch] text-lg leading-relaxed text-fg-subtle lg:text-xl"
         >
           Thoughts, tutorials, and insights on web development, frameworks, and
           the latest technologies.
@@ -46,7 +46,9 @@ const sortedPosts = allBlogPosts.sort(
       </div>
 
       <div class="mb-10" data-pagefind-ignore="all">
-        <h2 class="text-2xl font-bold mb-4 text-gray-900">Tags</h2>
+        <h2 class="mb-4 font-title text-2xl font-bold tracking-tight text-fg">
+          Tags
+        </h2>
         <Tags tags={tags} />
       </div>
 

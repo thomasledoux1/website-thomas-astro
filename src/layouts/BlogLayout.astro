@@ -12,14 +12,13 @@ interface Props {
     url: string;
   };
 }
-const convertedDate = new Date(frontmatter.data.date).toLocaleDateString(
-  'en-BE',
-  {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }
-);
+const postDate = new Date(frontmatter.data.date);
+const convertedDate = postDate.toLocaleDateString('en-BE', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+const postDateIso = postDate.toISOString();
 const blogs = await getCollection(
   'blog',
   blog => blog.data.title !== frontmatter.data.title && blog.data.draft !== true
@@ -41,8 +40,7 @@ const latestBlogs = await Promise.all(
 >
   <a
     href="/blog"
-    class="flex items-center gap-x-2 lg:mb-4"
-    transition:name="blog-back-link"
+    class="flex items-center gap-x-2 lg:mb-4 rounded-md w-fit text-fg outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -63,42 +61,50 @@ const latestBlogs = await Promise.all(
     Back to overview
   </a>
   <article class="mdx [&_.expressive-code]:mb-4">
-    <h1 transition:name={`blog-title-${frontmatter.id}`}>
-      {frontmatter.data.title}
-    </h1>
-    <div class="flex flex-col lg:flex-row gap-4 lg:items-center mb-4">
-      <div class="flex gap-x-4">
-        <time class="text-gray-500">{convertedDate}</time>
-        <span class="text-gray-500 inline-block">|</span>
-        <span>{frontmatter.minutesRead}</span>
-      </div>
-      <span class="text-gray-500 hidden lg:inline-block">|</span>
-      <div class="flex gap-x-2 flex-wrap gap-y-2">
-        {
-          frontmatter.data.tags.map(tag => (
-            <a
-              class="border-secondary border-2 text-secondary text-sm py-1 px-4 rounded-md tag font-semibold"
-              href={`/blog/tags/${tag}`}
-            >
-              {tag}
-            </a>
-          ))
-        }
-      </div>
-    </div>
-    <div class="mb-4 flex gap-x-2 items-center">
-      View count:{' '}
-      <ViewCount server:defer url={`/blog/${frontmatter.id}`}
-        ><div slot="fallback">
-          <span class="animate-loading h-[19.5px] inline-block w-12 rounded-xs"
-          ></span>
-        </div></ViewCount
+    <header class="mb-10 border-b border-border/50 pb-8">
+      <h1
+        class="font-title text-3xl font-bold leading-[1.15] tracking-tight text-fg sm:text-4xl"
       >
-    </div>
+        {frontmatter.data.title}
+      </h1>
+      <div class="mt-6 flex flex-col gap-4">
+        <p
+          class="m-0 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm leading-normal text-fg-muted"
+        >
+          <time class="text-fg-meta tabular-nums" datetime={postDateIso}
+            >{convertedDate}</time
+          >
+          <span class="text-fg-meta/60 select-none" aria-hidden="true">·</span>
+          <span class="text-fg-meta">{frontmatter.minutesRead}</span>
+        </p>
+        <div class="flex flex-wrap gap-2">
+          {
+            frontmatter.data.tags.map(tag => (
+              <a
+                class="tag inline-flex items-center rounded-md border border-link px-3 py-1.5 text-sm font-semibold leading-none text-link transition-colors hover:bg-surface-hover"
+                href={`/blog/tags/${tag}`}
+              >
+                {tag}
+              </a>
+            ))
+          }
+        </div>
+        <div class="flex items-baseline gap-x-2 text-sm leading-normal text-fg-muted">
+          <span>View count:</span>
+          <ViewCount server:defer url={`/blog/${frontmatter.id}`}
+            ><div slot="fallback">
+              <span
+                class="animate-loading inline-block h-[1.125rem] w-12 rounded-xs"
+              ></span>
+            </div></ViewCount
+          >
+        </div>
+      </div>
+    </header>
     <slot />
   </article>
   <Comments client:idle />
-  <h2 class="font-bold mt-8 mb-4 text-2xl">
+  <h2 class="font-title mt-10 mb-4 text-2xl font-bold leading-snug tracking-tight text-fg sm:text-3xl">
     Did you like this post? Check out my latest blog posts:
   </h2>
   <div

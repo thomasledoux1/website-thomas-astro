@@ -14,11 +14,13 @@ const { minutesRead } = remarkPluginFrontmatter;
 
 <a
   href={`/blog/${post.id}`}
-  class:list={[interactiveCard, 'group h-full bg-white rounded-2xl border border-gray-200/80 p-8 lg:p-10 flex flex-col hover:border-gray-300 hover:shadow-2xl hover:shadow-gray-200/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]']}
-  transition:name={`blog-card-${post.id}`}
+  class:list={[interactiveCard, 'group h-full bg-surface rounded-2xl border border-border/80 p-8 lg:p-10 flex flex-col hover:border-border-strong hover:shadow-2xl hover:shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]']}
 >
   <article class="flex flex-col grow">
-    <date class="text-sm text-gray-500 mb-4">
+    <time
+      class="text-sm text-fg-meta mb-4"
+      datetime={new Date(post.data.date).toISOString()}
+    >
       {
         new Date(post.data.date).toLocaleDateString('en-BE', {
           day: 'numeric',
@@ -26,19 +28,18 @@ const { minutesRead } = remarkPluginFrontmatter;
           year: 'numeric',
         })
       }
-    </date>
+    </time>
     <div class="flex flex-col gap-y-4 grow">
       <h2
-        transition:name={`blog-title-${post.id}`}
-        class="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-secondary transition-colors duration-200 ease-out"
+        class="text-xl font-bold leading-snug tracking-tight text-fg transition-colors duration-200 ease-out group-hover:text-link lg:text-2xl"
       >
         {post.data.title}
       </h2>
-      {minutesRead ? <p class="text-gray-500 text-sm">{minutesRead}</p> : null}
+      {minutesRead ? <p class="text-fg-meta text-sm">{minutesRead}</p> : null}
       <ul class="flex flex-wrap gap-2 mt-auto">
         {
           post.data.tags?.map((tag: string) => (
-            <li class="bg-gray-100 text-gray-700 text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
+            <li class="bg-surface-tag text-fg-muted text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
               {tag}
             </li>
           ))
@@ -46,7 +47,7 @@ const { minutesRead } = remarkPluginFrontmatter;
       </ul>
     </div>
     <div
-      class="mt-6 hidden md:flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out"
+      class="mt-6 hidden md:flex items-center text-link opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out"
     >
       <span class="text-sm font-medium mr-2">Read post</span>
       <svg

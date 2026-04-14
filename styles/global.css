@@ -1,17 +1,24 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--color-border, currentColor);
   }
 
   * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
   }
 }
 @theme {
@@ -19,12 +26,43 @@
   --font-title: var(--font-montserrat), "sans-serif";
   --color-secondary: #2c6e49;
   --color-primary: #c6ebbe;
+
+  /* Semantic neutrals (OKLCH, hue ~155° — tinted to brand green) */
+  --color-fg: oklch(0.21 0.022 155);
+  --color-fg-muted: oklch(0.37 0.028 155);
+  --color-fg-subtle: oklch(0.44 0.024 155);
+  --color-fg-meta: oklch(0.45 0.022 155);
+  --color-fg-disabled: oklch(0.78 0.012 155);
+
+  --color-surface-tag: oklch(0.955 0.012 155);
+  --color-surface-tooltip: oklch(0.955 0.012 155);
+  --color-surface-hover: oklch(0.97 0.01 155);
+
+  --color-border: oklch(0.88 0.014 155);
+  --color-border-strong: oklch(0.78 0.018 155);
+  --color-border-disabled: oklch(0.85 0.01 155);
+
+  --color-bg: oklch(0.985 0.005 155);
+  --color-surface: oklch(0.998 0.004 155);
+  --color-link: #2c6e49;
+  --color-on-secondary: oklch(0.99 0.002 155);
+  --color-logo-well: oklch(0.13 0.025 155);
+
+  /* MDX inline `code`: mint chip in light; separate tokens so dark mode stays AA */
+  --color-code-inline-bg: var(--color-primary);
+  --color-code-inline-fg: var(--color-fg);
+
+  --shadow-card: 0 25px 50px -12px oklch(0.45 0.04 155 / 0.12);
+  --animate-attention-soft: attention-soft 2.4s cubic-bezier(0.23, 1, 0.32, 1)
+    infinite;
   /* Custom animations → `animate-*` utilities */
   --animate-fade-in-up: fade-in-up 520ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
   --animate-fade-in-scale: fade-in-scale 520ms cubic-bezier(0.23, 1, 0.32, 1)
     forwards;
-  --animate-slide-in-right: slide-in-right 520ms cubic-bezier(0.23, 1, 0.32, 1)
-    forwards;
+  /* Homepage latest-post tab: opacity only — must not animate transform or it
+     overrides translate-x + breaks hover transitions (see homeBlogTabEnter). */
+  --animate-home-blog-tab-enter: home-blog-tab-enter 1000ms
+    cubic-bezier(0.23, 1, 0.32, 1) forwards;
   --animate-gradient-shift: gradient-shift 15s ease infinite;
   --animate-float: float 20s ease-in-out infinite;
   --animate-float-delayed: float-delayed 25s ease-in-out infinite;
@@ -59,47 +97,117 @@
   --cta-text: black;
   --cta-link-text: black;
   --cta-bullet-color: black;
+  color-scheme: light dark;
+}
+
+.dark {
+  --color-fg: oklch(0.93 0.014 155);
+  --color-fg-muted: oklch(0.78 0.02 155);
+  --color-fg-subtle: oklch(0.68 0.022 155);
+  --color-fg-meta: oklch(0.58 0.02 155);
+  --color-fg-disabled: oklch(0.4 0.018 155);
+
+  --color-surface-tag: oklch(0.28 0.024 155);
+  --color-surface-tooltip: oklch(0.3 0.02 155);
+  --color-surface-hover: oklch(0.26 0.02 155);
+
+  --color-border: oklch(0.34 0.028 155);
+  --color-border-strong: oklch(0.44 0.032 155);
+  --color-border-disabled: oklch(0.3 0.02 155);
+
+  --color-bg: oklch(0.14 0.018 155);
+  --color-surface: oklch(0.21 0.022 155);
+  --color-link: oklch(0.72 0.11 155);
+  --color-logo-well: oklch(0.1 0.022 155);
+
+  --shadow-card: 0 25px 50px -12px oklch(0.05 0.02 155 / 0.45);
+
+  --cta-text: oklch(0.18 0.02 155);
+  --cta-link-text: oklch(0.18 0.02 155);
+  --cta-bullet-color: oklch(0.18 0.02 155);
+
+  /* Dark: muted green field + near-white type (not mint on mint) */
+  --color-code-inline-bg: oklch(0.34 0.038 155);
+  --color-code-inline-fg: oklch(0.96 0.012 155);
+}
+
+/**
+ * Homepage “latest blog” tab (peek → full on hover).
+ * Tailwind v4’s translate utilities can use the `translate` longhand; pairing
+ * `lg:translate-x-*` with `transition-[transform]` does not interpolate those
+ * values, so the slide snaps. Drive motion with `transform` + `transition: transform` here.
+ */
+@layer components {
+  .home-blog-tab-slide {
+    @media (width >= 64rem) {
+      transform: translateX(calc(100% - 5rem));
+      transition:
+        transform 1s cubic-bezier(0.23, 1, 0.32, 1),
+        box-shadow 1s cubic-bezier(0.23, 1, 0.32, 1);
+
+      &:hover,
+      &:focus-visible {
+        transform: translateX(0);
+      }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .home-blog-tab-slide {
+      @media (width >= 64rem) {
+        transition-duration: 0.15s;
+      }
+    }
+  }
 }
 
 :is(h1, h2, h3, h4):not(.font-title) {
   @apply font-body font-semibold;
 }
 
+/* Long-form posts: comfortable measure, ≥16px body, clearer modular heading scale (~1.25) */
+.mdx {
+  @apply mx-auto w-full max-w-[65ch] text-base;
+}
+
 .mdx a:not(.tag) {
-  @apply decoration-[3px] decoration-solid underline-offset-[3px] decoration-secondary underline;
+  @apply decoration-[3px] decoration-solid underline-offset-[3px] underline text-link decoration-link;
 }
 
 .mdx p {
   line-height: 1.75;
-  @apply break-words;
+  @apply mb-4 break-words;
 }
 
-.mdx h4 {
-  @apply text-lg;
-}
-
-.mdx h3 {
-  @apply text-xl;
-}
-
-.mdx h2 {
-  @apply text-2xl;
+.dark .mdx p {
+  line-height: 1.8;
 }
 
 .mdx h1 {
-  @apply mt-0 text-3xl;
+  @apply mt-0 mb-6 scroll-m-20 font-title text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl;
+}
+
+.mdx h2 {
+  @apply mt-10 mb-4 scroll-m-20 text-2xl font-bold leading-snug sm:text-3xl;
+}
+
+.mdx h3 {
+  @apply mt-10 mb-3 scroll-m-20 text-xl font-semibold leading-snug sm:text-2xl;
+}
+
+.mdx h4 {
+  @apply mt-8 mb-3 scroll-m-20 text-lg font-semibold leading-snug;
 }
 
 .mdx :is(h1, h2, h3, h4) {
-  @apply font-bold my-4 scroll-m-16 relative;
-}
-
-.mdx p {
-  @apply mb-4;
+  @apply relative;
 }
 
 .mdx ul {
-  @apply list-disc list-inside mb-3 marker:text-secondary;
+  @apply list-disc list-inside mb-4 marker:text-secondary;
+}
+
+.mdx li {
+  @apply leading-[inherit];
 }
 
 pre {
@@ -107,11 +215,15 @@ pre {
 }
 
 .mdx code:not(pre code) {
-  @apply bg-primary mx-1 px-1 py-[0.125rem] rounded-[0.25rem];
+  @apply bg-code-inline-bg text-code-inline-fg mx-1 px-1 py-[0.125rem] text-[0.9375rem] rounded-[0.25rem] [box-decoration-break:clone];
 }
 
 .mdx pre {
-  @apply mb-4;
+  @apply mb-4 text-[0.9375rem] leading-relaxed;
+}
+
+.mdx pre code {
+  @apply text-[0.9375rem] leading-relaxed;
 }
 
 /* @keyframes referenced by @theme --animate-* utilities */
@@ -137,14 +249,12 @@ pre {
   }
 }
 
-@keyframes slide-in-right {
+@keyframes home-blog-tab-enter {
   from {
     opacity: 0;
-    transform: translateX(28px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
   }
 }
 
@@ -184,5 +294,17 @@ pre {
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes attention-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-3px);
+    opacity: 0.88;
   }
 }

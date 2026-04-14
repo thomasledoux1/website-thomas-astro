@@ -1,5 +1,6 @@
 ---
 import FooterLink from "./FooterLink.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import HomeLogo from "../assets/HomeLogo.svg";
 import PersonalLogo from "../assets/PersonalLogo.svg";
 import PortfolioLogo from "../assets/PortfolioLogo.svg";
@@ -10,14 +11,14 @@ import LinkedInLogo from "../assets/LinkedInLogo.svg";
 ---
 
 <footer
-  class="fixed z-30
+  class="[view-transition-name:site-footer] fixed z-30
   left-1/2 bottom-2 -translate-x-1/2 translate-y-0
   sm:left-4 sm:top-1/2 sm:bottom-auto sm:-translate-x-0 sm:-translate-y-1/2"
 >
   <nav
-    class="bg-primary rounded-2xl flex items-center px-3 lg:px-4 py-4 lg:py-6"
+    class="bg-primary text-secondary rounded-2xl flex items-center px-3 lg:px-4 py-4 lg:py-6"
   >
-    <ul class="flex sm:flex-col gap-3">
+    <ul class="flex sm:flex-col gap-3 items-center">
       <FooterLink label="Home" href="/"><HomeLogo /></FooterLink>
       <FooterLink label="Personal" href="/personal"><PersonalLogo /></FooterLink
       >
@@ -36,6 +37,11 @@ import LinkedInLogo from "../assets/LinkedInLogo.svg";
         href="https://www.linkedin.com/in/thomasledoux91"
         ><LinkedInLogo /></FooterLink
       >
+      <li
+        class="group flex shrink-0 items-center justify-center py-[6px] xs:py-2 z-40 relative"
+      >
+        <ThemeToggle dock />
+      </li>
     </ul>
   </nav>
 </footer>

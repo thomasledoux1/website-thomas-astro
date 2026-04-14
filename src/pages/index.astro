@@ -16,7 +16,6 @@ import HomeProfilePhoto from '../components/ui/HomeProfilePhoto.astro';
 import {
   homeBlogTabEnter,
   homeHeroEnter,
-  homeHeroLine,
   homeImageEnter,
   profileImage,
 } from '../lib/ui-classes';
@@ -31,7 +30,9 @@ const latestBlog = blogs.sort(
   title="Thomas Ledoux - Home"
 >
   <!-- Animated background gradient -->
-  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+  <div
+    class="fixed inset-0 -z-10 overflow-hidden pointer-events-none transition-opacity duration-300 dark:opacity-[0.55]"
+  >
     <div
       class="absolute inset-0 bg-size-[200%_200%] bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 animate-gradient-shift motion-reduce:animate-none"
     >
@@ -51,22 +52,22 @@ const latestBlog = blogs.sort(
       class="gap-12 w-full flex flex-col lg:flex-row items-center justify-between h-full"
     >
       <h1
-        class="font-title grow font-bold text-center lg:text-left md:leading-[1.1] flex flex-col items-center lg:items-start gap-2 lg:gap-3"
+        class="font-title flex grow flex-col items-center gap-2 font-bold tracking-tight text-center md:leading-[1.1] lg:items-start lg:gap-3 lg:text-left"
       >
         <span
-          class:list={[homeHeroEnter, homeHeroLine, 'will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] [animation-delay:0.1s]']}
+          class:list={[homeHeroEnter, 'inline-block text-fg will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] [animation-delay:0.1s]']}
           >Thomas Ledoux.</span
         >
         <span
-          class:list={[homeHeroEnter, homeHeroLine, 'will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.2s]']}
+          class:list={[homeHeroEnter, 'inline-block text-fg will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.2s]']}
           >Developer.</span
         >
         <span
-          class:list={[homeHeroEnter, homeHeroLine, 'will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.3s]']}
+          class:list={[homeHeroEnter, 'inline-block text-fg will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.3s]']}
           >Badminton player.</span
         >
         <span
-          class:list={[homeHeroEnter, homeHeroLine, 'will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.4s]']}
+          class:list={[homeHeroEnter, 'inline-block text-fg will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.4s]']}
           >Travel lover.</span
         >
       </h1>
@@ -89,30 +90,41 @@ const latestBlog = blogs.sort(
       <a
         href={`/blog/${latestBlog?.id}`}
         aria-label="Latest blog post"
-        class:list={[homeBlogTabEnter, 'fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-white transition-[transform,box-shadow] duration-200 ease-out lg:translate-x-[calc(100%-5rem)] lg:hover:translate-x-0 hover:shadow-xl hover:shadow-secondary/50 active:brightness-[0.95] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/90 [animation-delay:0.6s]']}
+        class:list={[
+          homeBlogTabEnter,
+          'home-blog-tab-slide fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-on-secondary',
+          'hover:shadow-lg hover:shadow-secondary/40 active:brightness-[0.95] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-secondary/90 [animation-delay:0.6s]',
+        ]}
       >
         <div class="relative flex items-center justify-center gap-x-8">
-          <span class="relative flex h-6 w-6">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6 animate-bounce motion-reduce:animate-none"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
-              ></path>
-            </svg>
+          <span class="relative grid h-6 w-6 place-items-center">
+            <!-- Single ping ring behind the bell (no inner dot — that read as a second pulse) -->
             <span
-              class="animate-ping motion-reduce:animate-none group-hover:hidden absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+              aria-hidden="true"
+              class="pointer-events-none absolute inset-[-30%] block animate-ping rounded-full bg-primary/40 opacity-75 motion-reduce:animate-none group-hover:opacity-0"
+            >
+            </span>
+            <!-- Outer: hover tilt; inner: float (separate transform layers) -->
+            <span
+              class="relative z-10 inline-block origin-[50%_15%] transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none [@media(hover:hover)_and_(pointer:fine)]:group-hover:-rotate-[15deg] group-focus-visible:-rotate-[12deg] motion-reduce:group-hover:rotate-0 motion-reduce:group-focus-visible:rotate-0"
             >
               <span
-                class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"
+                class="inline-flex animate-attention-soft motion-reduce:animate-none"
               >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
+                  ></path>
+                </svg>
               </span>
             </span>
           </span>

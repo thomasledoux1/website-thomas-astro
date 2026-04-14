@@ -11,6 +11,8 @@ interface Props {
   tags: string[];
   eager?: boolean;
   hasBlackBackground?: boolean;
+  /** Dark-on-transparent PNGs need a light field in dark mode (e.g. black wordmark). */
+  lightLogoPad?: boolean;
 }
 const {
   img,
@@ -20,7 +22,9 @@ const {
   tags,
   eager = false,
   hasBlackBackground = false,
+  lightLogoPad = false,
 } = Astro.props;
+const isExternal = /^https?:\/\//i.test(url);
 ---
 
 <li
@@ -30,17 +34,23 @@ const {
   ]}
 >
   <a
-    target="_blank"
-    rel="noopener noreferrer"
+    target={isExternal ? '_blank' : undefined}
+    rel={isExternal ? 'noopener noreferrer' : undefined}
     href={url}
-    class:list={[portfolioCard, 'min-h-0 h-full bg-white rounded-2xl border border-gray-200/80 p-8 lg:p-10 flex flex-col lg:grid lg:grid-cols-7 gap-8 lg:gap-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]']}
+    class:list={[portfolioCard, 'min-h-0 h-full bg-surface rounded-2xl border border-border/80 p-8 lg:p-10 flex flex-col lg:grid lg:grid-cols-7 gap-8 lg:gap-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]']}
   >
     <!-- Logo and tags section -->
     <div
       class="lg:col-span-2 flex flex-col items-center justify-center space-y-6"
     >
       <div
-        class:list={[portfolioCaseLogo, 'max-h-[140px] lg:mx-0 max-w-[80%] lg:max-w-full flex items-center justify-center', hasBlackBackground && 'bg-black p-4 rounded-lg']}
+        class:list={[
+          portfolioCaseLogo,
+          'max-h-[140px] lg:mx-0 max-w-[80%] lg:max-w-full flex items-center justify-center',
+          hasBlackBackground && 'rounded-lg bg-logo-well p-4',
+          lightLogoPad &&
+            'rounded-lg bg-white p-4 ring-1 ring-border/25 dark:bg-white dark:ring-border/50',
+        ]}
       >
         {
           img && logoWidth ? (
@@ -53,7 +63,7 @@ const {
               loading={eager ? "eager" : "lazy"}
             />
           ) : (
-            <span class="text-2xl lg:text-3xl text-center break-all font-bold text-gray-900 group-hover:text-secondary transition-colors duration-200 ease-out">
+            <span class="text-2xl lg:text-3xl text-center break-all font-bold text-fg group-hover:text-link transition-colors duration-200 ease-out">
               {logoAlt}
             </span>
           )
@@ -64,7 +74,7 @@ const {
       <ul class="flex justify-center flex-wrap gap-2 w-full">
         {
           tags.map((tag) => (
-            <li class="bg-gray-100 text-gray-700 text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
+            <li class="bg-surface-tag text-fg-muted text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
               {tag}
             </li>
           ))
@@ -75,14 +85,14 @@ const {
     <!-- Content section -->
     <div class="lg:col-span-5 flex flex-col justify-center">
       <div
-        class="text-gray-600 text-base lg:text-lg leading-relaxed space-y-6 group-hover:text-gray-800 transition-colors duration-200 ease-out"
+        class="text-fg-subtle text-base lg:text-lg leading-relaxed space-y-6 group-hover:text-fg-muted transition-colors duration-200 ease-out"
       >
         <slot />
       </div>
 
       <!-- Subtle arrow indicator (hidden on mobile; hover-only on desktop) -->
       <div
-        class="mt-6 hidden lg:flex items-center text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out"
+        class="mt-6 hidden lg:flex items-center text-link opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out"
       >
         <span class="text-sm font-medium mr-2">View project</span>
         <svg

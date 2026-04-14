@@ -34,7 +34,7 @@ const sortedTags = Object.entries(tags).sort(([, a], [, b]) => b - a);
         <button
           id="load-more-tags"
           type="button"
-          class:list={[tagMoreBtn, 'py-1 px-4 border cursor-pointer border-secondary text-sm rounded-md bg-secondary text-white inline-flex items-center']}
+          class:list={[tagMoreBtn, 'py-1 px-4 border cursor-pointer border-secondary text-sm rounded-md bg-secondary text-on-secondary inline-flex items-center outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-bg']}
           aria-expanded="false"
           aria-controls="tags-more-wrapper"
         >

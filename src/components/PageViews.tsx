@@ -27,7 +27,7 @@ const PageViews = () => {
   );
   const paginationButtonClasses = "border p-2 rounded-md my-2 border-black";
   const paginationButtonClassesDisabled =
-    "border p-2 my-2 rounded-md cursor-not-allowed text-gray-300 border-gray-300";
+    "border p-2 my-2 rounded-md cursor-not-allowed text-fg-disabled border-border-disabled";
   const pageSize = 10;
   const offset = (page - 1) * pageSize;
 
@@ -42,8 +42,8 @@ const PageViews = () => {
         <button
           className={`text-sm py-2 px-4 rounded-l-md font-semibold ${
             mode === "page-views"
-              ? "bg-secondary text-white"
-              : "border-secondary border-2 text-secondary"
+              ? "bg-secondary text-on-secondary"
+              : "border-link border-2 text-link"
           }`}
           onClick={() => {
             setMode("page-views");
@@ -55,8 +55,8 @@ const PageViews = () => {
         <button
           className={`py-2 px-4 rounded-r-md font-semibold text-sm ${
             mode === "per-url"
-              ? "bg-secondary text-white"
-              : "border-secondary border-2 text-secondary"
+              ? "bg-secondary text-on-secondary"
+              : "border-link border-2 text-link"
           }`}
           onClick={() => setMode("per-url")}
         >

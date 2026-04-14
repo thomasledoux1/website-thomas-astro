@@ -14,8 +14,8 @@ const { tag, number, isActive, extraClass } = Astro.props;
     extraClass,
     'rounded-md text-sm py-1 px-4 inline-flex items-center transition-colors duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary active:brightness-95',
     {
-      'border-secondary border-2 text-secondary': !isActive,
-      'bg-secondary text-white': isActive,
+      'border-link border-2 text-link': !isActive,
+      'bg-secondary text-on-secondary': isActive,
     }
   )}
   href={isActive ? '/blog' : `/blog/tags/${tag}`}

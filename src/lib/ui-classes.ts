@@ -17,7 +17,7 @@ export const portfolioCard = [
   "duration-200",
   easeOutStrong,
   "[@media(hover:hover)_and_(pointer:fine)]:hover:border-secondary/50",
-  "[@media(hover:hover)_and_(pointer:fine)]:hover:bg-gray-50/60",
+  "[@media(hover:hover)_and_(pointer:fine)]:hover:bg-surface-hover/60",
   "[@media(hover:hover)_and_(pointer:fine)]:hover:[transform:none]",
 ].join(" ");
 
@@ -50,19 +50,6 @@ export const tagMoreBtn = [
   "motion-reduce:active:scale-100",
 ].join(" ");
 
-export const homeHeroLine = [
-  "inline-block",
-  "transition-[transform,filter]",
-  "duration-200",
-  easeOutStrong,
-  "[@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.04]",
-  "[@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-0.5",
-  "[@media(hover:hover)_and_(pointer:fine)]:hover:drop-shadow-[0_4px_8px_rgba(44,110,73,0.28)]",
-  "motion-reduce:hover:scale-100",
-  "motion-reduce:hover:translate-y-0",
-  "motion-reduce:hover:filter-none",
-].join(" ");
-
 export const homeHeroEnter = [
   "opacity-0",
   "animate-fade-in-up",
@@ -79,7 +66,7 @@ export const homeImageEnter = [
 
 export const homeBlogTabEnter = [
   "opacity-0",
-  "animate-slide-in-right",
+  "animate-home-blog-tab-enter",
   "motion-reduce:opacity-100",
   "motion-reduce:animate-none",
 ].join(" ");

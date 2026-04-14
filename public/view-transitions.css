@@ -1,0 +1,96 @@
+/*
+ * Cross-document view transitions (MPA). Served from /public so @view-transition is preserved.
+ * Chrome 126+, Edge 126+, Safari 18.2+. Not Firefox.
+ */
+
+@view-transition {
+  navigation: auto;
+}
+
+/*
+ * Fixed footer dock: named layer is excluded from `root`, so it isn’t scaled /
+ * translated with the main page. No animation on this group — old/new snapshots
+ * match, so the bar stays visually stable during the transition.
+ */
+::view-transition-group(site-footer) {
+  animation-duration: 0s;
+}
+
+::view-transition-old(site-footer),
+::view-transition-new(site-footer) {
+  animation: none;
+}
+
+/* Respect system preference: opacity-only, no spatial motion */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes vt-root-out-a11y {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes vt-root-in-a11y {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  ::view-transition-old(root) {
+    animation-name: vt-root-out-a11y;
+    animation-duration: 140ms;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: vt-root-in-a11y;
+    animation-duration: 160ms;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+  }
+}
+
+/*
+ * Full motion: outgoing page drops back; incoming arrives from further above.
+ * Stronger than v1 — still no full-viewport blur (GPU cost).
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes vt-root-out {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(28px) scale(0.972);
+    }
+  }
+
+  @keyframes vt-root-in {
+    from {
+      opacity: 0;
+      transform: translateY(-48px) scale(0.968);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  ::view-transition-old(root) {
+    animation-name: vt-root-out;
+    animation-duration: 500ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.85, 0.35);
+    animation-fill-mode: both;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: vt-root-in;
+    animation-duration: 640ms;
+    animation-timing-function: cubic-bezier(0.18, 0.82, 0.22, 1);
+    animation-fill-mode: both;
+  }
+}
