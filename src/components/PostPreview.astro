@@ -6,19 +6,29 @@ import { interactiveCard } from '../lib/ui-classes';
 interface Props {
   post: CollectionEntry<'blog'>;
   index: number;
+  /** Spans full row on `lg` (use for the most recent post in a 2-column grid). */
+  featured?: boolean;
 }
-const { post } = Astro.props;
+const { post, featured = false } = Astro.props;
 const { remarkPluginFrontmatter } = await render(Astro.props.post);
 const { minutesRead } = remarkPluginFrontmatter;
 ---
 
 <a
   href={`/blog/${post.id}`}
-  class:list={[interactiveCard, 'group h-full bg-surface rounded-2xl border border-border/80 p-8 lg:p-10 flex flex-col hover:border-border-strong hover:shadow-2xl hover:shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]']}
+  class:list={[
+    interactiveCard,
+    'group flex h-full flex-col rounded-2xl border border-border/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]',
+    featured
+      ? 'lg:col-span-2 bg-gradient-to-br from-primary/[0.07] via-surface to-surface p-6 shadow-lg shadow-card/35 ring-1 ring-secondary/20 dark:from-primary/[0.11] sm:p-8 lg:p-10 xl:p-12'
+      : 'bg-surface p-8 lg:p-10',
+    'hover:border-border-strong hover:shadow-2xl hover:shadow-card',
+    featured && 'hover:ring-secondary/30',
+  ]}
 >
-  <article class="flex flex-col grow">
+  <article class="flex grow flex-col">
     <time
-      class="text-sm text-fg-meta mb-4"
+      class:list={['text-sm text-fg-meta', featured ? 'mb-3' : 'mb-4']}
       datetime={new Date(post.data.date).toISOString()}
     >
       {
@@ -29,17 +39,22 @@ const { minutesRead } = remarkPluginFrontmatter;
         })
       }
     </time>
-    <div class="flex flex-col gap-y-4 grow">
+    <div class="flex grow flex-col gap-y-4">
       <h2
-        class="text-xl font-bold leading-snug tracking-tight text-fg transition-colors duration-200 ease-out group-hover:text-link lg:text-2xl"
+        class:list={[
+          'font-bold leading-snug tracking-tight text-fg transition-colors duration-200 ease-out group-hover:text-link',
+          featured
+            ? 'text-xl sm:text-2xl lg:text-3xl xl:text-4xl xl:leading-[1.15]'
+            : 'text-xl lg:text-2xl',
+        ]}
       >
         {post.data.title}
       </h2>
-      {minutesRead ? <p class="text-fg-meta text-sm">{minutesRead}</p> : null}
-      <ul class="flex flex-wrap gap-2 mt-auto">
+      {minutesRead ? <p class="text-sm text-fg-meta">{minutesRead}</p> : null}
+      <ul class="mt-auto flex flex-wrap gap-2">
         {
           post.data.tags?.map((tag: string) => (
-            <li class="bg-surface-tag text-fg-muted text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
+            <li class="rounded-full bg-surface-tag px-4 py-2 text-xs font-medium uppercase tracking-wider text-fg-muted lg:text-sm">
               {tag}
             </li>
           ))
@@ -47,11 +62,11 @@ const { minutesRead } = remarkPluginFrontmatter;
       </ul>
     </div>
     <div
-      class="mt-6 hidden md:flex items-center text-link opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out"
+      class="mt-6 hidden items-center text-link opacity-0 transition-opacity duration-200 ease-out md:flex group-hover:opacity-100"
     >
-      <span class="text-sm font-medium mr-2">Read post</span>
+      <span class="mr-2 text-sm font-medium">Read post</span>
       <svg
-        class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200 ease-out"
+        class="h-4 w-4 transform transition-transform duration-200 ease-out group-hover:translate-x-1"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -60,7 +75,8 @@ const { minutesRead } = remarkPluginFrontmatter;
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          d="M9 5l7 7-7 7"></path>
+          d="M9 5l7 7-7 7"
+        />
       </svg>
     </div>
   </article>

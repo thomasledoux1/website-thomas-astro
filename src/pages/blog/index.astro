@@ -18,6 +18,8 @@ const tags = allBlogPosts
 const sortedPosts = allBlogPosts.sort(
   (a, b) => +new Date(b.data.date) - +new Date(a.data.date),
 );
+const latestPost = sortedPosts[0];
+const olderPosts = sortedPosts.slice(1);
 ---
 
 <Layout title="The Thomas Ledoux blog">
@@ -52,9 +54,35 @@ const sortedPosts = allBlogPosts.sort(
         <Tags tags={tags} />
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-        {sortedPosts.map((post, i) => <PostPreview {post} index={i} />)}
-      </div>
+      {
+        latestPost ? (
+          <>
+            <h2 class="mb-4 font-title text-2xl font-bold tracking-tight text-fg">
+              Latest post
+            </h2>
+            <div class="mb-10 lg:mb-12">
+              <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+                <PostPreview post={latestPost} index={0} featured />
+              </div>
+            </div>
+          </>
+        ) : null
+      }
+
+      {
+        olderPosts.length > 0 ? (
+          <>
+            <h2 class="mb-6 font-title text-2xl font-bold tracking-tight text-fg">
+              All posts
+            </h2>
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+              {olderPosts.map((post, i) => (
+                <PostPreview post={post} index={i + 1} />
+              ))}
+            </div>
+          </>
+        ) : null
+      }
     </div>
   </section>
 </Layout>

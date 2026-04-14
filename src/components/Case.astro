@@ -1,7 +1,11 @@
 ---
-import type { ImageMetadata } from "astro";
-import { Image } from "astro:assets";
-import { portfolioCaseLogo, portfolioCard, portfolioSlide } from "../lib/ui-classes";
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import {
+  portfolioCaseLogo,
+  portfolioCard,
+  portfolioSlide,
+} from '../lib/ui-classes';
 
 interface Props {
   img?: ImageMetadata;
@@ -37,7 +41,10 @@ const isExternal = /^https?:\/\//i.test(url);
     target={isExternal ? '_blank' : undefined}
     rel={isExternal ? 'noopener noreferrer' : undefined}
     href={url}
-    class:list={[portfolioCard, 'min-h-0 h-full bg-surface rounded-2xl border border-border/80 p-8 lg:p-10 flex flex-col lg:grid lg:grid-cols-7 gap-8 lg:gap-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]']}
+    class:list={[
+      portfolioCard,
+      'min-h-0 h-full bg-surface rounded-2xl border border-border/80 p-8 lg:p-10 flex flex-col lg:grid lg:grid-cols-7 gap-8 lg:gap-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary/40 active:brightness-[0.99]',
+    ]}
   >
     <!-- Logo and tags section -->
     <div
@@ -60,7 +67,7 @@ const isExternal = /^https?:\/\//i.test(url);
               alt={`Logo ${logoAlt}`}
               src={img}
               class="inline-block object-contain"
-              loading={eager ? "eager" : "lazy"}
+              loading={eager ? 'eager' : 'lazy'}
             />
           ) : (
             <span class="text-2xl lg:text-3xl text-center break-all font-bold text-fg group-hover:text-link transition-colors duration-200 ease-out">
@@ -73,7 +80,7 @@ const isExternal = /^https?:\/\//i.test(url);
       <!-- Tags -->
       <ul class="flex justify-center flex-wrap gap-2 w-full">
         {
-          tags.map((tag) => (
+          tags.map(tag => (
             <li class="bg-surface-tag text-fg-muted text-xs lg:text-sm py-2 px-4 rounded-full font-medium tracking-wider uppercase">
               {tag}
             </li>
@@ -105,8 +112,7 @@ const isExternal = /^https?:\/\//i.test(url);
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
+            d="M9 5l7 7-7 7"></path>
         </svg>
       </div>
     </div>
