@@ -22,14 +22,15 @@ export default defineConfig({
     fonts: [
       {
         provider: fontProviders.google(),
-        name: "Inter",
-        cssVariable: "--font-inter",
+        name: "Figtree",
+        cssVariable: "--font-figtree",
+        weights: ["400", "500", "600", "700"],
       },
       {
         provider: fontProviders.google(),
-        name: "Montserrat",
-        cssVariable: "--font-montserrat",
-        weights: ["600"],
+        name: "Bricolage Grotesque",
+        cssVariable: "--font-bricolage",
+        weights: ["600", "700", "800"],
       },
     ],
   },

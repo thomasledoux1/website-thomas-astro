@@ -17,7 +17,7 @@ export const GET: APIRoute = async function get({ params }) {
   const title = page?.data.title
     ? page?.data.title.slice(0, 200)
     : "My default title";
-  const robotoData = await fs.readFile(
+  const interFontData = await fs.readFile(
     "./public/fonts/inter-v12-latin-regular.ttf",
   );
 
@@ -101,9 +101,9 @@ export const GET: APIRoute = async function get({ params }) {
       height: 630,
       fonts: [
         {
-          name: "Roboto",
-          data: robotoData,
-          weight: 700,
+          name: "Inter",
+          data: interFontData,
+          weight: 400,
           style: "normal",
         },
       ],
