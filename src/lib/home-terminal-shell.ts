@@ -3,21 +3,11 @@
  * @wterm/just-bash BashShell).
  */
 
-const BIRTH = new Date("1991-07-11");
-
-function computeAge(): number {
-  const now = new Date();
-  let age = now.getFullYear() - BIRTH.getFullYear();
-  const m = now.getMonth() - BIRTH.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < BIRTH.getDate())) age--;
-  return age;
-}
-
 const COMMANDS_OUTPUT: Record<string, string> = {
-  "/age": `You asked for age — I'm ${computeAge()} years old (born 11 Jul 1991).`,
   "/contact": [
     "Email (best): hello@thomasledoux.be",
     "Site:    https://www.thomasledoux.be",
+    "LinkedIn: https://www.linkedin.com/in/thomasledoux91",
     "I'm open to interesting side projects — say hi.",
   ].join("\r\n"),
   "/stack": [
@@ -48,7 +38,6 @@ const COMMANDS_OUTPUT: Record<string, string> = {
   ].join("\r\n"),
   "/help": [
     "Commands:",
-    "  /age       — how old I am",
     "  /contact   — email & links",
     "  /stack     — tech I work with",
     "  /now       — what I'm up to",
