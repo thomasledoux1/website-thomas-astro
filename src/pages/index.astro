@@ -1,125 +1,74 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import profilePicture from './../assets/me.png';
-const mobileProfilePicture = await getImage({
-  src: profilePicture,
-  width: 320,
-});
-const desktopProfilePicture = await getImage({
-  src: profilePicture,
-  width: 480,
-});
-import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 import Layout from '../layouts/Layout.astro';
 import HomeProfilePhoto from '../components/ui/HomeProfilePhoto.astro';
-import {
-  homeBlogTabEnter,
-  homeHeroEnter,
-  homeImageEnter,
-  profileImage,
-} from '../lib/ui-classes';
-const blogs = await getCollection('blog', blog => blog.data.draft !== true);
-const latestBlog = blogs.sort(
-  (a, b) => +new Date(b.data.date) - +new Date(a.data.date)
-)[0];
+import { homeHeroEnter, homeImageEnter, profileImage } from '../lib/ui-classes';
+import HomeTerminal from '../components/HomeTerminal';
 ---
 
 <Layout
+  compactMain
   description="Thomas Ledoux' personal website. Writes about Javascript/React/Next.js/Remix/Astro. Always looking to learn about the newest frameworks and features."
   title="Thomas Ledoux - Home"
 >
-  <section class="relative lg:pt-0 items-center flex flex-wrap h-full my-auto">
-    <div
-      class="gap-12 w-full flex flex-col lg:flex-row items-center justify-between h-full"
-    >
-      <h1
-        class="font-title flex grow flex-col items-center gap-2 font-bold tracking-tight text-center md:leading-[1.1] lg:items-start lg:gap-3 lg:text-left"
-      >
-        <span
-          class:list={[homeHeroEnter, 'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] [animation-delay:0.1s]']}
-          >Thomas Ledoux.</span
-        >
-        <span
-          class:list={[homeHeroEnter, 'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.2s]']}
-          >Developer.</span
-        >
-        <span
-          class:list={[homeHeroEnter, 'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.3s]']}
-          >Badminton player.</span
-        >
-        <span
-          class:list={[homeHeroEnter, 'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-2xl sm:text-4xl xl:text-5xl 2xl:text-[3.5rem] [animation-delay:0.4s]']}
-          >Travel lover.</span
-        >
-      </h1>
+  <div
+    class="mx-auto flex w-full max-w-4xl flex-1 flex-col lg:justify-center gap-3 min-h-[calc(100dvh-7rem)] sm:gap-4 sm:py-6 lg:min-h-[calc(100dvh-6.5rem)]"
+  >
+    <section class="relative lg:pt-0 items-center flex flex-wrap shrink-0">
       <div
-        class:list={[homeImageEnter, 'w-[15rem] lg:w-[20rem] [animation-delay:0.5s]']}
+        class="gap-6 lg:gap-8 w-full flex flex-col lg:flex-row items-center justify-between"
       >
-        <HomeProfilePhoto>
-          <Image
-            src={profilePicture}
-            class:list={[profileImage, 'relative rounded-full mx-auto md:ml-auto lg:mr-0 aspect-square max-w-[15rem] lg:max-w-[20rem] max-h-[15rem] lg:max-h-[20rem] w-full shadow-2xl']}
-            alt="Thomas Ledoux profile"
-            loading="eager"
-            decoding="sync"
-            widths={[360, 640, 768, 1024, 1280, 1568]}
-            sizes="(max-width: 1023px) 240px, 320px"
-            srcset={`${mobileProfilePicture.src} 240w, ${desktopProfilePicture.src}`}
-          />
-        </HomeProfilePhoto>
-      </div>
-      <a
-        href={`/blog/${latestBlog?.id}`}
-        aria-label="Latest blog post"
-        class:list={[
-          homeBlogTabEnter,
-          'home-blog-tab-slide fixed top-0 right-0 bg-secondary rounded-tl-md group rounded-bl-md py-4 px-4 lg:py-4 lg:px-8 text-on-secondary',
-          'hover:shadow-lg hover:shadow-secondary/40 active:brightness-[0.95] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-secondary/90 [animation-delay:0.6s] max-lg:[animation-duration:550ms]',
-        ]}
-      >
-        <div class="relative flex items-center justify-center gap-x-8">
-          <span class="relative grid h-6 w-6 place-items-center">
-            <!-- Single ping ring behind the bell (no inner dot — that read as a second pulse) -->
-            <span
-              aria-hidden="true"
-              class="pointer-events-none absolute inset-[-30%] block animate-ping rounded-full bg-primary/40 opacity-75 motion-reduce:animate-none group-hover:opacity-0"
-            >
-            </span>
-            <!-- Outer: hover tilt; inner: float (separate transform layers) -->
-            <span
-              class="relative z-10 inline-block origin-[50%_15%] transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none [@media(hover:hover)_and_(pointer:fine)]:group-hover:-rotate-[15deg] group-focus-visible:-rotate-[12deg] motion-reduce:group-hover:rotate-0 motion-reduce:group-focus-visible:rotate-0"
-            >
-              <span
-                class="inline-flex animate-attention-soft motion-reduce:animate-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
-                  ></path>
-                </svg>
-              </span>
-            </span>
-          </span>
-          <div class="hidden lg:block">
-            <h2 class="font-bold">Latest blog post</h2>
-            {latestBlog?.data.title.substring(0, 60)}{
-              latestBlog?.data.title && latestBlog?.data.title.length > 60
-                ? '...'
-                : null
-            }
-          </div>
+        <h1
+          class="font-title flex grow flex-col items-center gap-2 font-bold tracking-tight text-center md:leading-[1.1] lg:items-start lg:gap-3 lg:text-left"
+        >
+          <span
+            class:list={[
+              homeHeroEnter,
+              'inline-block text-fg max-lg:will-change-[opacity] lg:will-change-[transform,opacity] text-4xl sm:text-6xl xl:text-7xl 2xl:text-[5.25rem] [animation-delay:0.1s]',
+            ]}>Thomas Ledoux.</span
+          >
+        </h1>
+        <div
+          class:list={[
+            homeImageEnter,
+            'w-[10rem] sm:w-[11rem] lg:w-[12.5rem] [animation-delay:0.5s]',
+          ]}
+        >
+          <HomeProfilePhoto>
+            <Image
+              src={profilePicture}
+              class:list={[
+                profileImage,
+                'relative rounded-full mx-auto md:ml-auto lg:mr-0 aspect-square max-w-[10rem] sm:max-w-[11rem] lg:max-w-[12.5rem] max-h-[10rem] sm:max-h-[11rem] lg:max-h-[12.5rem] w-full shadow-2xl',
+              ]}
+              alt="Thomas Ledoux profile"
+              loading="eager"
+              decoding="sync"
+              widths={[256, 352]}
+              sizes="(max-width: 1023px) 160px, 200px"
+            />
+          </HomeProfilePhoto>
         </div>
-      </a>
-    </div>
-  </section>
+      </div>
+    </section>
+
+    <section aria-label="Interactive terminal" class="flex shrink-0 flex-col">
+      <div
+        class:list={[homeHeroEnter, 'flex flex-col [animation-delay:0.55s]']}
+      >
+        <p
+          class="text-fg-muted text-center lg:text-left text-sm sm:text-base mb-3 max-w-2xl"
+        >
+          A tiny command line to learn a bit more — try{' '}
+          <kbd
+            class="rounded border border-border bg-surface-tag px-1.5 py-0.5 font-mono text-sm text-fg"
+            >/help</kbd
+          >.
+        </p>
+        <HomeTerminal client:load />
+      </div>
+    </section>
+  </div>
 </Layout>

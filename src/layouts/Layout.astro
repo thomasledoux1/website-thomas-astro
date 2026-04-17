@@ -7,13 +7,15 @@ import { Font } from 'astro:assets';
 interface Props {
   title?: string;
   description?: string;
+  /** Tighter vertical padding so dense pages (e.g. home) can fit in ~100dvh */
+  compactMain?: boolean;
   frontmatter?: {
     minutesRead: string;
     title: string;
     url: string;
   };
 }
-const { frontmatter, title, description } = Astro.props;
+const { frontmatter, title, description, compactMain = false } = Astro.props;
 import '../../styles/global.css';
 import { Head } from 'astro-capo';
 ---
@@ -87,7 +89,12 @@ import { Head } from 'astro-capo';
     class="flex flex-col font-body min-h-[100dvh] bg-bg text-fg transition-colors duration-200"
   >
     <main
-      class={`grow flex flex-col container mx-auto h-full pt-8 pb-24 sm:pb-8`}
+      class:list={[
+        'grow flex flex-col container mx-auto h-full',
+        compactMain
+          ? 'pt-5 pb-3 sm:pt-7 sm:pb-5'
+          : 'pt-8 pb-24 sm:pb-8',
+      ]}
     >
       <slot />
     </main>

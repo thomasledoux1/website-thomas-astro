@@ -64,13 +64,6 @@ export const homeImageEnter = [
   "motion-reduce:animate-none",
 ].join(" ");
 
-export const homeBlogTabEnter = [
-  "opacity-0",
-  "animate-home-blog-tab-enter",
-  "motion-reduce:opacity-100",
-  "motion-reduce:animate-none",
-].join(" ");
-
 export const profileImage = [
   "transition-transform",
   "duration-200",

@@ -95,36 +95,9 @@ const innerClass = 'inline-flex origin-center align-text-top';
 </button>
 
 <script>
-  const STORAGE_KEY = 'theme';
+  import { applySiteTheme, syncThemeToggleAria } from '../lib/site-theme';
 
-  function applyTheme(theme: 'light' | 'dark') {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    try {
-      localStorage.setItem(STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-    const btn = document.querySelector('[data-theme-toggle]');
-    if (btn instanceof HTMLButtonElement) {
-      btn.setAttribute(
-        'aria-label',
-        theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
-      );
-    }
-  }
-
-  function syncAriaFromDom() {
-    const btn = document.querySelector('[data-theme-toggle]');
-    if (btn instanceof HTMLButtonElement) {
-      const dark = document.documentElement.classList.contains('dark');
-      btn.setAttribute(
-        'aria-label',
-        dark ? 'Switch to light theme' : 'Switch to dark theme',
-      );
-    }
-  }
-
-  syncAriaFromDom();
+  syncThemeToggleAria();
 
   document
     .querySelector('[data-theme-toggle]')
@@ -151,6 +124,6 @@ const innerClass = 'inline-flex origin-center align-text-top';
         );
       }
 
-      applyTheme(next);
+      applySiteTheme(next);
     });
 </script>
