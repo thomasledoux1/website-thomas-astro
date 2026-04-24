@@ -1,5 +1,5 @@
 import { ActionError, defineAction } from "astro:actions";
-import { z } from "astro:schema";
+import { z } from "astro/zod";
 import { PageView, db } from "astro:db";
 import { isbot } from "isbot";
 

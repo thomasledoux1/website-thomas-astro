@@ -36,7 +36,7 @@ Let's define the action in code, under `/actions/index.ts`.
 
 ```ts title="src/actions/index.ts"
 import { ActionError, defineAction } from "astro:actions";
-import { z } from "astro:schema";
+import { z } from "astro/zod";
 import { PageView, db } from "astro:db";
 import { isbot } from "isbot";
 

@@ -2,7 +2,7 @@
  * Reusable Tailwind class groups for motion and surfaces.
  * Prefer importing these over ad-hoc duplicates.
  */
-export const easeOutStrong = "ease-[cubic-bezier(0.23,1,0.32,1)]";
+const easeOutStrong = "ease-[cubic-bezier(0.23,1,0.32,1)]";
 
 export const interactiveCard = [
   "transition-[border-color,box-shadow,transform]",
@@ -28,16 +28,6 @@ export const portfolioCaseLogo = [
   easeOutStrong,
   "[@media(hover:hover)_and_(pointer:fine)]:group-hover:brightness-[0.96]",
   "motion-reduce:group-hover:brightness-100",
-].join(" ");
-
-export const caseLogo = [
-  "transition-[transform,opacity]",
-  "duration-200",
-  easeOutStrong,
-  "[@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-105",
-  "[@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-90",
-  "motion-reduce:group-hover:scale-100",
-  "motion-reduce:group-hover:opacity-100",
 ].join(" ");
 
 export const tagMoreBtn = [

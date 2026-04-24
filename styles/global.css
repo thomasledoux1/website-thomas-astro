@@ -25,9 +25,9 @@
   }
 }
 @theme {
-  /* Figtree (UI/body) + Bricolage Grotesque (display) — loaded via astro:assets Font */
+  /* Figtree (body) + Sora (headings) — geometric display vs rounded humanist UI; loaded via astro:assets Font */
   --font-body: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
-  --font-title: var(--font-bricolage), ui-sans-serif, sans-serif;
+  --font-title: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
   --color-secondary: #2c6e49;
   --color-primary: #c6ebbe;
 

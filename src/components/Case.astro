@@ -53,22 +53,29 @@ const isExternal = /^https?:\/\//i.test(url);
       <div
         class:list={[
           portfolioCaseLogo,
-          'max-h-[140px] lg:mx-0 max-w-[80%] lg:max-w-full flex items-center justify-center',
-          hasBlackBackground && 'rounded-lg bg-logo-well p-4',
-          lightLogoPad &&
-            'rounded-lg bg-white p-4 ring-1 ring-border/25 dark:bg-white dark:ring-border/50',
+          'lg:mx-0 max-w-[80%] lg:max-w-full flex items-center justify-center',
         ]}
       >
         {
           img && logoWidth ? (
-            <Image
-              width={logoWidth}
-              height={140}
-              alt={`Logo ${logoAlt}`}
-              src={img}
-              class="inline-block object-contain"
-              loading={eager ? 'eager' : 'lazy'}
-            />
+            <div
+              class:list={[
+                hasBlackBackground && 'rounded-lg bg-logo-well p-4',
+                lightLogoPad &&
+                  'rounded-lg bg-white p-4 ring-1 ring-border/25 dark:bg-white dark:ring-border/50',
+              ]}
+            >
+              <div class="flex max-h-[140px] max-w-full min-h-0 items-center justify-center">
+                <Image
+                  width={logoWidth}
+                  height={140}
+                  alt={`Logo ${logoAlt}`}
+                  src={img}
+                  class="h-auto max-h-[140px] w-auto max-w-full object-contain"
+                  loading={eager ? 'eager' : 'lazy'}
+                />
+              </div>
+            </div>
           ) : (
             <span class="text-2xl lg:text-3xl text-center break-all font-bold text-fg group-hover:text-link transition-colors duration-200 ease-out">
               {logoAlt}
