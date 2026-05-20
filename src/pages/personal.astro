@@ -1,7 +1,7 @@
 ---
-import '../../styles/global.css';
-import Layout from '../layouts/Layout.astro';
-import Age from '../components/Age.astro';
+import "../../styles/global.css";
+import Layout from "../layouts/Layout.astro";
+import Age from "../components/Age.astro";
 ---
 
 <Layout
@@ -34,7 +34,9 @@ import Age from '../components/Age.astro';
       <article
         class="max-w-3xl mx-auto rounded-2xl border border-border/80 bg-surface shadow-card p-6 sm:p-8 lg:p-10 space-y-6"
       >
-        <h2 class="font-title text-2xl font-bold tracking-tight text-fg lg:text-3xl">
+        <h2
+          class="font-title text-2xl font-bold tracking-tight text-fg lg:text-3xl"
+        >
           About me
         </h2>
         <p class="text-fg-muted leading-relaxed text-base lg:text-lg">
@@ -42,9 +44,16 @@ import Age from '../components/Age.astro';
             ><span slot="fallback" class="inline-block tabular-nums">00</span
             ></Age
           > years old, living in Ghent. I&apos;m a professional <strong
-            >Frontend Developer</strong
-          >, currently working at Empathy Lab. I'm always looking for new
-          opportunities to work on for my side activity, so feel free to <a
+            >Full Stack Developer</strong
+          >, currently working at <a
+            class="text-link font-medium underline decoration-link"
+            href="https://www.nimblestudio.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Nimble Studio
+          </a>. I'm always looking for new opportunities to work on for my side
+          activity, so feel free to <a
             class="text-link font-medium underline decoration-link"
             href="mailto:hello@thomasledoux.be">contact me</a
           >!
@@ -66,7 +75,7 @@ import Age from '../components/Age.astro';
           this period.
         </p>
         <p class="text-fg-muted leading-relaxed text-base lg:text-lg">
-          You can read more about my work in the{' '}
+          You can read more about my work in the{" "}
           <a
             class="text-link font-medium underline decoration-link"
             href="/portfolio">portfolio</a
@@ -79,15 +88,15 @@ import Age from '../components/Age.astro';
     const AGE_DURATION = 1000;
 
     function animateAge(el: HTMLElement) {
-      const target = parseInt(el.getAttribute('data-age') ?? '0', 10);
-      if (target === 0 || el.hasAttribute('data-age-animated')) return;
-      el.setAttribute('data-age-animated', 'true');
+      const target = parseInt(el.getAttribute("data-age") ?? "0", 10);
+      if (target === 0 || el.hasAttribute("data-age-animated")) return;
+      el.setAttribute("data-age-animated", "true");
       let current = 0;
       const start = performance.now();
       function step(now: number) {
         const t = Math.min((now - start) / AGE_DURATION, 1);
         current = Math.round(target * t);
-        el.textContent = String(current).padStart(2, '0');
+        el.textContent = String(current).padStart(2, "0");
         if (t < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
@@ -96,12 +105,12 @@ import Age from '../components/Age.astro';
     function runAgeAnimations() {
       document
         .querySelectorAll<HTMLElement>(
-          '.age-display[data-age]:not([data-age-animated])',
+          ".age-display[data-age]:not([data-age-animated])",
         )
         .forEach(animateAge);
     }
 
-    const article = document.querySelector('article');
+    const article = document.querySelector("article");
     if (article) {
       runAgeAnimations();
       const observer = new MutationObserver(() => runAgeAnimations());
